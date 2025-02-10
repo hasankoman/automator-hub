@@ -3,7 +3,7 @@ import { getServerSession } from "#auth";
 export default defineEventHandler(async (event) => {
   const session = await getServerSession(event);
 
-  if (!session?.user?.accessToken) {
+  if (!session?.user?.github?.accessToken) {
     return { error: { message: "Unauthorized", statusCode: 401 } };
   }
 
@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const body = await readBody(event);
-  const token = session.user.accessToken;
+  const token = session?.user?.github?.accessToken;
 
   const payload = {
     token,
@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     const response = await $fetch(
-      "https://hasankoman.app.n8n.cloud/webhook-test/b2e08263-ce55-46a5-b8b4-fd683aebe2bb",
+      "https://hasankoman.app.n8n.cloud/webhook/b2e08263-ce55-46a5-b8b4-fd683aebe2bb",
       {
         method: "POST",
         headers: {
