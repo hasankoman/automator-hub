@@ -77,7 +77,7 @@ const isActive = (path) => route.path === path;
         <span>Security</span>
       </a>
       <a
-        href="#"
+        href="/integrations"
         :class="[
           'flex items-center px-3 py-2 rounded-lg transition-all duration-100 ease-in-out',
           isActive('/integrations')
