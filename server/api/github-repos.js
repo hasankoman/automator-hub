@@ -3,14 +3,13 @@ import { getServerSession } from "#auth";
 export default defineEventHandler(async (event) => {
   const session = await getServerSession(event);
 
-  if (!session?.user?.accessToken) {
+  if (!session?.user?.github?.accessToken) {
     return { error: { message: "Unauthorized", statusCode: 401 } };
   }
 
-  console.log(session.user.accessToken);
   const apiUrl = "https://api.github.com/user/repos?affiliation=owner";
   const headers = {
-    Authorization: `Bearer ${session.user.accessToken}`,
+    Authorization: `Bearer ${session?.user?.github?.accessToken}`,
     Accept: "application/vnd.github.v3+json",
   };
 

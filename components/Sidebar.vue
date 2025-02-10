@@ -35,7 +35,7 @@ const isActive = (path) => route.path === path;
         E-MAIL
       </h2>
       <a
-        href="/email"
+        href="#"
         :class="[
           'flex items-center px-3 py-2 rounded-lg transition-all duration-100 ease-in-out group',
           isActive('/email')
@@ -53,7 +53,7 @@ const isActive = (path) => route.path === path;
         ACCOUNT
       </h2>
       <a
-        href="/account/general"
+        href="#"
         :class="[
           'flex items-center px-3 py-2 rounded-lg transition-all duration-100 ease-in-out',
           isActive('/account/general')
@@ -65,7 +65,7 @@ const isActive = (path) => route.path === path;
         <span>General</span>
       </a>
       <a
-        href="/account/security"
+        href="#"
         :class="[
           'flex items-center px-3 py-2 rounded-lg transition-all duration-100 ease-in-out',
           isActive('/account/security')
@@ -77,7 +77,7 @@ const isActive = (path) => route.path === path;
         <span>Security</span>
       </a>
       <a
-        href="/integrations"
+        href="#"
         :class="[
           'flex items-center px-3 py-2 rounded-lg transition-all duration-100 ease-in-out',
           isActive('/integrations')
@@ -101,7 +101,7 @@ const isActive = (path) => route.path === path;
         <span>Account</span>
       </a>
       <a
-        href="/account/notifications"
+        href="#"
         :class="[
           'flex items-center px-3 py-2 rounded-lg transition-all duration-100 ease-in-out',
           isActive('/account/notifications')
