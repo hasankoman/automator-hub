@@ -1,4 +1,3 @@
-// file: ~/server/api/auth/[...].ts
 import GithubProvider from "next-auth/providers/github";
 import { NuxtAuthHandler } from "#auth";
 
