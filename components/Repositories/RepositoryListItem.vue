@@ -12,9 +12,12 @@ const { repository } = defineProps({
 
 const handleRepositoryClick = (repository) => {
   if (isSelected.value) {
-    selectedRepositories.value = {};
+    delete selectedRepositories.value[repository.id];
   } else {
-    selectedRepositories.value = { [repository.id]: repository };
+    selectedRepositories.value = {
+      ...selectedRepositories.value,
+      [repository.id]: repository,
+    };
   }
 };
 

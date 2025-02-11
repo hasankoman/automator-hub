@@ -31,15 +31,8 @@ export const useGitHubStore = defineStore("github", {
         this.loading = false;
       }
     },
-    async triggerAction(type) {
+    async triggerAction(type, repository) {
       if (type === "manual") {
-        const keys = Object.keys(this.selectedRepositories);
-        const repository = keys.length
-          ? this.selectedRepositories[keys[0]]
-          : null;
-
-        if (!repository) retun;
-
         const { data, error } = await useFetch("/api/action", {
           method: "POST",
           body: repository,

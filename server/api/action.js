@@ -14,18 +14,14 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   const token = session?.user?.github?.accessToken;
 
-  const payload = {
-    token,
-    ...body,
-  };
-
   try {
     const response = await $fetch(useRuntimeConfig().public.webhookUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: token,
       },
-      body: payload,
+      body,
     });
     return response;
   } catch (error) {

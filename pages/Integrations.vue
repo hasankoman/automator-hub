@@ -1,17 +1,25 @@
 <script setup>
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useToast } from "primevue/usetoast";
 import { useLoadingStore } from "~/store/loading";
+import Checkbox from "primevue/checkbox";
 
 const { signIn, signOut, data } = useAuth();
 const router = useRouter();
 const toast = useToast();
 const loadingStore = useLoadingStore();
 
+const isPrivateRepoAccess = ref(false);
+
 const handleGithubConnect = async () => {
   try {
     loadingStore.startLoading();
-    const response = await signIn("github");
+    const response = await signIn("github", {
+      scope: isPrivateRepoAccess.value
+        ? "read:user repo"
+        : "read:user public_repo",
+    });
 
     if (response?.error) {
       throw new Error(response.error);
@@ -79,29 +87,47 @@ const navigateToLogin = () => {
     >
       <template v-if="data">
         <div
-          class="p-4 bg-white rounded-xl shadow-xs flex items-center justify-between gap-3 col-span-1 border border-gray-200"
+          class="p-4 bg-white rounded-xl shadow-xs flex flex-col gap-3 col-span-1 border border-gray-200"
         >
-          <div class="flex gap-3 items-center">
-            <div
-              class="border border-gray-100 rounded-lg w-10 h-10 flex items-center justify-center shadow-inner"
-            >
-              <Icon name="mdi:github" class="text-3xl" />
+          <div class="flex items-center justify-between gap-3">
+            <div class="flex gap-3 items-center">
+              <div
+                class="border border-gray-100 rounded-lg w-10 h-10 flex items-center justify-center shadow-inner"
+              >
+                <Icon name="mdi:github" class="text-3xl" />
+              </div>
+              <div class="flex flex-col">
+                <span>Github</span>
+                <span v-if="data.user.github" class="text-sm text-gray-400">
+                  {{ data.user.github.username }}
+                </span>
+              </div>
             </div>
-            <div class="flex flex-col">
-              <span>Github</span>
-              <span v-if="data.user.github" class="text-sm text-gray-400">
-                {{ data.user.github.username }}
-              </span>
-            </div>
-          </div>
 
-          <Button
-            label="Disconnect"
-            outlined
-            v-if="data?.user.github"
-            @click="handleGithubDisconnect"
-          />
-          <Button label="Connect" v-else @click="handleGithubConnect" />
+            <Button
+              label="Disconnect"
+              outlined
+              v-if="data?.user.github"
+              @click="handleGithubDisconnect"
+            />
+            <Button label="Connect" v-else @click="handleGithubConnect" />
+          </div>
+          <div
+            class="flex items-center gap-2 pt-3 border-t-1 border-gray-200"
+            v-if="!data?.user.github"
+          >
+            <Checkbox
+              inputId="privateRepoAccess"
+              v-model="isPrivateRepoAccess"
+              :pt="{
+                box: '!rounded-lg',
+              }"
+              :value="true"
+            />
+            <label for="privateRepoAccess" class="text-sm text-gray-600">
+              Access my private repositories
+            </label>
+          </div>
         </div>
       </template>
 

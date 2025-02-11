@@ -28,6 +28,7 @@
     "@iconify-json/fa": "^1.2.1",
     "@iconify-json/fa6-solid": "^1.2.3",
     "@iconify-json/hugeicons": "^1.2.3",
+    "@iconify-json/line-md": "^1.2.5",
     "@iconify-json/material-symbols-light": "^1.2.14",
     "@primevue/nuxt-module": "^4.2.5",
     "@sidebase/nuxt-auth": "^0.10.0",

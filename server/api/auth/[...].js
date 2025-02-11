@@ -41,7 +41,7 @@ export default NuxtAuthHandler({
       clientSecret: useRuntimeConfig().githubClientSecret,
       authorization: {
         params: {
-          scope: "read:user repo",
+          scope: "read:user public_repo",
         },
       },
     }),

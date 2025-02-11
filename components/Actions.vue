@@ -1,25 +1,49 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useGitHubStore } from "~/store/github";
 import { useLoadingStore } from "~/store/loading";
 
 const githubStore = useGitHubStore();
-const loadingStore = useLoadingStore();
 const toast = useToast();
 
 const { selectedRepositories, currentStep } = storeToRefs(githubStore);
 
-const selectedAction = ref(null);
+const selectedAction = ref("manual");
+const loadingStatus = ref({});
 
-const handleTriggerAction = async () => {
+onMounted(() => {
+  Object.keys(selectedRepositories.value).forEach((repo) => {
+    loadingStatus.value[repo] = "pending";
+  });
+});
+
+const triggerAction = async (repository) => {
   try {
-    loadingStore.startLoading();
-    await githubStore.triggerAction(selectedAction.value);
+    loadingStatus.value[repository.id] = "loading";
+    await githubStore.triggerAction(selectedAction.value, repository);
+    loadingStatus.value[repository.id] = "success";
     toast.add({
       severity: "success",
       summary: "Process Successful",
-      detail: "Readme File Updated Successfully",
+      detail: `Readme File Updated Successfully for ${repository.name}`,
       life: 3000,
+    });
+  } catch (err) {
+    loadingStatus.value[repository.id] = "error";
+    toast.add({
+      severity: "error",
+      summary: "Error",
+      detail: `An unexpected error occurred for ${repository.name}`,
+      life: 3000,
+    });
+  }
+};
+
+const handleStartAction = () => {
+  try {
+    Object.values(selectedRepositories.value).map(async (repo) => {
+      if (loadingStatus.value[repo.id] === "success") return;
+      triggerAction(repo);
     });
   } catch (err) {
     toast.add({
@@ -28,8 +52,6 @@ const handleTriggerAction = async () => {
       detail: "An unexpected error occurred",
       life: 3000,
     });
-  } finally {
-    loadingStore.stopLoading();
   }
 };
 </script>
@@ -45,57 +67,138 @@ const handleTriggerAction = async () => {
           Selected Repositories
         </h2>
         <div class="flex gap-2 flex-wrap">
-          <Chip
+          <template
             v-for="repo in Object.values(selectedRepositories)"
             :key="repo.name"
-            :label="repo.name"
-            class="text-sm px-3 py-1 rounded-full border border-gray-700 text-gray-900 bg-gray-200 hover:bg-gray-300 transition"
-          />
+          >
+            <Chip
+              :label="repo.name"
+              class="text-sm px-3 py-1 rounded-full border border-gray-700 text-gray-900 bg-gray-200 hover:bg-gray-300 transition"
+            />
+          </template>
         </div>
       </div>
       <h2 class="text-2xl font-semibold text-gray-900">Select an Action</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div
-          class="bg-white rounded-xl shadow-md p-6 border-2 cursor-pointer hover:shadow-lg transition-all"
+          class="bg-white rounded-xl shadow-md p-6 border-2 cursor-pointer transition-all flex gap-3 justify-between"
           :class="
             selectedAction === 'manual' ? 'border-black' : 'border-gray-300'
           "
           @click="selectedAction = 'manual'"
         >
-          <div class="flex items-center justify-between mb-3">
+          <div class="flex flex-col gap-2">
             <h3 class="text-xl font-bold text-gray-900">
               Manual README Update
             </h3>
-            <Icon name="uil:github" class="text-4xl text-gray-700" />
+            <p class="text-gray-600">
+              Manually update your GitHub repository README with a single click.
+            </p>
           </div>
-          <p class="text-gray-600">
-            Manually update your GitHub repository README with a single click.
-          </p>
+          <Icon name="uil:github" class="text-4xl text-gray-700 self-end" />
         </div>
 
         <div
-          class="bg-gradient-to-r from-gray-900 to-gray-700 rounded-xl border-2 shadow-lg p-6 cursor-pointer transition-all hover:shadow-xl relative overflow-hidden"
+          class="bg-gradient-to-r from-gray-900 to-gray-700 rounded-xl border-2 shadow-lg p-6 transition-all relative overflow-hidden flex gap-3 justify-between"
           :class="
             selectedAction === 'auto' ? 'border-emerald-500' : 'border-gray-300'
           "
-          @click="selectedAction = 'auto'"
         >
           <div
-            class="absolute top-0 right-0 bg-emerald-500 text-white text-xs font-bold px-2 py-1 rounded-bl-lg"
+            class="absolute top-0 right-0 bg-black shadow-sm shadow-black text-white text-xs font-bold px-2 py-1 rounded-bl-lg"
           >
-            PREMIUM
+            COMING SOON
           </div>
-          <div class="flex items-center justify-between mb-3">
+          <div class="flex flex-col gap-2">
             <h3 class="text-xl font-bold text-white">Auto README Update</h3>
-            <Icon
-              name="hugeicons:robotic"
-              class="text-4xl text-white opacity-90"
-            />
+            <p class="text-white opacity-80">
+              Automatically update your README when changes are detected in your
+              repository.
+            </p>
           </div>
-          <p class="text-white opacity-80">
-            Automatically update your README when changes are detected in your
-            repository.
-          </p>
+          <Icon
+            name="hugeicons:robotic"
+            class="text-4xl text-white opacity-90 self-end"
+          />
+        </div>
+      </div>
+      <div class="grid grid-cols-1 gap-6">
+        <div class="flex justify-between items-center h-10">
+          <h2 class="text-2xl font-semibold text-gray-900">Action Statuses</h2>
+          <Button
+            @click="handleStartAction"
+            label="Start All"
+            class="!text-sm h-full"
+            v-if="
+              Object.values(loadingStatus).some(
+                (status) => status === 'error' || status === 'pending'
+              )
+            "
+          >
+            <template #icon>
+              <Icon name="hugeicons:play-circle" class="text-lg" />
+            </template>
+          </Button>
+        </div>
+        <div
+          class="border-1 rounded-xl h-20 w-full p-4 flex items-center justify-between shadow-md"
+          v-for="repo in Object.values(selectedRepositories)"
+          :key="repo.name"
+          :class="[
+            'relative flex items-center justify-between p-3 rounded-xl',
+            loadingStatus[repo.id] === 'pending' &&
+              'bg-white border border-gray-300 shadow hover:shadow-lg',
+            loadingStatus[repo.id] === 'loading' &&
+              'bg-gray-50 border border-gray-400 shadow-inner',
+            loadingStatus[repo.id] === 'success' &&
+              'bg-gradient-to-r from-green-100 to-green-50 border border-green-400 shadow-lg',
+            loadingStatus[repo.id] === 'error' &&
+              'bg-gradient-to-r from-red-100 to-red-50 border border-red-400 shadow-lg',
+          ]"
+        >
+          <div class="flex items-center justify-between gap-4 w-full">
+            <div class="flex gap-3 items-center">
+              <Icon
+                v-if="loadingStatus[repo.id] === 'loading'"
+                name="line-md:loading-loop"
+                class="text-black !w-6 !h-6"
+              />
+              <Icon
+                v-else-if="loadingStatus[repo.id] === 'pending'"
+                name="hugeicons:clock-01"
+                class="text-black !w-6 !h-6"
+              />
+              <Icon
+                v-else-if="loadingStatus[repo.id] === 'success'"
+                name="hugeicons:checkmark-circle-03"
+                class="text-green-500 !w-6 !h-6"
+              />
+              <Icon
+                v-else-if="loadingStatus[repo.id] === 'error'"
+                name="hugeicons:alert-01"
+                class="text-red-500 !w-6 !h-6"
+              />
+              <span>{{ repo.name }}</span>
+            </div>
+            <Button
+              v-if="loadingStatus[repo.id] === 'error'"
+              @click="triggerAction(repo)"
+              class="!w-10 !h-10"
+            >
+              <template #icon>
+                <Icon name="hugeicons:refresh" />
+              </template>
+            </Button>
+            <Button
+              v-else-if="loadingStatus[repo.id] === 'pending'"
+              @click="triggerAction(repo)"
+              class="!w-10 !h-10"
+            >
+              <template #icon>
+                <Icon name="hugeicons:play" />
+              </template>
+            </Button>
+          </div>
         </div>
       </div>
     </div>
@@ -109,12 +212,6 @@ const handleTriggerAction = async () => {
       class="px-8 mr-auto"
       outlined
       v-if="currentStep !== 1"
-    />
-    <Button
-      label="Start Action"
-      @click="handleTriggerAction"
-      class="px-8 ml-auto"
-      :disabled="Object.keys(selectedRepositories).length === 0"
     />
   </div>
 </template>
