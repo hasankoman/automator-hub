@@ -1,14 +1,36 @@
 <script setup>
 import { ref } from "vue";
 import { useGitHubStore } from "~/store/github";
+import { useLoadingStore } from "~/store/loading";
 
 const githubStore = useGitHubStore();
+const loadingStore = useLoadingStore();
+const toast = useToast();
+
 const { selectedRepositories, currentStep } = storeToRefs(githubStore);
 
 const selectedAction = ref(null);
 
-const handleTriggerAction = () => {
-  githubStore.triggerAction(selectedAction.value);
+const handleTriggerAction = async () => {
+  try {
+    loadingStore.startLoading();
+    await githubStore.triggerAction(selectedAction.value);
+    toast.add({
+      severity: "success",
+      summary: "Process Successful",
+      detail: "Readme File Updated Successfully",
+      life: 3000,
+    });
+  } catch (err) {
+    toast.add({
+      severity: "error",
+      summary: "Error",
+      detail: "An unexpected error occurred",
+      life: 3000,
+    });
+  } finally {
+    loadingStore.stopLoading();
+  }
 };
 </script>
 

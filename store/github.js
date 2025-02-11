@@ -32,30 +32,22 @@ export const useGitHubStore = defineStore("github", {
       }
     },
     async triggerAction(type) {
-      try {
-        if (type === "manual") {
-          const keys = Object.keys(this.selectedRepositories);
-          const repository = keys.length
-            ? this.selectedRepositories[keys[0]]
-            : null;
+      if (type === "manual") {
+        const keys = Object.keys(this.selectedRepositories);
+        const repository = keys.length
+          ? this.selectedRepositories[keys[0]]
+          : null;
 
-          if (!repository) retun;
+        if (!repository) retun;
 
-          const { data, error } = await useFetch("/api/action", {
-            method: "POST",
-            body: repository,
-          });
+        const { data, error } = await useFetch("/api/action", {
+          method: "POST",
+          body: repository,
+        });
 
-          if (error.value) {
-            throw new Error(error.value);
-          }
-
-          console.log("Webhook'dan gelen cevap:", data);
+        if (error.value) {
+          throw new Error(error.value);
         }
-      } catch (err) {
-        this.error = err.message;
-      } finally {
-        this.loading = false;
       }
     },
   },
