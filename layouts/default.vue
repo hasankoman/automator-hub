@@ -1,31 +1,46 @@
 <script setup>
-import { ref } from "vue";
+import { watch } from "vue";
 import { storeToRefs } from "pinia";
 import Sidebar from "~/components/Sidebar.vue";
-import { useGitHubStore } from "~/store/github";
 import { useSidebarStore } from "~/store/sidebar";
-
-const githubStore = useGitHubStore();
-const { currentStep } = storeToRefs(githubStore);
-const sidebarWidth = "275px";
 
 const sidebarStore = useSidebarStore();
 const { open: sidebarOpen } = storeToRefs(sidebarStore);
+const route = useRoute();
+
+const handleOutClick = () => {
+  if (sidebarOpen.value && window.innerWidth < 768) {
+    sidebarStore.closeSidebar();
+  }
+};
+
+watch(
+  () => route.fullPath,
+  () => {
+    if (sidebarOpen.value && window.innerWidth < 768) {
+      sidebarStore.closeSidebar();
+    }
+  }
+);
 </script>
 
 <template>
   <Loading />
+  <Toast
+    position="top-right"
+    :breakpoints="{
+      '1024px': { width: '30vw' },
+      '768px': { width: '50vw' },
+      '576px': { width: '75vw' },
+    }"
+  />
   <div class="relative h-screen bg-gray-100">
-    <div
-      class="absolute top-0 left-0 h-full transition-all duration-300 overflow-hidden"
-      :style="{ width: sidebarOpen ? sidebarWidth : '0px' }"
-    >
-      <Sidebar />
-    </div>
+    <Sidebar />
 
     <div
       class="h-full transition-all duration-300"
-      :style="{ marginLeft: sidebarOpen ? sidebarWidth : '0px' }"
+      :class="sidebarOpen ? 'md:ml-[275px] blur-xs md:blur-none' : '0px'"
+      @click="handleOutClick"
     >
       <div class="p-3 flex flex-col h-full">
         <NuxtPage />

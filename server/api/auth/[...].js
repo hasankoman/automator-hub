@@ -6,7 +6,6 @@ export default NuxtAuthHandler({
   secret: useRuntimeConfig().authSecret,
   debug: true,
   providers: [
-    // Credentials Provider: Email & Parola ile giriş için
     CredentialsProvider.default({
       name: "Credentials",
       credentials: {
@@ -14,21 +13,29 @@ export default NuxtAuthHandler({
         password: { label: "Parola", type: "password" },
       },
       async authorize(credentials) {
-        console.log("Credentials:", credentials);
+        try {
+          console.log("Credentials:", credentials);
 
-        // Sadece belirli bir email ve parola için girişe izin veriliyor
-        const user = { id: 1, email: credentials.email };
-        if (
-          credentials.email === "test@gmail.com" &&
-          credentials.password === "1234"
-        ) {
-          return user;
+          if (!credentials?.email || !credentials?.password) {
+            throw new Error("Email and password are required");
+          }
+
+          if (
+            credentials.email === "test@gmail.com" &&
+            credentials.password === "1234"
+          ) {
+            return { id: 1, email: credentials.email };
+          }
+
+          throw new Error("Invalid email or password");
+        } catch (error) {
+          throw new Error(
+            error instanceof Error ? error.message : "Authentication failed"
+          );
         }
-        return null;
       },
     }),
 
-    // GitHub Provider: GitHub OAuth ile giriş ve bağlantı için
     GithubProvider.default({
       clientId: useRuntimeConfig().public.githubClientId,
       clientSecret: useRuntimeConfig().githubClientSecret,

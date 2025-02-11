@@ -86,7 +86,7 @@ const filteredRepositories = computed(() => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-3 w-full overflow-hidden">
+  <div class="flex flex-col gap-3 w-full h-full overflow-hidden">
     <Header>
       <template #right>
         <div class="flex items-center relative" id="search-container">
@@ -131,7 +131,7 @@ const filteredRepositories = computed(() => {
     </Header>
 
     <div
-      class="grid grid-cols-1 gap-5 p-5 bg-white rounded-t-2xl overflow-auto border-t-1 border-x-1 border-gray-200 shadow-inner"
+      class="h-full grid grid-cols-1 auto-rows-min gap-5 p-5 bg-white rounded-t-2xl overflow-auto border-t-1 border-x-1 border-gray-200 shadow-inner"
     >
       <template
         v-for="repository in filteredRepositories"

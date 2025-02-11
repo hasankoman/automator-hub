@@ -9,6 +9,7 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@nuxt/icon",
     "@primevue/nuxt-module",
+    "@nuxtjs/device",,
   ],
   primevue: {
     options: {

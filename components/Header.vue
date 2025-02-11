@@ -1,41 +1,7 @@
 <script setup>
-import { useLoadingStore } from "~/store/loading";
 import { useSidebarStore } from "~/store/sidebar";
 
-const { status, signIn, signOut, data } = useAuth();
-
 const sidebarStore = useSidebarStore();
-
-const profileDropdown = ref(null);
-
-const openProfileDropdown = () => {
-  if (!profileDropdown.value) return;
-  profileDropdown.value.handleOpen();
-};
-
-const handleSignIn = async () => {
-  const loadingStore = useLoadingStore();
-
-  try {
-    loadingStore.startLoading();
-    await signIn();
-    loadingStore.stopLoading();
-  } catch (error) {
-    loadingStore.setError(error.message || "An unexpected error occurred");
-  }
-};
-
-const handleSignOut = async () => {
-  const loadingStore = useLoadingStore();
-
-  try {
-    loadingStore.startLoading();
-    await signOut();
-    loadingStore.stopLoading();
-  } catch (error) {
-    loadingStore.setError(error.message || "An unexpected error occurred");
-  }
-};
 
 const toggleSidebar = () => {
   sidebarStore.toggleSidebar();
@@ -48,7 +14,7 @@ const toggleSidebar = () => {
     >
       <Button
         class="w-10 h-10 !bg-white !border-gray-200 mr-auto"
-        @click="toggleSidebar"
+        @click.stop="toggleSidebar"
       >
         <template #icon>
           <Icon name="hugeicons:menu-01" class="text-black text-xl" />

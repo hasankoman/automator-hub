@@ -1,13 +1,20 @@
 <script setup>
 import { useRoute } from "vue-router";
+import { useSidebarStore } from "~/store/sidebar";
 
+const { data } = useAuth();
 const route = useRoute();
+const sidebarStore = useSidebarStore();
+const { open: sidebarOpen } = storeToRefs(sidebarStore);
 
 const isActive = (path) => route.path === path;
 </script>
 
 <template>
-  <aside class="min-w-72 h-screen rounded-2xl text-black p-5 flex flex-col">
+  <aside
+    class="h-screen text-black p-5 flex flex-col z-50 bg-white md:bg-transparent w-72 fixed left-0 top-0 shadow-2xl md:shadow-none transition-all duration-300"
+    :class="!sidebarOpen ? '-translate-x-100' : 'translate-x-0'"
+  >
     <div class="mb-8">
       <h1 class="text-xl font-semibold">AUTOMATION MANAGER</h1>
     </div>
@@ -16,44 +23,56 @@ const isActive = (path) => route.path === path;
       <h2 class="text-xs uppercase tracking-wider text-gray-400 mb-3">
         GITHUB
       </h2>
-      <a
-        href="/github"
+      <NuxtLink
+        to="/github"
         :class="[
           'flex items-center px-3 py-2 rounded-lg transition-all duration-100 ease-in-out group',
           isActive('/github')
             ? 'bg-gray-300 font-semibold'
             : 'hover:bg-gray-200',
+          data?.user.github ? '' : 'pointer-events-none opacity-50',
         ]"
       >
-        <Icon name="mdi:source-repository" class="mr-3" />
+        <Icon name="hugeicons:ease-curve-control-points" class="mr-3" />
         <span>Repositories</span>
-      </a>
+        <Icon
+          name="mdi:lock-outline"
+          class="ml-auto"
+          v-if="!data?.user.github"
+        />
+      </NuxtLink>
     </nav>
 
     <nav class="space-y-1 mb-8">
       <h2 class="text-xs uppercase tracking-wider text-gray-400 mb-3">
         E-MAIL
       </h2>
-      <a
-        href="#"
+      <NuxtLink
+        to="#"
         :class="[
           'flex items-center px-3 py-2 rounded-lg transition-all duration-100 ease-in-out group',
           isActive('/email')
             ? 'bg-gray-300 font-semibold'
             : 'hover:bg-gray-200',
+          data?.user.emails ? '' : 'pointer-events-none opacity-50',
         ]"
       >
-        <Icon name="mdi:email" class="mr-3" />
+        <Icon name="hugeicons:mail-02" class="mr-3" />
         <span>Email</span>
-      </a>
+        <Icon
+          name="mdi:lock-outline"
+          class="ml-auto"
+          v-if="!data?.user.emails"
+        />
+      </NuxtLink>
     </nav>
 
     <nav class="space-y-1">
       <h2 class="text-xs uppercase tracking-wider text-gray-400 mb-3">
         ACCOUNT
       </h2>
-      <a
-        href="#"
+      <NuxtLink
+        to="#"
         :class="[
           'flex items-center px-3 py-2 rounded-lg transition-all duration-100 ease-in-out',
           isActive('/account/general')
@@ -61,11 +80,11 @@ const isActive = (path) => route.path === path;
             : 'hover:bg-gray-200',
         ]"
       >
-        <Icon name="mdi:cog" class="mr-3" />
+        <Icon name="hugeicons:settings-01" class="mr-3" />
         <span>General</span>
-      </a>
-      <a
-        href="#"
+      </NuxtLink>
+      <NuxtLink
+        to="#"
         :class="[
           'flex items-center px-3 py-2 rounded-lg transition-all duration-100 ease-in-out',
           isActive('/account/security')
@@ -73,11 +92,11 @@ const isActive = (path) => route.path === path;
             : 'hover:bg-gray-200',
         ]"
       >
-        <Icon name="mdi:shield-lock" class="mr-3" />
+        <Icon name="hugeicons:shield-01" class="mr-3" />
         <span>Security</span>
-      </a>
-      <a
-        href="/integrations"
+      </NuxtLink>
+      <NuxtLink
+        to="/integrations"
         :class="[
           'flex items-center px-3 py-2 rounded-lg transition-all duration-100 ease-in-out',
           isActive('/integrations')
@@ -85,11 +104,11 @@ const isActive = (path) => route.path === path;
             : 'hover:bg-gray-200',
         ]"
       >
-        <Icon name="mdi:integration" class="mr-3" />
+        <Icon name="hugeicons:plug-socket" class="mr-3" />
         <span>Integrations</span>
-      </a>
-      <a
-        href="/account"
+      </NuxtLink>
+      <NuxtLink
+        to="/account"
         :class="[
           'flex items-center px-3 py-2 rounded-lg transition-all duration-100 ease-in-out',
           isActive('/account')
@@ -97,11 +116,11 @@ const isActive = (path) => route.path === path;
             : 'hover:bg-gray-200',
         ]"
       >
-        <Icon name="mdi:account" class="mr-3" />
+        <Icon name="hugeicons:user" class="mr-3" />
         <span>Account</span>
-      </a>
-      <a
-        href="#"
+      </NuxtLink>
+      <NuxtLink
+        to="#"
         :class="[
           'flex items-center px-3 py-2 rounded-lg transition-all duration-100 ease-in-out',
           isActive('/account/notifications')
@@ -109,9 +128,9 @@ const isActive = (path) => route.path === path;
             : 'hover:bg-gray-200',
         ]"
       >
-        <Icon name="mdi:bell" class="mr-3" />
+        <Icon name="hugeicons:notification-03" class="mr-3" />
         <span>Notifications</span>
-      </a>
+      </NuxtLink>
     </nav>
   </aside>
 </template>
