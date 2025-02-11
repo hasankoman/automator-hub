@@ -32,6 +32,8 @@
     </div>
     {{ status }}
     {{ data }}
+    {{ useRuntimeConfig().public.webhookUrl }}
+    {{ useRuntimeConfig().public }}
   </div>
 </template>
 
