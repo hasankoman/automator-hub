@@ -20,16 +20,13 @@ export default defineEventHandler(async (event) => {
   };
 
   try {
-    const response = await $fetch(
-      "https://hasankoman.app.n8n.cloud/webhook/b2e08263-ce55-46a5-b8b4-fd683aebe2bb",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: payload,
-      }
-    );
+    const response = await $fetch(useRuntimeConfig().public.webhookUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: payload,
+    });
     return response;
   } catch (error) {
     throw createError({ statusCode: 500, statusMessage: error.message });

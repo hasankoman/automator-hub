@@ -1,8 +1,6 @@
 import tailwindcss from "@tailwindcss/vite";
 import Aura from "@primevue/themes/aura";
-import AuraPreset from "./assets/preset/AuraPreset";
 import { definePreset } from "@primevue/themes";
-import AutoResizer from "element-plus/es/components/table-v2/src/components/auto-resizer.mjs";
 
 export default defineNuxtConfig({
   modules: [
@@ -59,6 +57,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       githubClientId: process.env.GITHUB_CLIENT_ID,
+      webhookUrl: process.env.WEBHOOK_URL,
     },
     githubClientSecret: process.env.GITHUB_CLIENT_SECRET,
     authSecret: process.env.AUTH_SECRET,
