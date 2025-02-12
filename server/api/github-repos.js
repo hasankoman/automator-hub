@@ -7,7 +7,8 @@ export default defineEventHandler(async (event) => {
     return { error: { message: "Unauthorized", statusCode: 401 } };
   }
 
-  const apiUrl = "https://api.github.com/user/repos?affiliation=owner";
+  const apiUrl =
+    "https://api.github.com/user/repos?affiliation=owner&sort=updated";
   const headers = {
     Authorization: `Bearer ${session?.user?.github?.accessToken}`,
     Accept: "application/vnd.github.v3+json",
@@ -37,7 +38,7 @@ export default defineEventHandler(async (event) => {
 
           const languages = await langRes.json();
           return {
-            name: repo.name,
+            ...repo,
             id: String(repo.id),
             fullName: repo.full_name,
             url: repo.html_url,
@@ -55,7 +56,7 @@ export default defineEventHandler(async (event) => {
       })
     );
 
-    return { data: repoData.filter(Boolean) }; // Hata alanları filtrele
+    return { data: repoData.filter(Boolean) };
   } catch (error) {
     return {
       error: {

@@ -113,6 +113,39 @@ const isSelected = computed(() => {
       <p class="text-gray-600 text-sm mb-3 line-clamp-2">
         {{ repository.description || "No description available" }}
       </p>
+
+      <div class="flex items-center gap-4 mt-auto text-gray-600 text-sm">
+        <div class="flex items-center gap-1">
+          <Icon name="hugeicons:star" class="text-yellow-500" />
+          {{ repository.stargazers_count }}
+        </div>
+
+        <div class="flex items-center gap-1">
+          <Icon name="hugeicons:git-fork" class="text-gray-500" />
+          {{ repository.forks_count }}
+        </div>
+
+        <div
+          v-if="repository.default_branch"
+          class="flex items-center gap-1 bg-gray-200 px-2 py-1 rounded text-xs"
+        >
+          <Icon name="hugeicons:git-branch" class="text-gray-500" />
+          {{ repository.default_branch }}
+        </div>
+      </div>
+
+      <div v-if="false" class="text-xs text-gray-500 mt-2">
+        <span class="font-medium">Last commit:</span>
+        <span>{{ repository.last_commit.message }}</span>
+        <span
+          >({{ new Date(repository.last_commit.date).toLocaleString() }})</span
+        >
+      </div>
+
+      <div v-if="repository.updated_at" class="text-xs text-gray-500 mt-1">
+        <span class="font-medium">Updated at: </span>
+        <span>{{ new Date(repository.updated_at).toLocaleString() }}</span>
+      </div>
     </div>
     <div
       v-if="formattedLanguages.length > 0"

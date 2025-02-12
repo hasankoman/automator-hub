@@ -1,38 +1,37 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, watchEffect } from "vue";
 import { useSidebarStore } from "~/store/sidebar";
+import { storeToRefs } from "pinia";
 import hamburgerArrowAnimation from "~/assets/lottie/hamburger-arrow-animation.json";
 
 const sidebarStore = useSidebarStore();
+const { open: sidebarOpen } = storeToRefs(sidebarStore);
 const lottieRef = ref(null);
 
-const { open: sidebarOpen } = storeToRefs(sidebarStore);
-
 const toggleSidebar = () => {
-  sidebarStore.toggleSidebar();
-
   if (lottieRef.value) {
-    if (!sidebarOpen.value) {
-      lottieRef.value.play();
+    if (sidebarOpen.value) {
+      lottieRef.value.setSpeed(1.5);
+      lottieRef.value.playSegments([68, 89], true);
     } else {
-      lottieRef.value.goToAndPlay(0, true);
+      lottieRef.value.setSpeed(1);
+      lottieRef.value.playSegments([0, 68], true);
     }
   }
+  sidebarStore.toggleSidebar();
 };
 
-const toggleDirection = () => {
-  if (direction.value === "forward") {
-    pause();
-    lottieAnimation.value.setDirection("reverse");
-    play();
-    direction.value = "reverse";
-  } else {
-    pause();
-    lottieAnimation.value.setDirection("forward");
-    play();
-    direction.value = "forward";
-  }
-};
+onMounted(() => {
+  setTimeout(() => {
+    if (lottieRef.value) {
+      if (sidebarOpen.value) {
+        lottieRef.value.goToAndStop(68, true);
+      } else {
+        lottieRef.value.goToAndStop(0, true);
+      }
+    }
+  }, 100);
+});
 </script>
 
 <template>
@@ -48,11 +47,13 @@ const toggleDirection = () => {
           <client-only>
             <Vue3Lottie
               ref="lottieRef"
+              :scale="4"
+              class="w-full h-full"
+              width="100%"
+              height="100%"
               :animationData="hamburgerArrowAnimation"
-              :height="300"
-              :width="300"
               :loop="false"
-              :autoplay="false"
+              :autoPlay="false"
             />
           </client-only>
         </template>
@@ -62,4 +63,9 @@ const toggleDirection = () => {
   </div>
 </template>
 
-<style></style>
+<style>
+.lottie-animation-container svg {
+  width: 100%;
+  height: 100%;
+}
+</style>
