@@ -42,7 +42,14 @@ watch(
       :class="sidebarOpen ? 'md:ml-[275px] blur-xs md:blur-none' : '0px'"
       @click="handleOutClick"
     >
-      <div class="p-3 flex flex-col h-full">
+      <div
+        class="p-3 flex flex-col h-full"
+        :class="
+          sidebarOpen
+            ? 'select-none pointer-events-none md:select-auto md:pointer-events-auto'
+            : ''
+        "
+      >
         <NuxtPage />
       </div>
     </div>
