@@ -1,12 +1,40 @@
 <script setup>
+import { ref } from "vue";
 import { useSidebarStore } from "~/store/sidebar";
+import hamburgerArrowAnimation from "~/assets/lottie/hamburger-arrow-animation.json";
 
 const sidebarStore = useSidebarStore();
+const lottieRef = ref(null);
+
+const { open: sidebarOpen } = storeToRefs(sidebarStore);
 
 const toggleSidebar = () => {
   sidebarStore.toggleSidebar();
+
+  if (lottieRef.value) {
+    if (!sidebarOpen.value) {
+      lottieRef.value.play();
+    } else {
+      lottieRef.value.goToAndPlay(0, true);
+    }
+  }
+};
+
+const toggleDirection = () => {
+  if (direction.value === "forward") {
+    pause();
+    lottieAnimation.value.setDirection("reverse");
+    play();
+    direction.value = "reverse";
+  } else {
+    pause();
+    lottieAnimation.value.setDirection("forward");
+    play();
+    direction.value = "forward";
+  }
 };
 </script>
+
 <template>
   <div class="!sticky top-0 z-10 bg-gray-100">
     <div
@@ -17,7 +45,16 @@ const toggleSidebar = () => {
         @click.stop="toggleSidebar"
       >
         <template #icon>
-          <Icon name="hugeicons:menu-01" class="text-black text-xl" />
+          <client-only>
+            <Vue3Lottie
+              ref="lottieRef"
+              :animationData="hamburgerArrowAnimation"
+              :height="300"
+              :width="300"
+              :loop="false"
+              :autoplay="false"
+            />
+          </client-only>
         </template>
       </Button>
       <slot name="right"></slot>

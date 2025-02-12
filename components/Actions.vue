@@ -1,7 +1,6 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useGitHubStore } from "~/store/github";
-import { useLoadingStore } from "~/store/loading";
 
 const githubStore = useGitHubStore();
 const toast = useToast();
