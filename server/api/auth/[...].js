@@ -49,20 +49,14 @@ export default NuxtAuthHandler({
 
   callbacks: {
     async jwt({ token, user, account, profile }) {
-      console.log("account ->" + JSON.stringify(account));
-      console.log("user ->" + JSON.stringify(user));
-      console.log("token ->" + JSON.stringify(token));
-      // Yeni bir giriş/bağlantı gerçekleştiğinde account nesnesi mevcut olacaktır.
       if (account) {
         if (account.provider === "credentials" && user) {
-          // Uygulamaya giriş yapan (credentials) bilgilerini token.app altında saklıyoruz.
           token.app = {
             id: user.id,
             email: user.email,
           };
         }
         if (account.provider === "github") {
-          // GitHub bilgilerini token.github altında saklıyoruz.
           token.github = {
             id: profile?.id,
             username: profile?.login,
@@ -80,16 +74,12 @@ export default NuxtAuthHandler({
     },
 
     async session({ session, token }) {
-      // Credentials bilgilerini session'a ekliyoruz
       session.user.credentials = token.app || null;
-      // GitHub bilgilerini session'a ekliyoruz
       session.user.github = token.github || null;
 
-      // Ortak id ve email alanlarını dolduruyoruz (öncelikle credentials, yoksa github)
       session.user.id = token.app?.id || token.github?.id;
       session.user.email = token.app?.email || session.user.email;
 
-      // Opsiyonel: Hangi yöntemlerle giriş yapıldığını belirten bir flag ekleyebilirsiniz.
       session.user.provider = {
         credentials: Boolean(token.app),
         github: Boolean(token.github),

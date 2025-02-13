@@ -85,6 +85,15 @@ const navigateToLogin = () => {
     <div
       class="flex flex-col gap-5 p-5 bg-white rounded-2xl overflow-auto border border-gray-200 shadow-inner"
     >
+      <div class="flex flex-col gap-2">
+        <h2 class="text-3xl m-0 font-bold">GitHub Integration</h2>
+        <span class="text-gray-500">
+          Connect your GitHub account with either public or private repository
+          access and manage your authentication preferences effortlessly. If
+          you're not signed in, log in to enable GitHub integration.
+        </span>
+      </div>
+
       <template v-if="data">
         <div
           class="p-4 bg-white rounded-xl shadow-xs flex flex-col gap-3 col-span-1 border border-gray-200"

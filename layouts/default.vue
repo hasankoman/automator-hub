@@ -34,7 +34,7 @@ watch(
       '576px': { width: '75vw' },
     }"
   />
-  <div class="relative h-screen bg-gray-100">
+  <div class="relative h-dvh bg-gray-100">
     <Sidebar />
 
     <div

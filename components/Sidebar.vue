@@ -1,18 +1,123 @@
 <script setup>
+import { ref } from "vue";
 import { useRoute } from "vue-router";
 import { useSidebarStore } from "~/store/sidebar";
+import { useToast } from "primevue/usetoast";
 
-const { data } = useAuth();
+const { data, signOut } = useAuth();
 const route = useRoute();
+const toast = useToast();
 const sidebarStore = useSidebarStore();
 const { open: sidebarOpen } = storeToRefs(sidebarStore);
 
 const isActive = (path) => route.path === path;
+
+const githubLinks = ref([
+  {
+    to: "/github",
+    icon: "hugeicons:ease-curve-control-points",
+    label: "Repositories",
+    requiresAuth: "github",
+  },
+]);
+
+const emailLinks = ref([
+  {
+    to: "#",
+    icon: "hugeicons:mail-02",
+    label: "Email",
+    requiresAuth: "emails",
+  },
+]);
+
+const accountLinks = ref([
+  {
+    to: "/settings",
+    icon: "hugeicons:settings-01",
+    label: "Settings",
+    iconClass: "w-5 h-5",
+  },
+  {
+    to: "/integrations",
+    icon: "hugeicons:plug-socket",
+    label: "Integrations",
+    iconClass: "text-xl",
+  },
+  {
+    to: "/pricing",
+    icon: "hugeicons:wallet-02",
+    label: "Pricing",
+  },
+  {
+    to: "#",
+    icon: "hugeicons:notification-03",
+    label: "Notifications",
+    path: "/account/notifications",
+  },
+]);
+
+const handleLogout = async () => {
+  try {
+    const response = await signOut({
+      redirect: false,
+    });
+
+    if (response?.error) {
+      throw new Error(response.error);
+    }
+
+    toast.add({
+      severity: "success",
+      summary: "Process Successful",
+      detail: "Successfully Logged Out",
+      life: 3000,
+    });
+  } catch (error) {
+    toast.add({
+      severity: "error",
+      summary: "Logout Error",
+      detail:
+        error instanceof Error ? error.message : "An unexpected error occurred",
+      life: 3000,
+    });
+  }
+};
+
+const menu = ref();
+const items = ref([
+  {
+    label: "Menu",
+    items: [
+      {
+        label: "My Profile",
+        icon: "hugeicons:user-circle",
+        command: () => navigateTo("/profile"),
+      },
+      {
+        label: "Settings",
+        icon: "hugeicons:settings-01",
+        command: () => navigateTo("/settings"),
+      },
+      {
+        separator: true,
+      },
+      {
+        label: "Logout",
+        icon: "hugeicons:logout-02",
+        command: () => handleLogout(),
+      },
+    ],
+  },
+]);
+
+const toggle = (event) => {
+  menu.value.toggle(event);
+};
 </script>
 
 <template>
   <aside
-    class="h-screen text-black p-5 flex flex-col z-50 bg-white md:bg-transparent w-72 fixed left-0 top-0 shadow-2xl md:shadow-none transition-all duration-300"
+    class="h-dvh text-black py-3 px-2 md:p-5 flex flex-col z-50 bg-white md:bg-transparent w-72 fixed left-0 top-0 shadow-2xl md:shadow-none transition-all duration-300 overflow-auto"
     :class="!sidebarOpen ? '-translate-x-100' : 'translate-x-0'"
   >
     <div class="mb-8">
@@ -25,21 +130,27 @@ const isActive = (path) => route.path === path;
       </h2>
       <div class="flex flex-col gap-2">
         <NuxtLink
-          to="/github"
+          v-for="link in githubLinks"
+          :key="link.to"
+          :to="link.to"
           :class="[
-            'flex items-center px-3 py-2 rounded-lg transition-all duration-100 ease-in-out group',
-            isActive('/github')
-              ? 'bg-gray-300 font-semibold'
-              : 'hover:bg-gray-200',
-            data?.user.github ? '' : 'pointer-events-none opacity-50',
+            'flex items-center border-1 p-2 rounded-xl transition-all duration-100 ease-in-out',
+            isActive(link.to)
+              ? 'bg-white  border-gray-300 shadow-sm  font-semibold'
+              : 'hover:bg-gray-200 border-transparent',
+            link.requiresAuth
+              ? data?.user[link.requiresAuth]
+                ? ''
+                : 'pointer-events-none opacity-50'
+              : '',
           ]"
         >
-          <Icon name="hugeicons:ease-curve-control-points" class="mr-3" />
-          <span>Repositories</span>
+          <Icon :name="link.icon" :class="['mr-3', link.iconClass]" />
+          <span>{{ link.label }}</span>
           <Icon
+            v-if="link.requiresAuth && !data?.user[link.requiresAuth]"
             name="mdi:lock-outline"
             class="ml-auto"
-            v-if="!data?.user.github"
           />
         </NuxtLink>
       </div>
@@ -51,21 +162,27 @@ const isActive = (path) => route.path === path;
       </h2>
       <div class="flex flex-col gap-2">
         <NuxtLink
-          to="#"
+          v-for="link in emailLinks"
+          :key="link.to"
+          :to="link.to"
           :class="[
-            'flex items-center px-3 py-2 rounded-lg transition-all duration-100 ease-in-out group',
-            isActive('/email')
-              ? 'bg-gray-300 font-semibold'
-              : 'hover:bg-gray-200',
-            data?.user.emails ? '' : 'pointer-events-none opacity-50',
+            'flex items-center border-1 p-2 rounded-xl transition-all duration-100 ease-in-out',
+            isActive(link.to)
+              ? 'bg-white  border-gray-300 shadow-sm  font-semibold'
+              : 'hover:bg-gray-200 border-transparent',
+            link.requiresAuth
+              ? data?.user[link.requiresAuth]
+                ? ''
+                : 'pointer-events-none opacity-50'
+              : '',
           ]"
         >
-          <Icon name="hugeicons:mail-02" class="mr-3" />
-          <span>Email</span>
+          <Icon :name="link.icon" :class="['mr-3', link.iconClass]" />
+          <span>{{ link.label }}</span>
           <Icon
+            v-if="link.requiresAuth && !data?.user[link.requiresAuth]"
             name="mdi:lock-outline"
             class="ml-auto"
-            v-if="!data?.user.emails"
           />
         </NuxtLink>
       </div>
@@ -77,66 +194,85 @@ const isActive = (path) => route.path === path;
       </h2>
       <div class="flex flex-col gap-2">
         <NuxtLink
-          to="#"
+          v-for="link in accountLinks"
+          :key="link.to"
+          :to="link.to"
           :class="[
-            'flex items-center px-3 py-2 rounded-lg transition-all duration-100 ease-in-out',
-            isActive('/account/general')
-              ? 'bg-gray-300 font-semibold'
-              : 'hover:bg-gray-200',
+            'flex items-center border-1 p-2 rounded-xl transition-all duration-100 ease-in-out',
+            isActive(link.path || link.to)
+              ? 'bg-white  border-gray-300 shadow-sm  font-semibold'
+              : 'hover:bg-gray-200 border-transparent',
           ]"
         >
-          <Icon name="hugeicons:settings-01" class="mr-3" />
-          <span>General</span>
-        </NuxtLink>
-        <NuxtLink
-          to="#"
-          :class="[
-            'flex items-center px-3 py-2 rounded-lg transition-all duration-100 ease-in-out',
-            isActive('/account/security')
-              ? 'bg-gray-300 font-semibold'
-              : 'hover:bg-gray-200',
-          ]"
-        >
-          <Icon name="hugeicons:shield-01" class="mr-3" />
-          <span>Security</span>
-        </NuxtLink>
-        <NuxtLink
-          to="/integrations"
-          :class="[
-            'flex items-center px-3 py-2 rounded-lg transition-all duration-100 ease-in-out',
-            isActive('/integrations')
-              ? 'bg-gray-300 font-semibold'
-              : 'hover:bg-gray-200',
-          ]"
-        >
-          <Icon name="hugeicons:plug-socket" class="mr-3" />
-          <span>Integrations</span>
-        </NuxtLink>
-        <NuxtLink
-          to="/account"
-          :class="[
-            'flex items-center px-3 py-2 rounded-lg transition-all duration-100 ease-in-out',
-            isActive('/account')
-              ? 'bg-gray-300 font-semibold'
-              : 'hover:bg-gray-200',
-          ]"
-        >
-          <Icon name="hugeicons:user" class="mr-3" />
-          <span>Account</span>
-        </NuxtLink>
-        <NuxtLink
-          to="#"
-          :class="[
-            'flex items-center px-3 py-2 rounded-lg transition-all duration-100 ease-in-out',
-            isActive('/account/notifications')
-              ? 'bg-gray-300 font-semibold'
-              : 'hover:bg-gray-200',
-          ]"
-        >
-          <Icon name="hugeicons:notification-03" class="mr-3" />
-          <span>Notifications</span>
+          <Icon :name="link.icon" :class="['mr-3', link.iconClass]" />
+          <span>{{ link.label }}</span>
         </NuxtLink>
       </div>
     </nav>
+
+    <div class="bg-white rounded-2xl border-gray-300 border-1 mt-auto">
+      <div
+        class="m-2 shadow-sm rounded-xl p-2 gap-2 flex items-center border-1 border-gray-200 cursor-pointer"
+        @click="toggle"
+      >
+        <Avatar
+          image="https://primefaces.org/cdn/primevue/images/avatar/amyelsner.png"
+          shape="circle"
+        />
+        <span class="inline-flex flex-col items-start">
+          <span class="font-bold">Amy Elsner</span>
+          <span class="text-sm">Admin</span>
+        </span>
+        <div class="border-l-1 border-gray-200 ml-auto my-2 pl-2">
+          <Button
+            outlined
+            class="ml-auto !border-none !border-l-2"
+            @click.stop="handleLogout"
+          >
+            <template #icon>
+              <Icon name="hugeicons:logout-02" class="text-2xl text-red-400" />
+            </template>
+          </Button>
+        </div>
+      </div>
+      <Menu
+        ref="menu"
+        id="overlay_menu"
+        :model="items"
+        :popup="true"
+        :pt="{
+          root: '-translate-y-3',
+        }"
+      >
+        <template #item="{ item, props }">
+          <a v-ripple class="flex items-center" v-bind="props.action">
+            <Icon :name="item.icon" />
+            <span>{{ item.label }}</span>
+            <Badge v-if="item.badge" class="ml-auto" :value="item.badge" />
+            <span
+              v-if="item.shortcut"
+              class="ml-auto border border-surface rounded bg-emphasis text-muted-color text-xs p-1"
+              >{{ item.shortcut }}</span
+            >
+          </a>
+        </template>
+      </Menu>
+    </div>
   </aside>
 </template>
+
+<style scoped>
+.p-menu {
+  width: 100% !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+.p-menu-list {
+  padding: 0.5rem !important;
+  background: white !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 0.5rem !important;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1) !important;
+}
+</style>

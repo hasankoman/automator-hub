@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, watchEffect } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { useSidebarStore } from "~/store/sidebar";
 import { storeToRefs } from "pinia";
 import hamburgerArrowAnimation from "~/assets/lottie/hamburger-arrow-animation.json";
@@ -7,19 +7,6 @@ import hamburgerArrowAnimation from "~/assets/lottie/hamburger-arrow-animation.j
 const sidebarStore = useSidebarStore();
 const { open: sidebarOpen } = storeToRefs(sidebarStore);
 const lottieRef = ref(null);
-
-const toggleSidebar = () => {
-  if (lottieRef.value) {
-    if (sidebarOpen.value) {
-      lottieRef.value.setSpeed(1.5);
-      lottieRef.value.playSegments([68, 89], true);
-    } else {
-      lottieRef.value.setSpeed(1);
-      lottieRef.value.playSegments([0, 68], true);
-    }
-  }
-  sidebarStore.toggleSidebar();
-};
 
 onMounted(() => {
   setTimeout(() => {
@@ -31,6 +18,24 @@ onMounted(() => {
       }
     }
   }, 100);
+});
+
+const toggleSidebar = () => {
+  sidebarStore.toggleSidebar();
+};
+
+watch(sidebarOpen, (newValue) => {
+  if (lottieRef.value) {
+    if (newValue) {
+      lottieRef.value.setSpeed(1.5);
+      lottieRef.value.playSegments([0, 68], true);
+    } else {
+      console.log(newValue);
+      console.log(lottieRef.value);
+      lottieRef.value.setSpeed(1);
+      lottieRef.value.playSegments([68, 89], true);
+    }
+  }
 });
 </script>
 
