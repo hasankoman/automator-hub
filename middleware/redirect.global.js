@@ -1,7 +1,1 @@
-
-export default defineNuxtRouteMiddleware((to) => {
-
-  if (to.path === "/") {
-    return navigateTo("/account");
-  }
-});
+export default defineNuxtRouteMiddleware((to) => {});

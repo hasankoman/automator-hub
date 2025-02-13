@@ -14,6 +14,11 @@ const isActive = (path) => route.path === path;
 
 const githubLinks = ref([
   {
+    to: "/",
+    icon: "hugeicons:home-02",
+    label: "Home",
+  },
+  {
     to: "/github",
     icon: "hugeicons:ease-curve-control-points",
     label: "Repositories",
