@@ -4,7 +4,7 @@ import { useRoute } from "vue-router";
 import { useSidebarStore } from "~/store/sidebar";
 import { useToast } from "primevue/usetoast";
 
-const { data, signOut } = useAuth();
+const { data, signOut, signIn, status } = useAuth();
 const route = useRoute();
 const toast = useToast();
 const sidebarStore = useSidebarStore();
@@ -21,22 +21,7 @@ const githubLinks = ref([
   },
 ]);
 
-const emailLinks = ref([
-  {
-    to: "#",
-    icon: "hugeicons:mail-02",
-    label: "Email",
-    requiresAuth: "emails",
-  },
-]);
-
 const accountLinks = ref([
-  {
-    to: "/settings",
-    icon: "hugeicons:settings-01",
-    label: "Settings",
-    iconClass: "w-5 h-5",
-  },
   {
     to: "/integrations",
     icon: "hugeicons:plug-socket",
@@ -47,12 +32,6 @@ const accountLinks = ref([
     to: "/pricing",
     icon: "hugeicons:wallet-02",
     label: "Pricing",
-  },
-  {
-    to: "#",
-    icon: "hugeicons:notification-03",
-    label: "Notifications",
-    path: "/account/notifications",
   },
 ]);
 
@@ -86,27 +65,22 @@ const handleLogout = async () => {
 const menu = ref();
 const items = ref([
   {
-    label: "Menu",
-    items: [
-      {
-        label: "My Profile",
-        icon: "hugeicons:user-circle",
-        command: () => navigateTo("/profile"),
-      },
-      {
-        label: "Settings",
-        icon: "hugeicons:settings-01",
-        command: () => navigateTo("/settings"),
-      },
-      {
-        separator: true,
-      },
-      {
-        label: "Logout",
-        icon: "hugeicons:logout-02",
-        command: () => handleLogout(),
-      },
-    ],
+    label: "Notifications",
+    icon: "hugeicons:notification-03",
+    command: () => navigateTo("/settings"),
+  },
+  {
+    label: "Settings",
+    icon: "hugeicons:settings-01",
+    command: () => navigateTo("/settings"),
+  },
+  {
+    separator: true,
+  },
+  {
+    label: "Sign Out",
+    icon: "hugeicons:logout-02",
+    command: () => handleLogout(),
   },
 ]);
 
@@ -158,38 +132,6 @@ const toggle = (event) => {
 
     <nav class="mb-8">
       <h2 class="text-xs uppercase tracking-wider text-gray-400 mb-3">
-        E-MAIL
-      </h2>
-      <div class="flex flex-col gap-2">
-        <NuxtLink
-          v-for="link in emailLinks"
-          :key="link.to"
-          :to="link.to"
-          :class="[
-            'flex items-center border-1 p-2 rounded-xl transition-all duration-100 ease-in-out',
-            isActive(link.to)
-              ? 'bg-white  border-gray-300 shadow-sm  font-semibold'
-              : 'hover:bg-gray-200 border-transparent',
-            link.requiresAuth
-              ? data?.user[link.requiresAuth]
-                ? ''
-                : 'pointer-events-none opacity-50'
-              : '',
-          ]"
-        >
-          <Icon :name="link.icon" :class="['mr-3', link.iconClass]" />
-          <span>{{ link.label }}</span>
-          <Icon
-            v-if="link.requiresAuth && !data?.user[link.requiresAuth]"
-            name="mdi:lock-outline"
-            class="ml-auto"
-          />
-        </NuxtLink>
-      </div>
-    </nav>
-
-    <nav class="mb-8">
-      <h2 class="text-xs uppercase tracking-wider text-gray-400 mb-3">
         ACCOUNT
       </h2>
       <div class="flex flex-col gap-2">
@@ -210,38 +152,43 @@ const toggle = (event) => {
       </div>
     </nav>
 
-    <div class="bg-white rounded-2xl border-gray-300 border-1 mt-auto">
+    <div
+      class="bg-white rounded-2xl border-gray-300 border-1 mt-auto flex"
+      id="sidebar-footer"
+    >
       <div
-        class="m-2 shadow-sm rounded-xl p-2 gap-2 flex items-center border-1 border-gray-200 cursor-pointer"
+        class="m-2 shadow-sm rounded-xl p-2 gap-2 flex items-center justify-between border-1 border-gray-200 cursor-pointer flex-1"
+        v-if="status === 'authenticated'"
         @click="toggle"
       >
-        <Avatar
-          image="https://primefaces.org/cdn/primevue/images/avatar/amyelsner.png"
-          shape="circle"
-        />
-        <span class="inline-flex flex-col items-start">
-          <span class="font-bold">Amy Elsner</span>
-          <span class="text-sm">Admin</span>
-        </span>
-        <div class="border-l-1 border-gray-200 ml-auto my-2 pl-2">
-          <Button
-            outlined
-            class="ml-auto !border-none !border-l-2"
-            @click.stop="handleLogout"
-          >
-            <template #icon>
-              <Icon name="hugeicons:logout-02" class="text-2xl text-red-400" />
-            </template>
-          </Button>
+        <div class="flex gap-2 items-center">
+          <Avatar :image="data.user.image" shape="circle" />
+          <span class="inline-flex flex-col items-start select-none">
+            <span class="font-bold">{{ data.user.name }}</span>
+          </span>
         </div>
       </div>
+      <Button
+        label="Sign In with Github"
+        v-else
+        class="m-2 shadow-sm rounded-xl p-2 gap-2 flex items-center border-1 border-gray-200 cursor-pointer flex-1"
+        @click="signIn('github')"
+      >
+        <template #icon>
+          <Icon name="hugeicons:github" />
+        </template>
+      </Button>
       <Menu
         ref="menu"
+        appendTo="#sidebar-footer"
         id="overlay_menu"
         :model="items"
         :popup="true"
         :pt="{
-          root: '-translate-y-3',
+          root: '-translate-y-3 !rounded-2xl',
+          list: '!p-2.5 !gap-2',
+          itemcontent: '!rounded-xl',
+          itemLink: '!p-2',
         }"
       >
         <template #item="{ item, props }">
@@ -261,18 +208,4 @@ const toggle = (event) => {
   </aside>
 </template>
 
-<style scoped>
-.p-menu {
-  width: 100% !important;
-  border: none !important;
-  background: transparent !important;
-}
-
-.p-menu-list {
-  padding: 0.5rem !important;
-  background: white !important;
-  border: 1px solid #e5e7eb !important;
-  border-radius: 0.5rem !important;
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1) !important;
-}
-</style>
+<style scoped></style>

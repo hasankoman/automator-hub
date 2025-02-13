@@ -89,8 +89,7 @@ const navigateToLogin = () => {
         <h2 class="text-3xl m-0 font-bold">GitHub Integration</h2>
         <span class="text-gray-500">
           Connect your GitHub account with either public or private repository
-          access and manage your authentication preferences effortlessly. If
-          you're not signed in, log in to enable GitHub integration.
+          access and manage your authentication preferences effortlessly.
         </span>
       </div>
 
@@ -113,17 +112,19 @@ const navigateToLogin = () => {
               </div>
             </div>
 
-            <Button
-              label="Disconnect"
-              outlined
-              v-if="data?.user.github"
-              @click="handleGithubDisconnect"
-            />
-            <Button label="Connect" v-else @click="handleGithubConnect" />
+            <template v-if="false">
+              <Button
+                label="Disconnect"
+                outlined
+                v-if="data?.user.github"
+                @click="handleGithubDisconnect"
+              />
+              <Button label="Connect" v-else @click="handleGithubConnect" />
+            </template>
           </div>
           <div
             class="flex items-center gap-2 pt-3 border-t-1 border-gray-200"
-            v-if="!data?.user.github"
+            v-if="!data?.user.github && false"
           >
             <Checkbox
               inputId="privateRepoAccess"
@@ -146,10 +147,9 @@ const navigateToLogin = () => {
         >
           <Icon name="mdi:account-lock" class="text-5xl text-black mb-2" />
           <p class="text-lg font-semibold text-gray-700">Login Required</p>
-          <p class="text-sm text-gray-500 mb-4">
+          <p class="text-sm text-gray-500 m-0">
             Please sign in to your account to continue.
           </p>
-          <Button label="Sign In" @click="navigateToLogin" />
         </div>
       </template>
     </div>

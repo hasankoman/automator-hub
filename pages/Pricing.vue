@@ -21,6 +21,7 @@ const pricingPlans = [
     billing: "billed monthly",
     link: "/billing",
     spanClass: "lg:col-span-2",
+    comingSoon: true,
     features: [
       { name: "Everything in Free", available: true },
       { name: "Unlimited README file updates", available: false },
@@ -68,6 +69,12 @@ const chunkFeatures = (features) => {
             plan.spanClass,
           ]"
         >
+          <span
+            v-if="plan.comingSoon"
+            class="absolute right-0 top-0 text-2xl text-white bg-black rounded-bl-2xl pl-3 pr-4 py-2 shadow-xl border-b-1 border-l-1 border-gray-200"
+          >
+            Coming Soon
+          </span>
           <div class="h-full">
             <div class="h-full z-10 relative">
               <div

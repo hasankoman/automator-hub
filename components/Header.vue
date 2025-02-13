@@ -30,8 +30,6 @@ watch(sidebarOpen, (newValue) => {
       lottieRef.value.setSpeed(1.5);
       lottieRef.value.playSegments([0, 68], true);
     } else {
-      console.log(newValue);
-      console.log(lottieRef.value);
       lottieRef.value.setSpeed(1);
       lottieRef.value.playSegments([68, 89], true);
     }

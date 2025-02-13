@@ -61,22 +61,6 @@ const handleStartAction = () => {
     <div
       class="flex flex-col gap-3 flex-1 p-5 bg-white rounded-t-2xl overflow-auto border-t-1 border-x-1 border-gray-200 shadow-inner"
     >
-      <div class="flex flex-col gap-4">
-        <h2 class="text-2xl font-semibold text-gray-900">
-          Selected Repositories
-        </h2>
-        <div class="flex gap-2 flex-wrap">
-          <template
-            v-for="repo in Object.values(selectedRepositories)"
-            :key="repo.name"
-          >
-            <Chip
-              :label="repo.name"
-              class="text-sm px-3 py-1 rounded-full border border-gray-700 text-gray-900 bg-gray-200 hover:bg-gray-300 transition"
-            />
-          </template>
-        </div>
-      </div>
       <h2 class="text-2xl font-semibold text-gray-900">Select an Action</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div
@@ -142,11 +126,11 @@ const handleStartAction = () => {
         <div
           class="border-1 rounded-xl h-20 w-full p-4 flex items-center justify-between shadow-md"
           v-for="repo in Object.values(selectedRepositories)"
-          :key="repo.name"
+          :key="repo.id"
           :class="[
             'relative flex items-center justify-between p-3 rounded-xl',
             loadingStatus[repo.id] === 'pending' &&
-              'bg-white border border-gray-300 shadow hover:shadow-lg',
+              'bg-white border border-gray-300 shadow',
             loadingStatus[repo.id] === 'loading' &&
               'bg-gray-50 border border-gray-400 shadow-inner',
             loadingStatus[repo.id] === 'success' &&
@@ -177,7 +161,16 @@ const handleStartAction = () => {
                 name="hugeicons:alert-01"
                 class="text-red-500 !w-6 !h-6"
               />
-              <span>{{ repo.name }}</span>
+              <div class="flex flex-col items-start gap-1">
+                <span>{{ repo.name }}</span>
+                <div
+                  v-if="repo.default_branch"
+                  class="flex items-center gap-1 bg-gray-200 px-2 py-1 rounded text-xs"
+                >
+                  <Icon name="hugeicons:git-branch" class="text-gray-500" />
+                  {{ repo.default_branch }}
+                </div>
+              </div>
             </div>
             <Button
               v-if="loadingStatus[repo.id] === 'error'"
