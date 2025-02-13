@@ -25,11 +25,6 @@ const usageStats = {
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div class="flex flex-col gap-6">
-          <SettingsAccount
-            :name="session?.user?.name || 'Unknown User'"
-            :email="session?.user?.email"
-            :image="session?.user?.image"
-          />
           <SettingsSubscription v-if="false" />
         </div>
 
