@@ -48,7 +48,7 @@ const handleGetStarted = () => {
             Your all-in-one solution for managing GitHub repositories and
             workflows
           </p>
-          <div class="flex gap-4 justify-center">
+          <div class="flex flex-col md:flex-row gap-4 justify-center">
             <Button
               :label="
                 status === 'authenticated'
