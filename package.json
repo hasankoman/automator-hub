@@ -6,8 +6,8 @@
     "seed": "node prisma/seed.js"
   },
   "scripts": {
-    "build": "nuxt build",
-    "dev": "nuxt dev --host",
+    "build": "npx prisma generate && nuxt build",
+    "dev": "npx prisma generate && nuxt dev --host",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
