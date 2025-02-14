@@ -2,7 +2,7 @@
 
 This project is a Nuxt 3 application designed to automate README updates for GitHub repositories.  It allows users to connect their GitHub account, select repositories, and then trigger either a manual or automated README update.  The automated update feature (premium) will monitor for changes and update the README accordingly (this functionality is not fully implemented in the provided code).
 
-## Project Structure
+## Project Structures
 
 The project follows a standard Nuxt 3 directory structure:
 
