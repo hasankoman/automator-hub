@@ -1,41 +1,22 @@
 <script setup>
-const pricingPlans = [
-  {
-    title: "Free",
-    price: 0,
+import { computed } from "vue";
+import { usePricingPlans } from "~/composables/usePricingPlans";
+
+const { plans, fetchPlans } = usePricingPlans();
+
+const formattedPlans = computed(() => {
+  return plans.value.map((plan) => ({
+    id: plan.id,
+    title: plan.name,
+    price: plan.price,
     period: "per month",
     billing: "billed monthly",
-    link: "/billing",
-    spanClass: "lg:col-span-1",
-    features: [
-      { name: "10 README file updates / month", available: true },
-      { name: "Basic GitHub repository integration", available: true },
-      { name: "Manually update README files", available: true },
-      { name: "Default branch only (no branch selection)", available: true },
-    ],
-  },
-  {
-    title: "Starter",
-    price: 10,
-    period: "per month",
-    billing: "billed monthly",
-    link: "/billing",
-    spanClass: "lg:col-span-2",
-    comingSoon: true,
-    features: [
-      { name: "Everything in Free", available: true },
-      { name: "Unlimited README file updates", available: false },
-      { name: "Auto-update README files on commit", available: false },
-      { name: "Monitor up to 5 repositories", available: false },
-      { name: "Priority support", available: false },
-      { name: "Select specific branches for updates", available: false },
-      {
-        name: "Control repository updates via Telegram commands",
-        available: false,
-      },
-    ],
-  },
-];
+    description: plan.description,
+    spanClass: plan.name === "Starter" ? "lg:col-span-2" : "lg:col-span-1",
+    comingSoon: false,
+    features: plan.features,
+  }));
+});
 
 const chunkFeatures = (features) => {
   const chunkSize = 5;
@@ -46,6 +27,12 @@ const chunkFeatures = (features) => {
   }
   return chunks;
 };
+
+const selectPlan = async (plan) => {
+  console.log("Selected plan:", plan);
+};
+
+fetchPlans();
 </script>
 
 <template>
@@ -60,12 +47,13 @@ const chunkFeatures = (features) => {
           >Select the plan that best suits your needs.
         </span>
       </div>
+
       <div class="grid grid-cols-1 xl:grid-cols-3 gap-5">
         <div
-          v-for="(plan, index) in pricingPlans"
-          :key="index"
+          v-for="plan in formattedPlans"
+          :key="plan.id"
           :class="[
-            'rounded-[30px] md:rounded-[36px] bg-[#FAFAFA] overflow-hidden border-1 border-y-3 border-black p-8 relative shadow-lg ',
+            'rounded-[30px] md:rounded-[36px] bg-[#FAFAFA] overflow-hidden border-1 border-y-3 border-black p-8 relative shadow-lg',
             plan.spanClass,
           ]"
         >
@@ -129,11 +117,9 @@ const chunkFeatures = (features) => {
                   </div>
                 </div>
                 <div class="pt-2">
-                  <a
-                    :href="plan.link"
-                    type="button"
-                    target="_blank"
-                    class="appearance-none inline-flex hover:shadow-xl transition-all duration-300 hover:scale-[1.02] items-center group space-x-2.5 bg-black text-white py-4 px-5 rounded-2xl cursor-pointer"
+                  <button
+                    @click="selectPlan(plan)"
+                    class="w-full appearance-none inline-flex hover:shadow-xl transition-all duration-300 hover:scale-[1.02] items-center group space-x-2.5 bg-black text-white py-4 px-5 rounded-2xl cursor-pointer"
                   >
                     <span class="w-full font-semibold text-base"
                       >Choose {{ plan.title }}</span
@@ -142,7 +128,7 @@ const chunkFeatures = (features) => {
                       name="hugeicons:arrow-right-02"
                       class="text-white text-3xl"
                     />
-                  </a>
+                  </button>
                 </div>
               </div>
             </div>

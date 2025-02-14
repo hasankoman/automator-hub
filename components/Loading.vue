@@ -14,7 +14,7 @@ const { clearError } = loadingStore;
       class="fixed inset-0 flex flex-col items-center justify-center bg-black/30 backdrop-blur-sm z-[99999]"
     >
       <div
-        class="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent"
+        class="animate-spin rounded-full h-12 w-12 border-b-2 border-black"
       ></div>
     </div>
   </Transition>

@@ -1,5 +1,6 @@
 import GithubProvider from "next-auth/providers/github";
 import { NuxtAuthHandler } from "#auth";
+import { getOrCreateUser } from "../../utils/auth";
 
 export default NuxtAuthHandler({
   secret: useRuntimeConfig().authSecret,
@@ -10,13 +11,21 @@ export default NuxtAuthHandler({
       clientSecret: useRuntimeConfig().githubClientSecret,
       authorization: {
         params: {
-          scope: "read:user public_repo",
+          scope: "read:user user:email public_repo",
         },
       },
     }),
   ],
 
   callbacks: {
+    async signIn({ user, account, profile }) {
+      if (account.provider === "github") {
+        await getOrCreateUser(profile);
+        return true;
+      }
+      return true;
+    },
+
     async jwt({ token, user, account, profile }) {
       if (account) {
         if (account.provider === "github") {
@@ -38,14 +47,11 @@ export default NuxtAuthHandler({
 
     async session({ session, token }) {
       session.user.github = token.github || null;
-
       session.user.id = token.github?.id;
       session.user.email = session.user.email;
-
       session.user.provider = {
         github: Boolean(token.github),
       };
-
       return session;
     },
   },
