@@ -12,6 +12,7 @@ const { open: sidebarOpen } = storeToRefs(sidebarStore);
 
 const isActive = (path) => route.path === path;
 
+const isMenuOpen = ref(false);
 const githubLinks = ref([
   {
     to: "/",
@@ -92,6 +93,14 @@ const items = ref([
 const toggle = (event) => {
   menu.value.toggle(event);
 };
+
+const handleMenuFocus = () => {
+  isMenuOpen.value = true;
+};
+
+const handleMenuBlur = () => {
+  isMenuOpen.value = false;
+};
 </script>
 
 <template>
@@ -162,7 +171,8 @@ const toggle = (event) => {
       id="sidebar-footer"
     >
       <div
-        class="m-2 shadow-sm rounded-xl p-2 gap-2 flex items-center justify-between border-1 border-gray-200 cursor-pointer flex-1"
+        class="m-2 rounded-xl p-2 gap-2 flex items-center justify-between border-1 border-gray-200 cursor-pointer flex-1 transition-all ease-in-out duration-300"
+        :class="isMenuOpen ? 'shadow-2xs translate-y-[0.5px]' : 'shadow-sm'"
         v-if="status === 'authenticated'"
         @click="toggle"
       >
@@ -174,13 +184,13 @@ const toggle = (event) => {
         </div>
       </div>
       <Button
-        label="Sign In with Github"
+        label="Sign In"
         v-else
         class="m-2 shadow-sm rounded-xl p-2 gap-2 flex items-center border-1 border-gray-200 cursor-pointer flex-1"
-        @click="signIn('github')"
+        @click="$router.push('/auth')"
       >
         <template #icon>
-          <Icon name="hugeicons:github" />
+          <Icon name="hugeicons:login-02" />
         </template>
       </Button>
       <Menu
@@ -188,6 +198,8 @@ const toggle = (event) => {
         appendTo="#sidebar-footer"
         id="overlay_menu"
         :model="items"
+        @focus="handleMenuFocus"
+        @blur="handleMenuBlur"
         :popup="true"
         :pt="{
           root: '-translate-y-3 !rounded-2xl',

@@ -47,11 +47,7 @@ export default NuxtAuthHandler({
 
     async session({ session, token }) {
       session.user.github = token.github || null;
-      session.user.id = token.github?.id;
       session.user.email = session.user.email;
-      session.user.provider = {
-        github: Boolean(token.github),
-      };
       return session;
     },
   },

@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import { useFetchWrapper } from "~/composables/useFetchWrapper";
 
 export const useGitHubStore = defineStore("github", {
   state: () => ({

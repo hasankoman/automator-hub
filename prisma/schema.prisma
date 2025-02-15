@@ -29,6 +29,7 @@ model Plan {
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @default(now()) @updatedAt
   subscriptions   Subscription[]
+  isFree          Boolean       @default(false)
 }
 
 model Subscription {

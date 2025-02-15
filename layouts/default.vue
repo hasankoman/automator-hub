@@ -1,12 +1,23 @@
 <script setup>
 import { watch } from "vue";
 import { storeToRefs } from "pinia";
+
 import Sidebar from "~/components/Sidebar.vue";
+
 import { useSidebarStore } from "~/store/sidebar";
+import { useMeStore } from "~/store/me";
+
+const route = useRoute();
+
+const { fetchUser, fetchSubscription } = useMeStore();
 
 const sidebarStore = useSidebarStore();
 const { open: sidebarOpen } = storeToRefs(sidebarStore);
-const route = useRoute();
+
+
+onMounted(async () => {
+  await Promise.all([fetchUser(), fetchSubscription()]);
+});
 
 const handleOutClick = () => {
   if (sidebarOpen.value && window.innerWidth < 768) {
@@ -36,7 +47,6 @@ watch(
   />
   <div class="relative h-dvh bg-gray-100">
     <Sidebar />
-
     <div
       class="h-full transition-all duration-300"
       :class="sidebarOpen ? 'md:ml-[275px] blur-xs md:blur-none' : '0px'"

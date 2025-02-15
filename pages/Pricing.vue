@@ -1,20 +1,21 @@
 <script setup>
 import { computed } from "vue";
 import { usePricingPlans } from "~/composables/usePricingPlans";
+import { useMeStore } from "~/store/me";
+import { useRouter } from "vue-router";
 
 const { plans, fetchPlans } = usePricingPlans();
+const meStore = useMeStore();
+const router = useRouter();
+
+const { user, subscription } = storeToRefs(meStore);
 
 const formattedPlans = computed(() => {
   return plans.value.map((plan) => ({
-    id: plan.id,
-    title: plan.name,
-    price: plan.price,
+    ...plan,
     period: "per month",
     billing: "billed monthly",
-    description: plan.description,
     spanClass: plan.name === "Starter" ? "lg:col-span-2" : "lg:col-span-1",
-    comingSoon: false,
-    features: plan.features,
   }));
 });
 
@@ -29,7 +30,13 @@ const chunkFeatures = (features) => {
 };
 
 const selectPlan = async (plan) => {
-  console.log("Selected plan:", plan);
+  if (!user.value) {
+    return router.push("/auth");
+  } else if (plan.isFree) {
+    await meStore.updateSubscription(plan.id);
+  } else {
+    // Redirect to payment page
+  }
 };
 
 fetchPlans();
@@ -47,7 +54,6 @@ fetchPlans();
           >Select the plan that best suits your needs.
         </span>
       </div>
-
       <div class="grid grid-cols-1 xl:grid-cols-3 gap-5">
         <div
           v-for="plan in formattedPlans"
@@ -72,7 +78,7 @@ fetchPlans();
                   <div
                     class="text-xl md:text-2xl font-bold text-gray-900 flex justify-between"
                   >
-                    <span>{{ plan.title }}</span>
+                    <span>{{ plan.name }}</span>
                   </div>
                   <div
                     class="pt-5 text-gray-500 font-medium text-base space-y-1"
@@ -116,20 +122,20 @@ fetchPlans();
                     </template>
                   </div>
                 </div>
-                <div class="pt-2">
-                  <button
+                <div class="pt-2" v-if="subscription?.planId !== plan.id">
+                  <Button
+                    :label="'Choose ' + plan.name"
                     @click="selectPlan(plan)"
-                    class="w-full appearance-none inline-flex hover:shadow-xl transition-all duration-300 hover:scale-[1.02] items-center group space-x-2.5 bg-black text-white py-4 px-5 rounded-2xl cursor-pointer"
                   >
-                    <span class="w-full font-semibold text-base"
-                      >Choose {{ plan.title }}</span
-                    >
-                    <Icon
-                      name="hugeicons:arrow-right-02"
-                      class="text-white text-3xl"
-                    />
-                  </button>
+                    <template #icon>
+                      <Icon
+                        name="hugeicons:arrow-right-02"
+                        class="text-white text-3xl"
+                      />
+                    </template>
+                  </Button>
                 </div>
+                <div v-else>You are currently subscribed to this plan</div>
               </div>
             </div>
           </div>

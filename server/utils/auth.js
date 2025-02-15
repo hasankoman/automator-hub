@@ -1,6 +1,6 @@
 import prisma from "./prisma";
 
-export async function getOrCreateUser(profile: any) {
+export async function getOrCreateUser(profile) {
   const user = await prisma.user.upsert({
     where: {
       githubId: String(profile.id),
@@ -20,10 +20,10 @@ export async function getOrCreateUser(profile: any) {
   return user;
 }
 
-export async function getUserById(id: string) {
+export async function getUserById(githubId) {
   return prisma.user.findUnique({
     where: {
-      githubId: id,
+      githubId,
     },
   });
 }
