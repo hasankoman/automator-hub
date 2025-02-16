@@ -69,6 +69,12 @@ fetchPlans();
           >
             Coming Soon
           </span>
+          <div
+            class="absolute right-0 top-0 bg-black text-white rounded-bl-2xl pl-3 pr-4 py-2 shadow-xl border-b-1 border-l-1 border-gray-200"
+            v-if="subscription?.planId === plan.id"
+          >
+            Your Plan
+          </div>
           <div class="h-full">
             <div class="h-full z-10 relative">
               <div
@@ -124,7 +130,7 @@ fetchPlans();
                 </div>
                 <div class="pt-2" v-if="subscription?.planId !== plan.id">
                   <Button
-                    :label="'Choose ' + plan.name"
+                    :label="plan.isFree ? 'Start Free' : 'Choose ' + plan.name"
                     @click="selectPlan(plan)"
                   >
                     <template #icon>
@@ -135,7 +141,6 @@ fetchPlans();
                     </template>
                   </Button>
                 </div>
-                <div v-else>You are currently subscribed to this plan</div>
               </div>
             </div>
           </div>
@@ -145,24 +150,4 @@ fetchPlans();
   </div>
 </template>
 
-<style scoped>
-@keyframes slidedown-icon {
-  0% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(20px);
-  }
-
-  100% {
-    transform: translateY(0);
-  }
-}
-
-.slidedown-icon {
-  animation: slidedown-icon;
-  animation-duration: 3s;
-  animation-iteration-count: infinite;
-}
-</style>
+<style scoped></style>

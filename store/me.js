@@ -7,6 +7,18 @@ export const useMeStore = defineStore("me", {
   }),
 
   actions: {
+    async signIn() {
+      const { signIn } = useAuth();
+
+      await signIn("github");
+    },
+
+    async signOut() {
+      const { signOut } = useAuth();
+
+      await signOut();
+    },
+
     async fetchUser() {
       this.user = await useFetchWrapper("/api/user/me");
     },

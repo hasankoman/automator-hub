@@ -1,11 +1,28 @@
 <script setup>
+import { useLoadingStore } from "~/store/loading";
+import { useToastStore } from "~/store/toast";
+import { useMeStore } from "~/store/me";
+
 definePageMeta({
   layout: "auth",
   middleware: "auth",
   isAuthPage: true,
 });
 
-const { signIn } = useAuth();
+const loadingStore = useLoadingStore();
+const toastStore = useToastStore();
+const meStore = useMeStore();
+
+const handleSignIn = async () => {
+  try {
+    loadingStore.startLoading();
+    await meStore.signIn();
+  } catch (error) {
+    toastStore.error(error);
+  } finally {
+    loadingStore.stopLoading();
+  }
+};
 </script>
 <template>
   <div
@@ -15,7 +32,7 @@ const { signIn } = useAuth();
     <Button
       label="Sign In with Github"
       class="shadow-sm rounded-xl w-full p-2 gap-2 flex items-center border-1 border-gray-200 cursor-pointer flex-1"
-      @click="signIn('github')"
+      @click="handleSignIn"
     >
       <template #icon>
         <Icon name="hugeicons:github" />

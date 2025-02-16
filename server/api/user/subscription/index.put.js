@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
 
     const body = await readBody(event);
 
-    const { planId } = JSON.parse(body);
+    const { planId } = body;
 
     if (!session) {
       event.node.res.statusCode = 204;

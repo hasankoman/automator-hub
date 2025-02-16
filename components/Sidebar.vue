@@ -1,75 +1,24 @@
 <script setup>
 import { ref } from "vue";
 import { useRoute } from "vue-router";
-import { useSidebarStore } from "~/store/sidebar";
-import { useToast } from "primevue/usetoast";
 
-const { data, signOut, signIn, status } = useAuth();
+import { useSidebarStore } from "~/store/sidebar";
+import { useMeStore } from "~/store/me";
+import { useLoadingStore } from "~/store/loading";
+
+const { data, status } = useAuth();
 const route = useRoute();
-const toast = useToast();
 const sidebarStore = useSidebarStore();
 const { open: sidebarOpen } = storeToRefs(sidebarStore);
+const meStore = useMeStore();
+const loadingStore = useLoadingStore();
 
 const isActive = (path) => route.path === path;
 
 const isMenuOpen = ref(false);
-const githubLinks = ref([
-  {
-    to: "/",
-    icon: "hugeicons:home-02",
-    label: "Home",
-  },
-  {
-    to: "/github",
-    icon: "hugeicons:ease-curve-control-points",
-    label: "Repositories",
-    requiresAuth: "github",
-  },
-]);
-
-const accountLinks = ref([
-  {
-    to: "/integrations",
-    icon: "hugeicons:plug-socket",
-    label: "Integrations",
-    iconClass: "text-xl",
-  },
-  {
-    to: "/pricing",
-    icon: "hugeicons:wallet-02",
-    label: "Pricing",
-  },
-]);
-
-const handleLogout = async () => {
-  try {
-    const response = await signOut({
-      redirect: false,
-    });
-
-    if (response?.error) {
-      throw new Error(response.error);
-    }
-
-    toast.add({
-      severity: "success",
-      summary: "Process Successful",
-      detail: "Successfully Logged Out",
-      life: 3000,
-    });
-  } catch (error) {
-    toast.add({
-      severity: "error",
-      summary: "Logout Error",
-      detail:
-        error instanceof Error ? error.message : "An unexpected error occurred",
-      life: 3000,
-    });
-  }
-};
-
 const menu = ref();
-const items = ref([
+
+const menuItems = [
   {
     label: "Notifications",
     icon: "hugeicons:notification-03",
@@ -86,9 +35,48 @@ const items = ref([
   {
     label: "Sign Out",
     icon: "hugeicons:logout-02",
-    command: () => handleLogout(),
+    command: () => handleSignOut(),
   },
-]);
+];
+
+const githubLinks = [
+  {
+    to: "/",
+    icon: "hugeicons:home-02",
+    label: "Home",
+  },
+  {
+    to: "/github",
+    icon: "hugeicons:ease-curve-control-points",
+    label: "Repositories",
+    requiresAuth: "github",
+  },
+];
+
+const accountLinks = [
+  {
+    to: "/integrations",
+    icon: "hugeicons:plug-socket",
+    label: "Integrations",
+    iconClass: "text-xl",
+  },
+  {
+    to: "/pricing",
+    icon: "hugeicons:wallet-02",
+    label: "Pricing",
+  },
+];
+
+const handleSignOut = async () => {
+  try {
+    loadingStore.startLoading();
+    await meStore.signOut();
+  } catch (error) {
+    toastStore.error(error);
+  } finally {
+    loadingStore.stopLoading();
+  }
+};
 
 const toggle = (event) => {
   menu.value.toggle(event);
@@ -197,7 +185,7 @@ const handleMenuBlur = () => {
         ref="menu"
         appendTo="#sidebar-footer"
         id="overlay_menu"
-        :model="items"
+        :model="menuItems"
         @focus="handleMenuFocus"
         @blur="handleMenuBlur"
         :popup="true"
