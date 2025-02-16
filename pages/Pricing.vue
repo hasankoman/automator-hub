@@ -1,8 +1,6 @@
 <script setup>
 import { computed } from "vue";
 import { usePricingPlans } from "~/composables/usePricingPlans";
-import { useMeStore } from "~/store/me";
-import { useRouter } from "vue-router";
 
 const { plans, fetchPlans } = usePricingPlans();
 const meStore = useMeStore();

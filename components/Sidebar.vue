@@ -1,10 +1,5 @@
 <script setup>
 import { ref } from "vue";
-import { useRoute } from "vue-router";
-
-import { useSidebarStore } from "~/store/sidebar";
-import { useMeStore } from "~/store/me";
-import { useLoadingStore } from "~/store/loading";
 
 const { data, status } = useAuth();
 const route = useRoute();

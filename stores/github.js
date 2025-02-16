@@ -5,30 +5,13 @@ export const useGitHubStore = defineStore("github", {
     repositories: [],
     selectedRepositories: {},
     currentStep: 1,
-    loading: false,
-    error: null,
   }),
 
   actions: {
     async fetchRepositories() {
-      this.loading = true;
-      this.error = null;
+      const { data } = await useFetchWrapper("/api/github-repos");
 
-      try {
-        const { data, error } = await useFetchWrapper("/api/github-repos");
-
-        console.log(data);
-
-        if (error) {
-          this.error = error.message;
-        } else {
-          this.repositories = data || [];
-        }
-      } catch (err) {
-        this.error = err.message;
-      } finally {
-        this.loading = false;
-      }
+      this.repositories = data || [];
     },
     async triggerAction(type, repository) {
       if (type === "manual") {

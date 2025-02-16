@@ -1,8 +1,7 @@
 <script setup>
 import { ref } from "vue";
-import { useRouter } from "vue-router";
 import { useToast } from "primevue/usetoast";
-import { useLoadingStore } from "~/store/loading";
+
 import Checkbox from "primevue/checkbox";
 
 const { signIn, signOut, data } = useAuth();

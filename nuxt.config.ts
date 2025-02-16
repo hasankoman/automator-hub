@@ -73,6 +73,9 @@ export default defineNuxtConfig({
       },
     },
   },
+  imports: {
+    presets: [],
+  },
   vite: {
     plugins: [tailwindcss()],
   },

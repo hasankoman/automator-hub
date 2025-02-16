@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
-import { useSidebarStore } from "~/store/sidebar";
+
 import { storeToRefs } from "pinia";
 import hamburgerArrowAnimation from "~/assets/lottie/hamburger-arrow-animation.json";
 

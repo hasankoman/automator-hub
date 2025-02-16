@@ -1,7 +1,6 @@
 <script setup>
 import { computed, onMounted } from "vue";
-import { useGitHubStore } from "~/store/github";
-import { useHeaderStore } from "~/store/header";
+
 import { storeToRefs } from "pinia";
 
 const githubStore = useGitHubStore();
@@ -29,7 +28,7 @@ const filteredRepositories = computed(() =>
         v-for="repository in filteredRepositories"
         :key="repository.id || repository.fullName"
       >
-        <repositories-repository-list-item :repository="repository" />
+        <GithubRepositoriesRepositoryListItem :repository="repository" />
       </template>
     </div>
     <div

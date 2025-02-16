@@ -1,8 +1,4 @@
 <script setup>
-import { useLoadingStore } from "~/store/loading";
-import { useToastStore } from "~/store/toast";
-import { useMeStore } from "~/store/me";
-
 definePageMeta({
   layout: "auth",
   middleware: "auth",

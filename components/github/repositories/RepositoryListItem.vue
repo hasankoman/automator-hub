@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from "vue";
-import { useGitHubStore } from "~/store/github";
+
 import { storeToRefs } from "pinia";
 
 const githubStore = useGitHubStore();

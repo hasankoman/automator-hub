@@ -1,7 +1,5 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { useGitHubStore } from "~/store/github";
-import { openNewTab } from "~/utils/openNewTab";
 
 const githubStore = useGitHubStore();
 const toast = useToast();

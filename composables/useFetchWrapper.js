@@ -1,5 +1,3 @@
-import { useLoadingStore } from "~/store/loading";
-
 export const useFetchWrapper = async (url, options) => {
   const loadingStore = useLoadingStore();
 

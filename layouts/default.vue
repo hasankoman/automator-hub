@@ -2,12 +2,7 @@
 import { watch } from "vue";
 import { storeToRefs } from "pinia";
 
-import Sidebar from "~/components/Sidebar.vue";
-import Header from "~/components/Header.vue";
-import HeaderRight from "~/components/HeaderRight.vue";
-
-import { useSidebarStore } from "~/store/sidebar";
-import { useMeStore } from "~/store/me";
+import { Sidebar, Header, HeaderRight } from "#components";
 
 const route = useRoute();
 
@@ -15,6 +10,9 @@ const { fetchUser, fetchSubscription } = useMeStore();
 
 const sidebarStore = useSidebarStore();
 const { open: sidebarOpen } = storeToRefs(sidebarStore);
+
+const githubStore = useGitHubStore();
+const { currentStep } = storeToRefs(githubStore);
 
 onMounted(async () => {
   await Promise.all([fetchUser(), fetchSubscription()]);
@@ -64,7 +62,9 @@ watch(
         >
           <Header>
             <template #right>
-              <HeaderRight v-if="$route.path.includes('github')" />
+              <HeaderRight
+                v-if="$route.path.includes('github') && currentStep === 1"
+              />
             </template>
           </Header>
           <NuxtPage />
