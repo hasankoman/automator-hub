@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { useRoute } from "vue-router";
 
 export const useMeStore = defineStore("me", {
   state: () => ({
@@ -9,8 +10,11 @@ export const useMeStore = defineStore("me", {
   actions: {
     async signIn() {
       const { signIn } = useAuth();
+      const route = useRoute();
 
-      await signIn("github");
+      await signIn("github", {
+        callbackUrl: window.location.origin + route?.query?.redirect || "/",
+      });
     },
 
     async signOut() {

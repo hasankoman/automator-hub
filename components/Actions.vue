@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useGitHubStore } from "~/store/github";
+import { openNewTab } from "~/utils/openNewTab";
 
 const githubStore = useGitHubStore();
 const toast = useToast();
@@ -72,7 +73,7 @@ const handleStartAction = () => {
         >
           <div class="flex flex-col gap-2">
             <h3 class="text-xl font-bold text-gray-900">
-              Manual README Update
+              Manual AI-powered README Update
             </h3>
             <p class="text-gray-600">
               Manually update your GitHub repository README with a single click.
@@ -165,9 +166,19 @@ const handleStartAction = () => {
                 <span>{{ repo.name }}</span>
                 <div
                   v-if="repo.default_branch"
-                  class="flex items-center gap-1 bg-gray-200 px-2 py-1 rounded text-xs"
+                  :class="[
+                    'flex items-center gap-1 bg-[#ffffff9a] px-2 py-1 rounded text-xs',
+                    loadingStatus[repo.id] === 'pending' &&
+                      ' border border-gray-300 ',
+                    loadingStatus[repo.id] === 'loading' &&
+                      ' border border-gray-400',
+                    loadingStatus[repo.id] === 'success' &&
+                      ' border border-green-400 ',
+                    loadingStatus[repo.id] === 'error' &&
+                      ' border border-red-400 ',
+                  ]"
                 >
-                  <Icon name="hugeicons:git-branch" class="text-gray-500" />
+                  <Icon name="hugeicons:git-branch" class="" />
                   {{ repo.default_branch }}
                 </div>
               </div>
@@ -188,6 +199,15 @@ const handleStartAction = () => {
             >
               <template #icon>
                 <Icon name="hugeicons:play" />
+              </template>
+            </Button>
+            <Button
+              v-else-if="loadingStatus[repo.id] === 'success'"
+              class="!w-10 !h-10"
+              @click="openNewTab(repo.html_url)"
+            >
+              <template #icon>
+                <Icon name="hugeicons:link-square-02" />
               </template>
             </Button>
           </div>

@@ -87,7 +87,13 @@ fetchPlans();
                     <span>{{ plan.name }}</span>
                   </div>
                   <div
-                    class="pt-5 text-gray-500 font-medium text-base space-y-1"
+                    class="text-gray-700 flex justify-between border-b-1 border-gray-200 pb-4"
+                  >
+                    <span>{{ plan.description }}</span>
+                  </div>
+
+                  <div
+                    class="pt-4 text-gray-500 font-medium text-base space-y-1"
                   >
                     <div class="flex items-center align-bottom">
                       <span class="pt-1.5">$</span>
@@ -122,7 +128,15 @@ fetchPlans();
                             name="hugeicons:checkmark-circle-03"
                             class="text-black min-w-4"
                           />
-                          <span>{{ feature.name }}</span>
+                          <span v-if="feature.name.split('/').length === 1">{{
+                            feature.name
+                          }}</span>
+                          <span v-else
+                            >{{ feature.name.split("/")[0]
+                            }}<span class="text-gray-500 text-xs">
+                              {{ `/per ${feature.name.split("/")[1]}` }}
+                            </span>
+                          </span>
                         </li>
                       </ul>
                     </template>
@@ -130,7 +144,9 @@ fetchPlans();
                 </div>
                 <div class="pt-2" v-if="subscription?.planId !== plan.id">
                   <Button
-                    :label="plan.isFree ? 'Start Free' : 'Choose ' + plan.name"
+                    :label="
+                      plan.isFree ? 'Start Free' : 'Upgrade to ' + plan.name
+                    "
                     @click="selectPlan(plan)"
                   >
                     <template #icon>

@@ -1,11 +1,15 @@
 <script setup>
+definePageMeta({
+  middleware: "auth",
+  authRequired: true,
+});
+
 const usageStats = {
   premiumRequests: 2,
   premiumLimit: 50,
   monthlyRequests: 0,
   monthlyLimit: 200,
 };
-
 </script>
 
 <template>
