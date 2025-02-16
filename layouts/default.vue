@@ -3,6 +3,8 @@ import { watch } from "vue";
 import { storeToRefs } from "pinia";
 
 import Sidebar from "~/components/Sidebar.vue";
+import Header from "~/components/Header.vue";
+import HeaderRight from "~/components/HeaderRight.vue";
 
 import { useSidebarStore } from "~/store/sidebar";
 import { useMeStore } from "~/store/me";
@@ -13,7 +15,6 @@ const { fetchUser, fetchSubscription } = useMeStore();
 
 const sidebarStore = useSidebarStore();
 const { open: sidebarOpen } = storeToRefs(sidebarStore);
-
 
 onMounted(async () => {
   await Promise.all([fetchUser(), fetchSubscription()]);
@@ -45,22 +46,29 @@ watch(
       '576px': { width: '75vw' },
     }"
   />
-  <div class="relative h-dvh bg-gray-100">
-    <Sidebar />
-    <div
-      class="h-full transition-all duration-300"
-      :class="sidebarOpen ? 'md:ml-[275px] blur-xs md:blur-none' : '0px'"
-      @click="handleOutClick"
-    >
+  <div class="min-h-screen bg-gray-100">
+    <div class="relative h-dvh bg-gray-100">
+      <Sidebar />
       <div
-        class="p-3 flex flex-col h-full"
-        :class="
-          sidebarOpen
-            ? 'select-none pointer-events-none md:select-auto md:pointer-events-auto'
-            : ''
-        "
+        class="h-full transition-all duration-300"
+        :class="sidebarOpen ? 'md:ml-[275px] blur-xs md:blur-none' : '0px'"
+        @click="handleOutClick"
       >
-        <NuxtPage />
+        <div
+          class="p-3 flex flex-col gap-3 h-full"
+          :class="
+            sidebarOpen
+              ? 'select-none pointer-events-none md:select-auto md:pointer-events-auto'
+              : ''
+          "
+        >
+          <Header>
+            <template #right>
+              <HeaderRight v-if="$route.path.includes('github')" />
+            </template>
+          </Header>
+          <NuxtPage />
+        </div>
       </div>
     </div>
   </div>

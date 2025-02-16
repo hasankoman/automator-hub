@@ -38,9 +38,9 @@ watch(sidebarOpen, (newValue) => {
 </script>
 
 <template>
-  <div class="!sticky top-0 z-10 bg-gray-100">
+  <div class="!sticky top-0 z-10 bg-gray-100 h-[60px]">
     <div
-      class="flex items-center justify-end gap-3 bg-white p-2 border-1 border-gray-200 rounded-2xl"
+      class="flex items-center justify-end gap-3 bg-white p-2 border-1 border-gray-200 rounded-2xl h-full"
     >
       <Button
         class="w-10 h-10 !bg-white !border-gray-200 mr-auto"

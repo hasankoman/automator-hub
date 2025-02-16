@@ -81,7 +81,6 @@ const navigateToLogin = () => {
 
 <template>
   <div class="flex flex-col gap-3 w-full">
-    <Header />
     <div
       class="flex flex-col gap-5 p-5 bg-white rounded-2xl overflow-auto border border-gray-200 shadow-inner"
     >

@@ -58,7 +58,6 @@ const handleStartAction = () => {
 
 <template>
   <div class="flex flex-col gap-3 overflow-hidden flex-1">
-    <Header />
     <div
       class="flex flex-col gap-3 flex-1 p-5 bg-white rounded-t-2xl overflow-auto border-t-1 border-x-1 border-gray-200 shadow-inner"
     >
