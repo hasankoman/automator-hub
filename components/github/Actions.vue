@@ -55,7 +55,7 @@ const handleStartAction = () => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-3 overflow-hidden flex-1">
+  <div class="flex flex-col overflow-hidden flex-1">
     <div
       class="flex flex-col gap-3 flex-1 p-5 bg-white rounded-t-2xl overflow-auto border-t-1 border-x-1 border-gray-200 shadow-inner"
     >
@@ -211,16 +211,16 @@ const handleStartAction = () => {
         </div>
       </div>
     </div>
-  </div>
-  <div
-    class="flex items-center sticky bottom-0 z-10 justify-between gap-3 border border-gray-200 bg-white px-5 py-3 mt-auto w-full rounded-b-2xl"
-  >
-    <Button
-      label="Previous"
-      @click="currentStep -= 1"
-      class="px-8 mr-auto"
-      outlined
-      v-if="currentStep !== 1"
-    />
+    <div
+      class="flex items-center sticky bottom-0 z-10 justify-between gap-3 border border-gray-200 bg-white px-5 py-3 mt-auto w-full rounded-b-2xl"
+    >
+      <Button
+        label="Previous"
+        @click="currentStep -= 1"
+        class="px-8 mr-auto"
+        outlined
+        v-if="currentStep !== 1"
+      />
+    </div>
   </div>
 </template>

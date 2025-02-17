@@ -70,7 +70,7 @@ fetchPlans();
             class="absolute right-0 top-0 bg-black text-white rounded-bl-2xl pl-3 pr-4 py-2 shadow-xl border-b-1 border-l-1 border-gray-200"
             v-if="subscription?.planId === plan.id"
           >
-            Your Plan
+            Current Plan
           </div>
           <div class="h-full">
             <div class="h-full z-10 relative">
@@ -142,7 +142,9 @@ fetchPlans();
                 <div class="pt-2" v-if="subscription?.planId !== plan.id">
                   <Button
                     :label="
-                      plan.isFree ? 'Start Free' : 'Upgrade to ' + plan.name
+                      plan.isFree
+                        ? 'Start Free'
+                        : `Upgrade to ${plan.name} Plan`
                     "
                     @click="selectPlan(plan)"
                   >

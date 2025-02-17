@@ -155,7 +155,9 @@ const handleMenuBlur = () => {
     >
       <div
         class="m-2 rounded-xl p-2 gap-2 flex items-center justify-between border-1 border-gray-200 cursor-pointer flex-1 transition-all ease-in-out duration-300"
-        :class="isMenuOpen ? 'shadow-2xs translate-y-[0.5px]' : 'shadow-sm'"
+        :class="
+          isMenuOpen ? 'shadow-2xs translate-y-[0.5px] bg-gray-50' : 'shadow-sm'
+        "
         v-if="status === 'authenticated'"
         @click="toggle"
       >
@@ -165,6 +167,7 @@ const handleMenuBlur = () => {
             <span class="font-bold">{{ data.user.name }}</span>
           </span>
         </div>
+        <Icon name="material-symbols:expand-all-rounded" class="text-xl" />
       </div>
       <Button
         label="Sign In"
