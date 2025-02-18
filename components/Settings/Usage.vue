@@ -1,7 +1,7 @@
 <script setup>
-const usageStore = useMeStore();
+const meStore = useMeStore();
 
-const { usage } = storeToRefs(usageStore);
+const { usage } = storeToRefs(meStore);
 
 const formatKey = (key) => {
   return key
@@ -11,7 +11,7 @@ const formatKey = (key) => {
 };
 
 onMounted(async () => {
-  await usageStore.fetchUsage();
+  await meStore.fetchUsage();
 });
 </script>
 
@@ -24,15 +24,26 @@ onMounted(async () => {
       <div class="flex flex-col gap-2">
         <div class="flex justify-between items-center text-md">
           <h3>{{ formatKey(key) }}</h3>
-          <span>{{ value.used }}/{{ value.limit }}</span>
+          <span v-if="false">{{ value.used }}/{{ value.limit }}</span>
         </div>
         <ProgressBar
           :value="(value.used / value.limit) * 100"
           :pt="{
             root: '!h-4',
-            label: 'hidden',
+            label: 'hidden !text-xs',
+            value: {
+              class: [
+                (value.used / value.limit) * 100 >= 90
+                  ? '!bg-red-600'
+                  : (value.used / value.limit) * 100 >= 75
+                  ? '!bg-yellow-500'
+                  : '!bg-green-600',
+              ],
+            },
           }"
-        />
+        >
+          <span class="!">{{ value.used }}/{{ value.limit }}</span>
+        </ProgressBar>
 
         <p class="text-sm text-gray-400">
           You've used {{ value.used }} updates out of your {{ value.limit }}

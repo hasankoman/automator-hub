@@ -15,19 +15,24 @@ const menu = ref();
 
 const menuItems = [
   {
+    active: false,
     label: "Notifications",
     icon: "hugeicons:notification-03",
     command: () => navigateTo("/settings"),
   },
   {
+    active: true,
     label: "Settings",
+    link: "/settings",
     icon: "hugeicons:settings-01",
     command: () => navigateTo("/settings"),
   },
   {
     separator: true,
+    active: true,
   },
   {
+    active: true,
     label: "Sign Out",
     icon: "hugeicons:logout-02",
     command: () => handleSignOut(),
@@ -115,10 +120,10 @@ const handleMenuBlur = () => {
           :key="link.to"
           :to="link.to"
           :class="[
-            'flex items-center border-1 p-2 rounded-xl transition-all duration-100 ease-in-out',
+            'flex items-center border-1 p-2 rounded-xl transition-all duration-300 ease-in-out font-medium',
             isActive(link.to)
-              ? 'bg-white  border-gray-300 shadow-sm  font-semibold'
-              : 'hover:bg-gray-200 border-transparent',
+              ? 'bg-white border-gray-300 shadow-sm  text-black'
+              : 'hover:bg-gray-200 border-transparent text-slate-700',
             link.requiresAuth
               ? data?.user[link.requiresAuth]
                 ? ''
@@ -193,14 +198,20 @@ const handleMenuBlur = () => {
         ref="menu"
         appendTo="#sidebar-footer"
         id="overlay_menu"
-        :model="menuItems"
+        :model="menuItems.filter((item) => item.active)"
         @focus="handleMenuFocus"
         @blur="handleMenuBlur"
         :popup="true"
         :pt="{
           root: '-translate-y-3 !rounded-2xl',
           list: '!p-2.5 !gap-2',
-          itemcontent: '!rounded-xl',
+          itemcontent: ({ context: { item } }) => {
+            return `${
+              $route.fullPath.includes(item.link)
+                ? 'bg-gray-200 hover:!bg-gray-200'
+                : ''
+            } !rounded-xl`;
+          },
           itemLink: '!p-2',
         }"
       >

@@ -33,12 +33,6 @@ export default NuxtAuthHandler({
           token.userId = dbUser.id;
           token.github = {
             username: profile?.login,
-            bio: profile?.bio,
-            location: profile?.location,
-            blog: profile?.blog,
-            company: profile?.company,
-            twitter: profile?.twitter_username,
-            defaultBranch: profile?.default_branch,
             accessToken: account.access_token,
           };
         }

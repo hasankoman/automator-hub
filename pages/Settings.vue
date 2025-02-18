@@ -1,8 +1,14 @@
 <script setup>
+import SettingsProfile from "@/components/settings/Profile.vue";
+
 definePageMeta({
   middleware: "auth",
   authRequired: true,
 });
+
+const meStore = useMeStore();
+
+const { subscription } = storeToRefs(meStore);
 </script>
 
 <template>
@@ -17,11 +23,12 @@ definePageMeta({
         </p>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        <SettingsProfile />
         <div class="flex flex-col gap-6">
-          <SettingsSubscription v-if="false" />
+          <SettingsSubscription />
+          <SettingsUsage v-if="subscription" />
         </div>
-        <SettingsUsage />
       </div>
     </div>
   </div>

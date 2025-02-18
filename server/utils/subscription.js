@@ -11,19 +11,13 @@ export async function getUserSubscription(userId) {
   return subscription;
 }
 
-export async function updateOrCreateSubscription(planId, githubId) {
+export async function updateOrCreateSubscription(planId, userId) {
   try {
-    const response = await prisma.user.findUnique({
-      where: {
-        githubId,
-      },
-    });
-
     const updatedSubscription = await prisma.subscription.upsert({
-      where: { userId: response.id },
+      where: { userId },
       update: { planId, updatedAt: new Date() },
       create: {
-        userId: response.id,
+        userId,
         planId,
         startDate: new Date(),
         endDate: new Date(new Date().setMonth(new Date().getMonth() + 1)),

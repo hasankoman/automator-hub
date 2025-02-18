@@ -14,12 +14,9 @@ export default defineEventHandler(async (event) => {
       return null;
     }
 
-    const githubId = session.user.github.id;
+    const userId = session.user.id;
 
-    const subscription = await updateOrCreateSubscription(
-      planId,
-      String(githubId)
-    );
+    const subscription = await updateOrCreateSubscription(planId, userId);
 
     return subscription;
   } catch (error) {
