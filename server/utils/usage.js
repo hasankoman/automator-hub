@@ -1,27 +1,30 @@
 import prisma from "./prisma";
 
-export async function getUserUsage(githubId) {
-  const user = await prisma.user.findUnique({
-    where: {
-      githubId: String(githubId),
-    },
+export async function getUserUsage(userId) {
+  const userUsage = await prisma.usage.findUnique({
+    where: { userId },
     include: {
-      subscription: {
+      user: {
         include: {
-          plan: true,
+          subscription: {
+            include: {
+              plan: true,
+            },
+          },
         },
       },
     },
   });
 
-  const usage = await prisma.usage.findUnique({
-    where: { userId: user.id },
-  });
+  if (!userUsage || !userUsage.user || !userUsage.user.subscription) {
+    throw new Error("Usage or user data not found");
+  }
 
   return {
     manualReadme: {
-      limit: user?.subscription?.plan?.manualReadmeUpdateLimit ?? 0,
-      use: usage.manualUpdatesUsed,
+      limit: userUsage.user.subscription.plan.manualReadmeUpdateLimit,
+      used: userUsage.manualUpdatesUsed,
+      lastResetDate: userUsage.lastResetDate,
     },
   };
 }

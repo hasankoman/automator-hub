@@ -24,10 +24,10 @@ onMounted(async () => {
       <div class="flex flex-col gap-2">
         <div class="flex justify-between items-center text-md">
           <h3>{{ formatKey(key) }}</h3>
-          <span>{{ value.use }}/{{ value.limit }}</span>
+          <span>{{ value.used }}/{{ value.limit }}</span>
         </div>
         <ProgressBar
-          :value="(value.use / value.limit) * 100"
+          :value="(value.used / value.limit) * 100"
           :pt="{
             root: '!h-4',
             label: 'hidden',
@@ -35,7 +35,7 @@ onMounted(async () => {
         />
 
         <p class="text-sm text-gray-400">
-          You've used {{ value.use }} updates out of your {{ value.limit }}
+          You've used {{ value.used }} updates out of your {{ value.limit }}
           {{ formatKey(key).toLowerCase() }} update quota.
         </p>
       </div>

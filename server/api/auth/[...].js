@@ -29,8 +29,9 @@ export default NuxtAuthHandler({
     async jwt({ token, user, account, profile }) {
       if (account) {
         if (account.provider === "github") {
+          const dbUser = await getUserByGithubId(profile.id);
+          token.userId = dbUser.id;
           token.github = {
-            id: profile?.id,
             username: profile?.login,
             bio: profile?.bio,
             location: profile?.location,
@@ -47,7 +48,7 @@ export default NuxtAuthHandler({
 
     async session({ session, token }) {
       session.user.github = token.github || null;
-      session.user.email = session.user.email;
+      session.user.id = token.userId;
       return session;
     },
   },

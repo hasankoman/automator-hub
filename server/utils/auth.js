@@ -20,10 +20,18 @@ export async function getOrCreateUser(profile) {
   return user;
 }
 
-export async function getUserById(githubId) {
+export async function getUserByGithubId(githubId) {
   return prisma.user.findUnique({
     where: {
       githubId: String(githubId),
+    },
+  });
+}
+
+export async function getUserById(id) {
+  return prisma.user.findUnique({
+    where: {
+      id,
     },
   });
 }

@@ -21,7 +21,6 @@ definePageMeta({
         <div class="flex flex-col gap-6">
           <SettingsSubscription v-if="false" />
         </div>
-
         <SettingsUsage />
       </div>
     </div>

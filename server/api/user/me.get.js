@@ -1,4 +1,3 @@
-import { getUserById } from "../../utils/auth";
 import { getServerSession } from "#auth";
 
 export default defineEventHandler(async (event) => {
@@ -10,9 +9,9 @@ export default defineEventHandler(async (event) => {
       return null;
     }
 
-    const githubId = session.user.github.id;
+    const userId = session.user.id;
 
-    const user = await getUserById(String(githubId));
+    const user = await getUserById(userId);
 
     return user;
   } catch (error) {

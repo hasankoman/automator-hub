@@ -1,14 +1,11 @@
 import prisma from "./prisma";
 
-export async function getUserSubscription(githubId) {
-  const response = await prisma.user.findUnique({
-    where: {
-      githubId,
-    },
-  });
-
+export async function getUserSubscription(userId) {
   const subscription = await prisma.subscription.findUnique({
-    where: { userId: response.id },
+    where: { userId },
+    include: {
+      plan: true,
+    },
   });
 
   return subscription;

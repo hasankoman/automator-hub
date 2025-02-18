@@ -10,9 +10,9 @@ export default defineEventHandler(async (event) => {
       return null;
     }
 
-    const githubId = session.user.github.id;
+    const userId = session.user.id;
 
-    const usage = await getUserUsage(String(githubId));
+    const usage = await getUserUsage(userId);
 
     return usage;
   } catch (error) {
