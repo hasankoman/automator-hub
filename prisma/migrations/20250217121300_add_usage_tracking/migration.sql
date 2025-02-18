@@ -1,0 +1,17 @@
+-- CreateTable
+CREATE TABLE "Usage" (
+    "id" SERIAL NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "readmeUpdates" INTEGER NOT NULL DEFAULT 0,
+    "lastResetDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Usage_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Usage_userId_key" ON "Usage"("userId");
+
+-- AddForeignKey
+ALTER TABLE "Usage" ADD CONSTRAINT "Usage_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

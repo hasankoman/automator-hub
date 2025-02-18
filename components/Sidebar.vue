@@ -91,7 +91,17 @@ const handleMenuBlur = () => {
     class="h-dvh text-black py-3 px-2 md:p-5 flex flex-col z-50 bg-white md:bg-transparent w-72 fixed left-0 top-0 shadow-2xl md:shadow-none transition-all duration-300 overflow-auto"
     :class="!sidebarOpen ? '-translate-x-100' : 'translate-x-0'"
   >
-    <div class="mb-8">
+    <div class="flex items-center gap-3 mb-8">
+      <div
+        class="flex items-center justify-center w-12 h-12 bg-[#D2CECF] rounded-full"
+      >
+        <img
+          src="../assets/icons/gh-manager-icon.png"
+          alt=""
+          class="w-2/3 aspect-auto"
+        />
+      </div>
+
       <h1 class="text-xl font-semibold">AUTOMATION MANAGER</h1>
     </div>
 

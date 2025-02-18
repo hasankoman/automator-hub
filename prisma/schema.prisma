@@ -16,20 +16,22 @@ model User {
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @default(now()) @updatedAt
   subscription    Subscription?
+  usage           Usage?
 }
 
 model Plan {
-  id              Int           @id @default(autoincrement())
-  name            String        @unique
-  description     String?
-  price           Float
-  features        Json[]
-  maxRepos        Int           @default(5)
-  isActive        Boolean       @default(true)
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @default(now()) @updatedAt
-  subscriptions   Subscription[]
-  isFree          Boolean       @default(false)
+  id                      Int           @id @default(autoincrement())
+  name                    String        @unique
+  description             String?
+  price                   Float
+  features                Json[]
+  manualReadmeUpdateLimit Int           @default(10)
+  allowBranchSelection    Boolean       @default(false)
+  isActive                Boolean       @default(true)
+  createdAt               DateTime      @default(now())
+  updatedAt               DateTime      @default(now()) @updatedAt
+  isFree                  Boolean       @default(false)
+  subscriptions           Subscription[]
 }
 
 model Subscription {
@@ -43,4 +45,14 @@ model Subscription {
   updatedAt       DateTime  @default(now()) @updatedAt
   user            User      @relation(fields: [userId], references: [id])
   plan            Plan      @relation(fields: [planId], references: [id])
+}
+
+model Usage {
+  id                    Int       @id @default(autoincrement())
+  userId                Int       @unique
+  lastResetDate         DateTime  @default(now())
+  manualUpdatesUsed     Int       @default(0)
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @default(now()) @updatedAt
+  user                  User      @relation(fields: [userId], references: [id])
 }

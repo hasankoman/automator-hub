@@ -3,13 +3,6 @@ definePageMeta({
   middleware: "auth",
   authRequired: true,
 });
-
-const usageStats = {
-  premiumRequests: 2,
-  premiumLimit: 50,
-  monthlyRequests: 0,
-  monthlyLimit: 200,
-};
 </script>
 
 <template>
@@ -29,7 +22,7 @@ const usageStats = {
           <SettingsSubscription v-if="false" />
         </div>
 
-        <SettingsUsage v-bind="usageStats" v-if="false" />
+        <SettingsUsage />
       </div>
     </div>
   </div>

@@ -15,7 +15,18 @@ export default defineEventHandler(async (event) => {
   const token = session?.user?.github?.accessToken;
 
   try {
-    const response = await $fetch(useRuntimeConfig().public.webhookUrl, {
+    const githubId = session.user.github.id;
+
+    const usage = await getUserUsage(githubId);
+
+    if (usage.manualReadme.use >= usage.manualReadme.limit) {
+      throw createError({
+        statusCode: 500,
+        statusMessage: "Usage limit reached!",
+      });
+    }
+
+    await $fetch(useRuntimeConfig().public.webhookUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -23,6 +34,9 @@ export default defineEventHandler(async (event) => {
       },
       body,
     });
+
+    await incrementUsage(String(githubId), "readmeUpdates");
+
     return response;
   } catch (error) {
     throw createError({ statusCode: 500, statusMessage: error.message });

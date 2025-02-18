@@ -4,6 +4,7 @@ export const useMeStore = defineStore("me", {
   state: () => ({
     user: null,
     subscription: null,
+    usage: {},
   }),
 
   actions: {
@@ -35,6 +36,10 @@ export const useMeStore = defineStore("me", {
         method: "PUT",
         body: { planId },
       });
+    },
+
+    async fetchUsage() {
+      this.usage = await useFetchWrapper("/api/user/usage");
     },
   },
 });
