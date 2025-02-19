@@ -54,14 +54,16 @@ fetchPlans();
         </span>
       </div>
       <div
-        class="grid grid-cols-1 gap-5"
-        :class="isSidebarOpen ? 'xl:grid-cols-3' : 'lg:grid-cols-3'"
+        class="grid grid-cols-1 gap-y-5"
+        :class="
+          isSidebarOpen ? 'xl:grid-cols-3 xl:gap-5' : 'lg:grid-cols-3 xl:gap-5'
+        "
       >
         <div
           v-for="plan in formattedPlans"
           :key="plan.id"
           :class="[
-            'rounded-[30px] md:rounded-[36px] bg-[#FAFAFA] overflow-hidden border-1 border-y-3 border-black p-8 relative shadow-lg',
+            'rounded-4xl bg-[#FAFAFA] border-1 border-y-3 border-black p-8 relative shadow-lg',
             plan.spanClass,
           ]"
         >
@@ -72,7 +74,7 @@ fetchPlans();
             Coming Soon
           </span>
           <div
-            class="absolute right-0 top-0 bg-black text-white rounded-bl-2xl pl-3 pr-4 py-2 shadow-xl border-b-1 border-l-1 border-gray-200"
+            class="absolute left-[50%] top-0 translate-[-50%] rounded-xl py-1 px-2 bg-white text-black border-[2.5px] border-black"
             v-if="subscription?.planId === plan.id"
           >
             Current Plan
