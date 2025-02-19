@@ -45,5 +45,12 @@ export const useMeStore = defineStore("me", {
       const { data } = await useFetchWrapper("/api/user/usage");
       this.usage = data;
     },
+
+    async deleteAccount() {
+      const { data } = await useFetchWrapper("/api/user", {
+        method: "DELETE",
+      });
+      return data;
+    },
   },
 });

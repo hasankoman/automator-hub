@@ -1,5 +1,5 @@
 export const getPlans = () =>
-  prisma.plan.plan({
+  prisma.plan.findMany({
     where: {
       isActive: true,
     },

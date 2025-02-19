@@ -1,6 +1,10 @@
 import GithubProvider from "next-auth/providers/github";
 import { NuxtAuthHandler } from "#auth";
-import { createOrUpdateFromGithub, getById } from "~/server/db/userRepository";
+import {
+  createOrUpdateFromGithub,
+  getById,
+  createOrGetFromGithub,
+} from "~/server/db/user";
 
 export default NuxtAuthHandler({
   secret: useRuntimeConfig().authSecret,
@@ -29,7 +33,7 @@ export default NuxtAuthHandler({
     async jwt({ token, user, account, profile }) {
       if (account) {
         if (account.provider === "github") {
-          const dbUser = await getById(profile.id);
+          const dbUser = await createOrGetFromGithub(profile);
           token.userId = dbUser.id;
           token.github = {
             username: profile?.login,

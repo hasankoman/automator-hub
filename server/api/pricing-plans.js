@@ -1,3 +1,5 @@
+import { getPlans } from "~/server/db/plan";
+
 export default defineEventHandler(async (event) => {
   try {
     const plans = await getPlans();

@@ -1,11 +1,11 @@
-import { getById } from "~/server/db/user";
+import { deleteUser } from "~/server/db/user";
 
 export default defineEventHandler(async (event) => {
   try {
     const session = await requireAuth(event);
-    const user = await getById(session.user.id);
+    await deleteUser(session.user.id);
 
-    return createApiResponse(user);
+    return createApiResponse({ success: true });
   } catch (error) {
     throw createApiError(ErrorTypes.INTERNAL, error.message, error);
   }

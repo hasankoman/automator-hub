@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
       throw createApiError(ErrorTypes.VALIDATION, "Plan ID is required");
     }
 
-    const subscription = await updateOrCreate(planId, session.user.id);
+    const subscription = await updateOrCreate(session.user.id, planId);
 
     return createApiResponse(subscription);
   } catch (error) {
