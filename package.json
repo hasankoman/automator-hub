@@ -39,6 +39,7 @@
     "@iconify-json/hugeicons": "^1.2.3",
     "@iconify-json/line-md": "^1.2.5",
     "@iconify-json/material-symbols-light": "^1.2.14",
+    "@iconify-json/solar": "^1.2.2",
     "@primevue/nuxt-module": "^4.2.5",
     "@sidebase/nuxt-auth": "^0.10.0",
     "@types/node": "^22.13.4",

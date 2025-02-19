@@ -4,9 +4,11 @@ import { usePricingPlans } from "~/composables/usePricingPlans";
 
 const { plans, fetchPlans } = usePricingPlans();
 const meStore = useMeStore();
+const sidebarStore = useSidebarStore();
 const router = useRouter();
 
 const { user, subscription } = storeToRefs(meStore);
+const { open: isSidebarOpen } = storeToRefs(sidebarStore);
 
 const formattedPlans = computed(() => {
   return plans.value.map((plan) => ({
@@ -33,7 +35,7 @@ const selectPlan = async (plan) => {
   } else if (plan.isFree) {
     await meStore.updateSubscription(plan.id);
   } else {
-    // Redirect to payment page
+    return router.push(`/payment/${plan.id}`);
   }
 };
 
@@ -51,7 +53,10 @@ fetchPlans();
           >Select the plan that best suits your needs.
         </span>
       </div>
-      <div class="grid grid-cols-1 xl:grid-cols-3 gap-5">
+      <div
+        class="grid grid-cols-1 gap-5"
+        :class="isSidebarOpen ? 'xl:grid-cols-3' : 'lg:grid-cols-3'"
+      >
         <div
           v-for="plan in formattedPlans"
           :key="plan.id"
@@ -117,13 +122,13 @@ fetchPlans();
                           v-for="(feature, idx) in chunk"
                           :key="idx"
                           :class="[
-                            'flex items-center font-medium space-x-2',
+                            'flex font-medium space-x-2',
                             feature.available ? 'text-black' : 'text-gray-600',
                           ]"
                         >
                           <Icon
                             name="hugeicons:checkmark-circle-03"
-                            class="text-black min-w-4"
+                            class="text-green-500 flex-shrink-0 mt-1"
                           />
                           <span v-if="feature.name.split('/').length === 1">{{
                             feature.name

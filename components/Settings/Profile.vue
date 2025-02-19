@@ -71,6 +71,15 @@ const handleDeleteAccount = async (event) => {
     </div>
 
     <Accordion>
+      <template #collapseicon>
+        <Icon
+          name="hugeicons:arrow-down-01"
+          class="text-black text-2xl rotate-180"
+        />
+      </template>
+      <template #expandicon>
+        <Icon name="hugeicons:arrow-down-01" class="text-2xl text-black" />
+      </template>
       <AccordionPanel
         value="0"
         :pt="{
