@@ -1,6 +1,11 @@
 <script setup>
 import { watch } from "vue";
 import { storeToRefs } from "pinia";
+import { useHead } from "#imports";
+
+useHead({
+  title: "Automation Manager",
+});
 
 import { Sidebar, Header, HeaderRight } from "#components";
 

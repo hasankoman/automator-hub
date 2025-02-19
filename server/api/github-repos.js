@@ -1,68 +1,71 @@
-import { getServerSession } from "#auth";
-
 export default defineEventHandler(async (event) => {
-  const session = await getServerSession(event);
-
-  if (!session?.user?.github?.accessToken) {
-    return { error: { message: "Unauthorized", statusCode: 401 } };
-  }
-
-  const apiUrl =
-    "https://api.github.com/user/repos?affiliation=owner&sort=updated";
-  const headers = {
-    Authorization: `Bearer ${session?.user?.github?.accessToken}`,
-    Accept: "application/vnd.github.v3+json",
-  };
-
   try {
-    const res = await fetch(apiUrl, { headers });
-
-    if (!res.ok) {
-      const errorText = await res.text();
-      throw new Error(
-        `GitHub API error: ${res.status} ${res.statusText} - ${errorText}`
-      );
-    }
-
-    const repos = await res.json();
-
-    const repoData = await Promise.all(
-      repos.map(async (repo) => {
-        try {
-          const langRes = await fetch(repo.languages_url, { headers });
-
-          if (!langRes.ok) {
-            console.error(`Failed to fetch languages for ${repo.name}`);
-            return null;
-          }
-
-          const languages = await langRes.json();
-          return {
-            ...repo,
-            id: String(repo.id),
-            fullName: repo.full_name,
-            url: repo.html_url,
-            description: repo.description,
-            avatarUrl: repo.owner.avatar_url,
-            language: repo.language,
-            stars: repo.stargazers_count,
-            defaultBranch: repo.default_branch,
-            languages,
-          };
-        } catch (err) {
-          console.error(`Error fetching languages for ${repo.name}:`, err);
-          return null;
-        }
-      })
-    );
-
-    return { data: repoData.filter(Boolean) };
-  } catch (error) {
-    return {
-      error: {
-        message: error.message || "Internal Server Error",
-        statusCode: 500,
-      },
+    const session = await requireGithubAuth(event);
+    const headers = {
+      Authorization: `Bearer ${session.user.github.accessToken}`,
+      Accept: "application/vnd.github.v3+json",
     };
+
+    const repos = await fetchRepos(headers);
+    const repoData = await enrichReposWithLanguages(repos, headers);
+
+    return createApiResponse(repoData);
+  } catch (error) {
+    if (error.statusCode) throw error;
+    throw createApiError(ErrorTypes.INTERNAL, error.message, error);
   }
 });
+
+async function fetchRepos(headers) {
+  const res = await fetch(
+    "https://api.github.com/user/repos?affiliation=owner&sort=updated",
+    { headers }
+  );
+
+  if (!res.ok) {
+    throw createApiError(
+      ErrorTypes.INTERNAL,
+      `GitHub API error: ${res.status} ${res.statusText}`
+    );
+  }
+
+  return res.json();
+}
+
+async function enrichReposWithLanguages(repos, headers) {
+  const enrichedRepos = await Promise.all(
+    repos.map(async (repo) => {
+      try {
+        const languages = await fetchLanguages(repo.languages_url, headers);
+        return {
+          id: repo.id,
+          name: repo.name,
+          description: repo.description,
+          languages,
+          url: repo.html_url,
+          created_at: repo.created_at,
+          updated_at: repo.updated_at,
+        };
+      } catch (err) {
+        console.error(
+          `Language information for ${repo.name} could not be retrieved:`,
+          err
+        );
+        return null;
+      }
+    })
+  );
+
+  return enrichedRepos.filter(Boolean);
+}
+
+async function fetchLanguages(url, headers) {
+  const res = await fetch(url, { headers });
+  if (!res.ok) {
+    throw createApiError(
+      ErrorTypes.INTERNAL,
+      `Language information could not be retrieved: ${res.status} ${res.statusText}`
+    );
+  }
+  return res.json();
+}

@@ -29,15 +29,9 @@ export async function getUserUsage(userId) {
   };
 }
 
-export async function incrementUsage(githubId, metric) {
-  const user = await prisma.user.findUnique({
-    where: {
-      githubId,
-    },
-  });
-
+export async function incrementUsage(userId, metric) {
   await prisma.usage.update({
-    where: { userId: user.id },
-    data: { manualUpdatesUsed: { increment: 1 } },
+    where: { userId },
+    data: { [metric]: { increment: 1 } },
   });
 }

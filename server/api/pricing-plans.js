@@ -1,5 +1,3 @@
-import prisma from "../utils/prisma";
-
 export default defineEventHandler(async (event) => {
   try {
     const plans = await prisma.plan.findMany({
@@ -10,12 +8,13 @@ export default defineEventHandler(async (event) => {
         price: "asc",
       },
     });
-    return plans;
+
+    return createApiResponse(plans);
   } catch (error) {
-    console.error("Error fetching pricing plans:", error);
-    throw createError({
-      statusCode: 500,
-      message: "Error fetching pricing plans",
-    });
+    throw createApiError(
+      ErrorTypes.INTERNAL,
+      "Error fetching pricing plans",
+      error
+    );
   }
 });
