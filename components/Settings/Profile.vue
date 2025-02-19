@@ -1,9 +1,10 @@
 <script setup>
 const meStore = useMeStore();
-const { user } = storeToRefs(meStore);
 const router = useRouter();
 const toast = useToast();
 const confirm = useConfirm();
+
+const { user } = storeToRefs(meStore);
 
 const handleDeleteAccount = async (event) => {
   confirm.require({
@@ -46,6 +47,7 @@ const handleDeleteAccount = async (event) => {
 <template>
   <div
     class="flex flex-col gap-3 p-4 border border-gray-200 rounded-xl shadow-md"
+    v-if="user"
   >
     <h2 class="text-xl font-semibold border-b border-gray-200 pb-2">
       Profile Information
@@ -90,7 +92,7 @@ const handleDeleteAccount = async (event) => {
           <Button
             severity="danger"
             label="Delete Account"
-            class="hover:underline !bg-transparent !p-0 !text-sm"
+            class="hover:underline !bg-transparent !p-0 !text-xs"
             text
             @click="handleDeleteAccount"
             outlined
