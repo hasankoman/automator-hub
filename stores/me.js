@@ -24,22 +24,26 @@ export const useMeStore = defineStore("me", {
     },
 
     async fetchUser() {
-      this.user = await useFetchWrapper("/api/user/me");
+      const { data } = await useFetchWrapper("/api/user/me");
+      this.user = data;
     },
 
     async fetchSubscription() {
-      this.subscription = await useFetchWrapper("/api/user/subscription");
+      const { data } = await useFetchWrapper("/api/user/subscription");
+      this.subscription = data;
     },
 
     async updateSubscription(planId) {
-      this.subscription = await useFetchWrapper("/api/user/subscription", {
+      const { data } = await useFetchWrapper("/api/user/subscription", {
         method: "PUT",
         body: { planId },
       });
+      this.subscription = data;
     },
 
     async fetchUsage() {
-      this.usage = await useFetchWrapper("/api/user/usage");
+      const { data } = await useFetchWrapper("/api/user/usage");
+      this.usage = data;
     },
   },
 });

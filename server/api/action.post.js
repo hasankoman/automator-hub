@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
       body,
     });
 
-    await incrementUsage(userId, "manualUpdatesUsed");
+    await incrementMetric(userId, "manualUpdatesUsed");
 
     return createApiResponse({ success: true });
   } catch (error) {

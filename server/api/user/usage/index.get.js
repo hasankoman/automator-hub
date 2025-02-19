@@ -1,3 +1,5 @@
+import { getUserUsage } from "~/server/db/usage";
+
 export default defineEventHandler(async (event) => {
   try {
     const session = await requireAuth(event);

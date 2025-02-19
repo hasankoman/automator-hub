@@ -38,13 +38,16 @@ async function enrichReposWithLanguages(repos, headers) {
       try {
         const languages = await fetchLanguages(repo.languages_url, headers);
         return {
-          id: repo.id,
-          name: repo.name,
-          description: repo.description,
-          languages,
+          ...repo,
+          id: String(repo.id),
+          fullName: repo.full_name,
           url: repo.html_url,
-          created_at: repo.created_at,
-          updated_at: repo.updated_at,
+          description: repo.description,
+          avatarUrl: repo.owner.avatar_url,
+          language: repo.language,
+          stars: repo.stargazers_count,
+          defaultBranch: repo.default_branch,
+          languages,
         };
       } catch (err) {
         console.error(

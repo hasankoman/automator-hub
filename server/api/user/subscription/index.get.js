@@ -1,3 +1,5 @@
+import { getUserSubscription } from "~/server/db/subscription";
+
 export default defineEventHandler(async (event) => {
   try {
     const session = await requireAuth(event);

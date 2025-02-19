@@ -1,13 +1,6 @@
 export default defineEventHandler(async (event) => {
   try {
-    const plans = await prisma.plan.findMany({
-      where: {
-        isActive: true,
-      },
-      orderBy: {
-        price: "asc",
-      },
-    });
+    const plans = await getPlans();
 
     return createApiResponse(plans);
   } catch (error) {

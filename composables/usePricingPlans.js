@@ -4,7 +4,8 @@ export const usePricingPlans = () => {
   const plans = ref([]);
 
   const fetchPlans = async () => {
-    plans.value = await useFetchWrapper("/api/pricing-plans");
+    const { data } = await useFetchWrapper("/api/pricing-plans");
+    plans.value = data;
   };
 
   return {

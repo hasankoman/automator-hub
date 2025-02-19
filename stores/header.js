@@ -2,13 +2,11 @@ import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 
 export const useHeaderStore = defineStore("header", () => {
-  // UI State
   const isExpanded = ref(false);
   const searchInput = ref(null);
   const searchTerm = ref("");
   const selectedLanguages = ref([]);
 
-  // UI Methods
   const handleClickOutside = (event) => {
     if (!event.target.closest("#search-container")) {
       collapseInput();
@@ -38,7 +36,6 @@ export const useHeaderStore = defineStore("header", () => {
     document.removeEventListener("click", handleClickOutside);
   };
 
-  // Search and Filter Methods
   const getLanguageOptions = (repositories) => {
     const langs = new Set();
     repositories.forEach((repository) => {
@@ -78,13 +75,11 @@ export const useHeaderStore = defineStore("header", () => {
   };
 
   return {
-    // State
     isExpanded,
     searchInput,
     searchTerm,
     selectedLanguages,
 
-    // Methods
     expandInput,
     collapseInput,
     setupListeners,

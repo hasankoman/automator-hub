@@ -1,6 +1,4 @@
 <script setup>
-import SettingsProfile from "@/components/settings/Profile.vue";
-
 definePageMeta({
   middleware: "auth",
   authRequired: true,
