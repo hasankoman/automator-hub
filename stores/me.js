@@ -68,5 +68,19 @@ export const useMeStore = defineStore("me", {
 
       return data;
     },
+
+    async updateSubscriptionStatus(status) {
+      const { data } = await useFetchWrapper(
+        "/api/user/subscription/update-status",
+        {
+          method: "PUT",
+          body: {
+            status,
+          },
+        }
+      );
+      this.subscription = data;
+      return data;
+    },
   },
 });

@@ -42,3 +42,25 @@ export const updateOrCreate = async (userId, planId) => {
     );
   }
 };
+
+export const updateSubscriptionStatus = async (userId, status) => {
+  try {
+    return await prisma.subscription.update({
+      where: {
+        userId,
+      },
+      data: {
+        status,
+      },
+      include: {
+        plan: true,
+      },
+    });
+  } catch (error) {
+    throw createApiError(
+      ErrorTypes.INTERNAL,
+      "Error updating subscription status",
+      error
+    );
+  }
+};

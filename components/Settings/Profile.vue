@@ -8,6 +8,7 @@ const { user } = storeToRefs(meStore);
 
 const handleDeleteAccount = async (event) => {
   confirm.require({
+    group: "delete-account",
     target: event.currentTarget,
     header: "Delete Account",
     message:
@@ -111,6 +112,7 @@ const handleDeleteAccount = async (event) => {
     </Accordion>
 
     <ConfirmPopup
+      group="delete-account"
       :pt="{
         root: '!rounded-xl md:w-1/3',
         content: '!gap-2',

@@ -1,14 +1,18 @@
 <script setup>
 import { computed } from "vue";
-import { usePricingPlans } from "~/composables/usePricingPlans";
 
-const { plans, fetchPlans } = usePricingPlans();
+const planStore = usePlanStore();
 const meStore = useMeStore();
 const sidebarStore = useSidebarStore();
 const router = useRouter();
 
 const { user, subscription } = storeToRefs(meStore);
 const { open: isSidebarOpen } = storeToRefs(sidebarStore);
+const { plans } = storeToRefs(planStore);
+
+onMounted(async () => {
+  await planStore.fetchPlans();
+});
 
 const formattedPlans = computed(() => {
   return plans.value.map((plan) => ({
@@ -38,8 +42,6 @@ const selectPlan = async (plan) => {
     return router.push(`/payment/${plan.id}`);
   }
 };
-
-fetchPlans();
 </script>
 
 <template>

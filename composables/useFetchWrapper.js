@@ -7,10 +7,11 @@ export const useFetchWrapper = async (url, options) => {
       ...options,
       body: JSON.stringify(options?.body),
     });
-    loadingStore.stopLoading();
     return response;
   } catch (error) {
     loadingStore.setError(error.message || "An unexpected error occurred");
     return null;
+  } finally {
+    loadingStore.stopLoading();
   }
 };

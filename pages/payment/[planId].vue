@@ -9,7 +9,8 @@ const router = useRouter();
 const toast = useToast();
 const meStore = useMeStore();
 
-const { plans, fetchPlans } = usePricingPlans();
+const planStore = usePlanStore();
+const { plans } = storeToRefs(planStore);
 const loading = ref(false);
 
 const selectedPlan = computed(() => {
@@ -113,7 +114,7 @@ const handleSubmit = async () => {
 
 onMounted(() => {
   if (plans.value.length === 0) {
-    fetchPlans();
+    planStore.fetchPlans();
   }
 });
 </script>

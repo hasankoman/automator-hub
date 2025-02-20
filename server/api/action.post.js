@@ -1,3 +1,5 @@
+import { getUserUsage, incrementMetric } from "../db/usage";
+
 export default defineEventHandler(async (event) => {
   try {
     const session = await requireGithubAuth(event);
