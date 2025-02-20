@@ -52,5 +52,21 @@ export const useMeStore = defineStore("me", {
       });
       return data;
     },
+
+    async processPayment(planId, paymentDetails) {
+      const { data } = await useFetchWrapper("/api/payment", {
+        method: "POST",
+        body: {
+          planId,
+          paymentDetails,
+        },
+      });
+
+      if (data?.subscription) {
+        this.subscription = data.subscription;
+      }
+
+      return data;
+    },
   },
 });

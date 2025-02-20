@@ -101,26 +101,14 @@ const cardLogo = computed(() => {
 });
 
 const handleSubmit = async () => {
-  loading.value = true;
-  try {
-    await meStore.updateSubscription(selectedPlan.value.id);
-    toast.add({
-      severity: "success",
-      summary: "Success",
-      detail: "Payment successful",
-      life: 3000,
-    });
-    router.push("/settings");
-  } catch (error) {
-    toast.add({
-      severity: "error",
-      summary: "Error",
-      detail: "Payment failed",
-      life: 3000,
-    });
-  } finally {
-    loading.value = false;
-  }
+  await meStore.processPayment(selectedPlan.value.id, {
+    cardNumber: cardForm.value.number,
+    cardName: cardForm.value.name,
+    expiry: cardForm.value.expiry,
+    cvc: cardForm.value.cvc,
+  });
+
+  router.push("/settings");
 };
 
 onMounted(() => {

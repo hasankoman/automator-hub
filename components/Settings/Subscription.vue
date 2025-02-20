@@ -30,7 +30,7 @@ const navigateToPricing = () => {
         <div v-if="subscription.status === 'active'" class="space-y-3">
           <div class="flex justify-between items-center">
             <span class="text-gray-500">Current Plan</span>
-            <span class="font-medium">{{ subscription.plan.name }}</span>
+            <span class="font-medium">{{ subscription?.plan?.name }}</span>
           </div>
           <div class="flex justify-between items-center">
             <span class="text-gray-500">Status</span>

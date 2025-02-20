@@ -24,13 +24,17 @@ onMounted(async () => {
       <div class="flex flex-col gap-2">
         <div class="flex justify-between items-center text-md">
           <h3>{{ formatKey(key) }}</h3>
-          <span v-if="false">{{ value.used }}/{{ value.limit }}</span>
+          <span v-if="false">
+            {{ value.used }}/{{ value.limit === 999999999 ? "∞" : value.limit }}
+          </span>
         </div>
         <ProgressBar
-          :value="(value.used / value.limit) * 100"
+          :value="
+            value.limit === 999999999 ? 100 : (value.used / value.limit) * 100
+          "
           :pt="{
             root: '!h-4',
-            label: 'hidden !text-xs',
+            label: '!text-xs',
             value: {
               class: [
                 (value.used / value.limit) * 100 >= 90
@@ -42,12 +46,22 @@ onMounted(async () => {
             },
           }"
         >
-          <span class="!">{{ value.used }}/{{ value.limit }}</span>
+          <span
+            >{{ value.used }}/{{
+              value.limit === 999999999 ? "∞" : value.limit
+            }}</span
+          >
         </ProgressBar>
 
         <p class="text-sm text-gray-400">
-          You've used {{ value.used }} updates out of your {{ value.limit }}
-          {{ formatKey(key).toLowerCase() }} update quota.
+          You've used {{ value.used }} updates
+          {{
+            value.limit === 999999999
+              ? "(unlimited quota)"
+              : `out of your ${value.limit} ${formatKey(
+                  key
+                ).toLowerCase()} update quota`
+          }}.
         </p>
       </div>
     </div>
