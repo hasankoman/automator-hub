@@ -19,7 +19,7 @@ const formattedPlans = computed(() => {
     ...plan,
     period: "per month",
     billing: "billed monthly",
-    spanClass: plan.name === "Starter" ? "md:col-span-2" : "md:col-span-1",
+    spanClass: plan.name === "Pro" ? "md:col-span-2" : "md:col-span-1",
   }));
 });
 
@@ -146,11 +146,13 @@ const selectPlan = async (plan) => {
                     </template>
                   </div>
                 </div>
-                <div class="pt-2" v-if="subscription?.planId !== plan.id">
+                <div class="pt-4" v-if="subscription?.planId !== plan.id">
                   <Button
                     :label="
-                      plan.isFree
-                        ? 'Start Free'
+                      !subscription?.planId
+                        ? `Start with ${plan.name}`
+                        : !subscription?.plan?.isFree
+                        ? 'Downgrade to Free Plan'
                         : `Upgrade to ${plan.name} Plan`
                     "
                     @click="selectPlan(plan)"

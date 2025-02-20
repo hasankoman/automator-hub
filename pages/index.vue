@@ -1,25 +1,30 @@
 <script setup>
+useHead({
+  title: "Automate Your GitHub Documentation",
+});
 const { data: authData, status, signIn } = useAuth();
 
 const features = [
   {
+    title: "AI-Powered README Updates",
+    description:
+      "Automatically generate and update your repository documentation using advanced AI",
+    icon: "hugeicons:magic-wand-02",
+  },
+  {
     title: "GitHub Integration",
-    description: "Seamlessly manage your GitHub repositories and workflows",
+    description: "Seamlessly connect and manage your GitHub repositories",
     icon: "hugeicons:github",
   },
   {
-    title: "Repository Management",
-    description: "Organize and track your repositories efficiently",
-    icon: "hugeicons:folder-02",
-  },
-  {
-    title: "Easy Settings",
-    description: "Customize your experience with simple configuration options",
-    icon: "hugeicons:settings-01",
+    title: "Multiple Update Modes",
+    description:
+      "Choose between manual updates or automated monitoring (Premium)",
+    icon: "hugeicons:refresh",
   },
   {
     title: "Usage Analytics",
-    description: "Monitor your GitHub activity and repository metrics",
+    description: "Track your documentation updates and repository metrics",
     icon: "hugeicons:chart-breakout-square",
   },
 ];
@@ -38,24 +43,25 @@ const handleGetStarted = () => {
     <div
       class="flex flex-col gap-5 p-5 bg-white rounded-2xl overflow-auto border border-gray-200 shadow-inner"
     >
-      <div class="bg-white rounded-xl p-8 shadow-md border-1 border-gray-200">
+      <div
+        class="bg-gradient-to-t from-gray-100 to-gray-300 rounded-xl p-8 shadow-md"
+      >
         <div class="max-w-4xl mx-auto text-center">
-          <h1 class="text-4xl font-bold text-gray-800 mb-4">
-            Welcome to GitHub Manager
+          <h1 class="text-5xl font-bold mb-4">
+            Automate Your GitHub Documentation
           </h1>
-          <p class="text-xl text-gray-600 mb-8">
-            Your all-in-one solution for managing GitHub repositories and
-            workflows
+          <p class="text-xl mb-8">
+            Transform your repository documentation with AI-powered README
+            generation and management
           </p>
           <div class="flex flex-col md:flex-row gap-4 justify-center">
             <Button
               :label="
                 status === 'authenticated'
-                  ? 'Get Started'
-                  : 'Sign In with GitHub'
+                  ? 'Go to Dashboard'
+                  : 'Connect GitHub'
               "
               class="flex items-center gap-2"
-              severity="primary"
               size="large"
               @click="handleGetStarted"
             >
@@ -63,15 +69,15 @@ const handleGetStarted = () => {
                 <Icon
                   :name="
                     status === 'authenticated'
-                      ? 'hugeicons:play-circle'
+                      ? 'hugeicons:dashboard-square-02'
                       : 'hugeicons:github'
                   "
                 />
               </template>
             </Button>
             <Button
-              label="View Pricing"
-              class="flex items-center gap-2"
+              label="View Plans"
+              class="flex items-center gap-2 !border-black !bg-transparent"
               size="large"
               outlined
               @click="$router.push('/pricing')"
@@ -84,14 +90,16 @@ const handleGetStarted = () => {
         </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
         <div
           v-for="feature in features"
           :key="feature.title"
-          class="bg-white rounded-xl p-6 shadow-md transition-shadow border-1 border-gray-200"
+          class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 border border-gray-200"
         >
           <div class="flex flex-col items-center text-center">
-            <Icon :name="feature.icon" class="text-4xl mb-4 text-primary" />
+            <div class="bg-primary/10 p-4 rounded-full mb-4">
+              <Icon :name="feature.icon" class="text-4xl text-primary" />
+            </div>
             <h3 class="text-xl font-semibold text-gray-800 mb-2">
               {{ feature.title }}
             </h3>
@@ -100,18 +108,17 @@ const handleGetStarted = () => {
         </div>
       </div>
 
-      <div class="bg-primary/10 rounded-xl p-8 text-center">
-        <h2 class="text-2xl font-bold text-gray-800 mb-4">
-          Ready to streamline your GitHub workflow?
+      <div class="rounded-xl p-8 text-center">
+        <h2 class="text-3xl font-bold text-gray-800 mb-4">
+          Ready to enhance your GitHub workflow?
         </h2>
-        <p class="text-gray-600 mb-6">
-          Join thousands of developers who are already using GitHub Manager
+        <p class="text-gray-600 mb-6 text-lg">
+          Join developers who are streamlining their documentation process with
+          AI
         </p>
         <Button
           :label="
-            status === 'authenticated'
-              ? 'Start Managing Your Repositories'
-              : 'Sign In with GitHub'
+            status === 'authenticated' ? 'Access Dashboard' : 'Get Started Free'
           "
           class="flex items-center gap-2"
           severity="primary"
@@ -122,7 +129,7 @@ const handleGetStarted = () => {
             <Icon
               :name="
                 status === 'authenticated'
-                  ? 'hugeicons:github'
+                  ? 'hugeicons:dashboard-square-02'
                   : 'hugeicons:github'
               "
             />

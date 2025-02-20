@@ -24,11 +24,17 @@ export const useMeStore = defineStore("me", {
     },
 
     async fetchUser() {
+      const { status } = useAuth();
+      if (status.value !== "authenticated") return;
+
       const { data } = await useFetchWrapper("/api/user/me");
       this.user = data;
     },
 
     async fetchSubscription() {
+      const { status } = useAuth();
+      if (status.value !== "authenticated") return;
+
       const { data } = await useFetchWrapper("/api/user/subscription");
       this.subscription = data;
     },

@@ -12,6 +12,15 @@ export default defineNuxtConfig({
     "@nuxtjs/device",
     "@nuxt/fonts",
   ],
+  fonts: {
+    families: [
+      {
+        name: "DM Sans",
+        provider: "google",
+        weights: [400, 500, 600, 700],
+      },
+    ],
+  },
   primevue: {
     options: {
       theme: {

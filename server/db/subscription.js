@@ -9,9 +9,13 @@ export const updateOrCreate = async (userId, planId) => {
     return await prisma.$transaction(async (tx) => {
       const subscription = await tx.subscription.upsert({
         where: { userId },
+        include: { plan: true },
         update: {
           planId,
           updatedAt: new Date(),
+          startDate: new Date(),
+          endDate: new Date(new Date().setMonth(new Date().getMonth() + 1)),
+          status: "active",
         },
         create: {
           userId,
@@ -24,7 +28,10 @@ export const updateOrCreate = async (userId, planId) => {
 
       await tx.usage.upsert({
         where: { userId },
-        update: {},
+        update: {
+          lastResetDate: new Date(),
+          manualUpdatesUsed: 0,
+        },
         create: {
           userId,
           lastResetDate: new Date(),
