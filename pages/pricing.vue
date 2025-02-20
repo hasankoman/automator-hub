@@ -19,7 +19,7 @@ const formattedPlans = computed(() => {
     ...plan,
     period: "per month",
     billing: "billed monthly",
-    spanClass: plan.name === "Starter" ? "lg:col-span-2" : "lg:col-span-1",
+    spanClass: plan.name === "Starter" ? "md:col-span-2" : "md:col-span-1",
   }));
 });
 
@@ -56,9 +56,11 @@ const selectPlan = async (plan) => {
         </span>
       </div>
       <div
-        class="grid grid-cols-1 gap-y-5"
+        class="grid grid-cols-1"
         :class="
-          isSidebarOpen ? 'xl:grid-cols-3 xl:gap-5' : 'lg:grid-cols-3 xl:gap-5'
+          isSidebarOpen
+            ? 'xl:grid-cols-3 xl:gap-5 gap-y-8'
+            : 'md:grid-cols-3 xl:gap-5 gap-y-8 md:gap-x-5'
         "
       >
         <div
@@ -83,9 +85,7 @@ const selectPlan = async (plan) => {
           </div>
           <div class="h-full">
             <div class="h-full z-10 relative">
-              <div
-                class="flex flex-col flex-1 justify-between h-full space-y-5"
-              >
+              <div class="flex flex-col flex-1 justify-between h-full">
                 <div class="flex justify-between flex-col">
                   <div
                     class="text-xl md:text-2xl font-bold text-gray-900 flex justify-between"
@@ -98,9 +98,7 @@ const selectPlan = async (plan) => {
                     <span>{{ plan.description }}</span>
                   </div>
 
-                  <div
-                    class="pt-4 text-gray-500 font-medium text-base space-y-1"
-                  >
+                  <div class="pt-4 text-gray-500 font-medium text-base">
                     <div class="flex items-center align-bottom">
                       <span class="pt-1.5">$</span>
                       <div
@@ -126,7 +124,7 @@ const selectPlan = async (plan) => {
                           v-for="(feature, idx) in chunk"
                           :key="idx"
                           :class="[
-                            'flex font-medium space-x-2',
+                            'flex font-medium gap-2',
                             feature.available ? 'text-black' : 'text-gray-600',
                           ]"
                         >
