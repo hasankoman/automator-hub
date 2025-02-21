@@ -9,9 +9,9 @@ export default defineEventHandler(async (event) => {
       {
         method: "POST",
         headers: {
-          Authorization: `token ${session.user.github.accessToken}`,
-          Accept: "application/vnd.github.v3+json",
-          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.user.github.accessToken}`,
+          Accept: "application/vnd.github+json",
+          "X-GitHub-Api-Version": "2022-11-28",
         },
         body: JSON.stringify({
           name: "web",

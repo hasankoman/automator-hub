@@ -52,5 +52,13 @@ export const useGitHubStore = defineStore("github", {
 
       return data;
     },
+
+    async fetchRepositoryHooks(repository) {
+      const { data } = await useFetchWrapper(
+        `/api/github-webhooks/${repository.fullName}/list`
+      );
+
+      return data;
+    },
   },
 });

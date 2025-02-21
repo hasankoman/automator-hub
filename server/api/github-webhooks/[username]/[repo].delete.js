@@ -1,12 +1,12 @@
 export default defineEventHandler(async (event) => {
   try {
     const session = await requireGithubAuth(event);
-    const { fullName } = event.context.params;
+    const { username, repo } = event.context.params;
 
     await prisma.monitoredRepository.updateMany({
       where: {
         userId: session.user.id,
-        fullName,
+        fullName: `${username}/${repo}`,
       },
       data: {
         isActive: false,

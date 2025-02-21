@@ -51,6 +51,12 @@ const githubLinks = [
     label: "Repositories",
     requiresAuth: "github",
   },
+  {
+    to: "/github/hooks",
+    icon: "hugeicons:webhook",
+    label: "Webhooks",
+    requiresAuth: "github",
+  },
 ];
 
 const accountLinks = [
