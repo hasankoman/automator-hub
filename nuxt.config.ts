@@ -11,8 +11,51 @@ export default defineNuxtConfig({
     "@primevue/nuxt-module",
     "@nuxtjs/device",
     "@nuxt/fonts",
-  ],
-  fonts: {
+    process.env.NODE_ENV === 'development' && "@nuxtjs/ngrok",
+  ].filter(Boolean),
+  imports: {
+    presets: [],
+  },
+  vite: {
+    plugins: [tailwindcss()],
+    server: {
+      allowedHosts: [
+        "unified-moderately-mule.ngrok-free.app", 
+        "localhost",
+        "https://authomation-manager.vercel.app"
+      ],
+    },
+  },
+  auth: {
+    isEnabled: true,
+    disableServerSideAuth: false,
+    originEnvKey: "AUTH_ORIGIN",
+    baseURL: process.env.AUTH_ORIGIN,
+    sessionRefresh: {
+      enablePeriodically: 60000,
+      enableOnWindowFocus: true,
+    },
+  },
+  runtimeConfig: {
+    public: {
+      githubClientId: process.env.GITHUB_CLIENT_ID,
+      webhookUrl: process.env.WEBHOOK_URL,
+      appUrl: process.env.APP_URL,
+    },
+    githubClientSecret: process.env.GITHUB_CLIENT_SECRET,
+    authSecret: process.env.AUTH_SECRET,
+    webhookSecret: process.env.WEBHOOK_SECRET,
+  },
+  css: ["~/assets/css/main.css", "animate.css"],
+  compatibilityDate: "2025-02-06",
+  ...(process.env.NODE_ENV === 'development' ? {
+    ngrok: {
+      authtoken: process.env.NGROK_AUTHTOKEN,
+      domain: "unified-moderately-mule.ngrok-free.app",
+      addr: 3000,
+    }
+  } : {}),
+    fonts: {
     families: [
       {
         name: "DM Sans",
@@ -82,35 +125,4 @@ export default defineNuxtConfig({
       },
     },
   },
-  imports: {
-    presets: [],
-  },
-  vite: {
-    plugins: [tailwindcss()],
-    server: {
-      allowedHosts: ["unified-moderately-mule.ngrok-free.app", "localhost"],
-    },
-  },
-  auth: {
-    isEnabled: true,
-    disableServerSideAuth: false,
-    originEnvKey: "AUTH_ORIGIN",
-    baseURL: process.env.AUTH_ORIGIN,
-    sessionRefresh: {
-      enablePeriodically: 60000,
-      enableOnWindowFocus: true,
-    },
-  },
-  runtimeConfig: {
-    public: {
-      githubClientId: process.env.GITHUB_CLIENT_ID,
-      webhookUrl: process.env.WEBHOOK_URL,
-      appUrl: process.env.APP_URL,
-    },
-    githubClientSecret: process.env.GITHUB_CLIENT_SECRET,
-    authSecret: process.env.AUTH_SECRET,
-    webhookSecret: process.env.WEBHOOK_SECRET,
-  },
-  css: ["~/assets/css/main.css", "animate.css"],
-  compatibilityDate: "2025-02-06",
 });

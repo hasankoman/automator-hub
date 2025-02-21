@@ -17,6 +17,7 @@
     "@nuxt/fonts": "^0.10.3",
     "@nuxt/icon": "^1.10.3",
     "@nuxtjs/device": "^3.2.4",
+    "@nuxtjs/ngrok": "^3.0.1",
     "@nuxtjs/tailwindcss": "^6.13.1",
     "@pinia/nuxt": "^0.9.0",
     "@primevue/themes": "^4.2.5",
