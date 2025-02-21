@@ -25,5 +25,32 @@ export const useGitHubStore = defineStore("github", {
         }
       }
     },
+    async setupWebhook(repository) {
+      const { data, error } = await useFetch("/api/github-webhooks/setup", {
+        method: "POST",
+        body: { repository },
+      });
+
+      if (error.value) {
+        throw new Error(error.value);
+      }
+
+      return data;
+    },
+
+    async removeWebhook(repository) {
+      const { data, error } = await useFetch(
+        `/api/github-webhooks/${repository.fullName}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (error.value) {
+        throw new Error(error.value);
+      }
+
+      return data;
+    },
   },
 });

@@ -18,14 +18,18 @@ onMounted(() => {
 const triggerAction = async (repository) => {
   try {
     loadingStatus.value[repository.id] = "loading";
-    await githubStore.triggerAction(selectedAction.value, repository);
-    loadingStatus.value[repository.id] = "success";
-    toast.add({
-      severity: "success",
-      summary: "Process Successful",
-      detail: `Readme File Updated Successfully for ${repository.name}`,
-      life: 3000,
-    });
+    if (selectedAction.value === "auto") {
+      await handleAutoSetup(repository);
+    } else {
+      await githubStore.triggerAction(selectedAction.value, repository);
+      loadingStatus.value[repository.id] = "success";
+      toast.add({
+        severity: "success",
+        summary: "Process Successful",
+        detail: `Readme File Updated Successfully for ${repository.name}`,
+        life: 3000,
+      });
+    }
   } catch (err) {
     loadingStatus.value[repository.id] = "error";
     toast.add({
@@ -34,6 +38,21 @@ const triggerAction = async (repository) => {
       detail: `An unexpected error occurred for ${repository.name}`,
       life: 3000,
     });
+  }
+};
+
+const handleAutoSetup = async (repository) => {
+  try {
+    await githubStore.setupWebhook(repository);
+    loadingStatus.value[repository.id] = "success";
+    toast.add({
+      severity: "success",
+      summary: "Setup Successful",
+      detail: `Auto-update enabled for ${repository.name}`,
+      life: 3000,
+    });
+  } catch (err) {
+    throw new Error(`Failed to setup auto-update: ${err.message}`);
   }
 };
 
@@ -80,16 +99,12 @@ const handleStartAction = () => {
         </div>
 
         <div
-          class="bg-gradient-to-r from-gray-900 to-gray-700 rounded-xl border-2 shadow-lg p-6 transition-all relative overflow-hidden flex gap-3 justify-between"
+          class="bg-gradient-to-r from-gray-900 to-gray-700 rounded-xl border-2 shadow-lg p-6 transition-all relative overflow-hidden flex gap-3 justify-between cursor-pointer"
           :class="
             selectedAction === 'auto' ? 'border-emerald-500' : 'border-gray-300'
           "
+          @click="selectedAction = 'auto'"
         >
-          <div
-            class="absolute top-0 right-0 bg-black shadow-sm shadow-black text-white text-xs font-bold px-2 py-1 rounded-bl-lg"
-          >
-            COMING SOON
-          </div>
           <div class="flex flex-col gap-2">
             <h3 class="text-xl font-bold text-white">Auto README Update</h3>
             <p class="text-white opacity-80">
@@ -103,114 +118,44 @@ const handleStartAction = () => {
           />
         </div>
       </div>
-      <div class="grid grid-cols-1 gap-6">
-        <div class="flex justify-between items-center h-10">
-          <h2 class="text-2xl font-semibold text-gray-900">Action Statuses</h2>
-          <Button
-            @click="handleStartAction"
-            label="Start All"
-            class="!text-sm h-full"
-            v-if="
-              Object.values(loadingStatus).some(
-                (status) => status === 'error' || status === 'pending'
-              )
-            "
+
+      <div class="mt-8">
+        <h3 class="text-xl font-semibold mb-4">Selected Repositories</h3>
+        <div class="space-y-4">
+          <div
+            v-for="repository in Object.values(selectedRepositories)"
+            :key="repository.id"
+            class="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-200"
           >
-            <template #icon>
-              <Icon name="hugeicons:play-circle" class="text-lg" />
-            </template>
-          </Button>
-        </div>
-        <div
-          class="border-1 rounded-xl h-20 w-full p-4 flex items-center justify-between shadow-md"
-          v-for="repo in Object.values(selectedRepositories)"
-          :key="repo.id"
-          :class="[
-            'relative flex items-center justify-between p-3 rounded-xl',
-            loadingStatus[repo.id] === 'pending' &&
-              'bg-white border border-gray-300 shadow',
-            loadingStatus[repo.id] === 'loading' &&
-              'bg-gray-50 border border-gray-400 shadow-inner',
-            loadingStatus[repo.id] === 'success' &&
-              'bg-gradient-to-r from-green-100 to-green-50 border border-green-400 shadow-lg',
-            loadingStatus[repo.id] === 'error' &&
-              'bg-gradient-to-r from-red-100 to-red-50 border border-red-400 shadow-lg',
-          ]"
-        >
-          <div class="flex items-center justify-between gap-4 w-full">
-            <div class="flex gap-3 items-center">
-              <Icon
-                v-if="loadingStatus[repo.id] === 'loading'"
-                name="line-md:loading-loop"
-                class="text-black !w-6 !h-6"
+            <div class="flex items-center gap-3">
+              <img
+                :src="repository.avatarUrl"
+                :alt="repository.name"
+                class="w-8 h-8 rounded-full"
               />
-              <Icon
-                v-else-if="loadingStatus[repo.id] === 'pending'"
-                name="hugeicons:clock-01"
-                class="text-black !w-6 !h-6"
-              />
-              <Icon
-                v-else-if="loadingStatus[repo.id] === 'success'"
-                name="hugeicons:checkmark-circle-03"
-                class="text-green-500 !w-6 !h-6"
-              />
-              <Icon
-                v-else-if="loadingStatus[repo.id] === 'error'"
-                name="hugeicons:alert-01"
-                class="text-red-500 !w-6 !h-6"
-              />
-              <div class="flex flex-col items-start gap-1">
-                <span>{{ repo.name }}</span>
-                <div
-                  v-if="repo.default_branch"
-                  :class="[
-                    'flex items-center gap-1 bg-[#ffffff9a] px-2 py-1 rounded text-xs',
-                    loadingStatus[repo.id] === 'pending' &&
-                      ' border border-gray-300 ',
-                    loadingStatus[repo.id] === 'loading' &&
-                      ' border border-gray-400',
-                    loadingStatus[repo.id] === 'success' &&
-                      ' border border-green-400 ',
-                    loadingStatus[repo.id] === 'error' &&
-                      ' border border-red-400 ',
-                  ]"
-                >
-                  <Icon name="hugeicons:git-branch" class="" />
-                  {{ repo.default_branch }}
-                </div>
-              </div>
+              <span class="font-medium">{{ repository.name }}</span>
             </div>
-            <Button
-              v-if="loadingStatus[repo.id] === 'error'"
-              @click="triggerAction(repo)"
-              class="!w-10 !h-10"
-            >
-              <template #icon>
-                <Icon name="hugeicons:refresh" />
-              </template>
-            </Button>
-            <Button
-              v-else-if="loadingStatus[repo.id] === 'pending'"
-              @click="triggerAction(repo)"
-              class="!w-10 !h-10"
-            >
-              <template #icon>
-                <Icon name="hugeicons:play" />
-              </template>
-            </Button>
-            <Button
-              v-else-if="loadingStatus[repo.id] === 'success'"
-              class="!w-10 !h-10"
-              @click="openNewTab(repo.html_url)"
-            >
-              <template #icon>
-                <Icon name="hugeicons:link-square-02" />
-              </template>
-            </Button>
+            <div class="flex items-center gap-2">
+              <Icon
+                v-if="loadingStatus[repository.id] === 'success'"
+                name="material-symbols:check-circle"
+                class="text-2xl text-emerald-500"
+              />
+              <Icon
+                v-if="loadingStatus[repository.id] === 'error'"
+                name="material-symbols:error"
+                class="text-2xl text-red-500"
+              />
+              <span
+                v-if="loadingStatus[repository.id] === 'loading'"
+                class="loading loading-spinner loading-sm"
+              ></span>
+            </div>
           </div>
         </div>
       </div>
     </div>
+
     <div
       class="flex items-center sticky bottom-0 z-10 justify-between gap-3 border border-gray-200 bg-white px-5 py-3 mt-auto w-full rounded-b-2xl"
     >
@@ -219,7 +164,12 @@ const handleStartAction = () => {
         @click="currentStep -= 1"
         class="px-8 mr-auto"
         outlined
-        v-if="currentStep !== 1"
+      />
+      <Button
+        label="Start Process"
+        @click="handleStartAction"
+        class="px-8"
+        :disabled="Object.keys(selectedRepositories).length === 0"
       />
     </div>
   </div>

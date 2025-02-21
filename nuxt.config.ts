@@ -87,6 +87,9 @@ export default defineNuxtConfig({
   },
   vite: {
     plugins: [tailwindcss()],
+    server: {
+      allowedHosts: ["unified-moderately-mule.ngrok-free.app", "localhost"],
+    },
   },
   auth: {
     isEnabled: true,
@@ -102,9 +105,11 @@ export default defineNuxtConfig({
     public: {
       githubClientId: process.env.GITHUB_CLIENT_ID,
       webhookUrl: process.env.WEBHOOK_URL,
+      appUrl: process.env.APP_URL,
     },
     githubClientSecret: process.env.GITHUB_CLIENT_SECRET,
     authSecret: process.env.AUTH_SECRET,
+    webhookSecret: process.env.WEBHOOK_SECRET,
   },
   css: ["~/assets/css/main.css", "animate.css"],
   compatibilityDate: "2025-02-06",

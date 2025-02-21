@@ -16,8 +16,8 @@ const handleGithubConnect = async () => {
     loadingStore.startLoading();
     const response = await signIn("github", {
       scope: isPrivateRepoAccess.value
-        ? "read:user repo"
-        : "read:user public_repo",
+        ? "read:user repo admin:repo_hook"
+        : "read:user public_repo admin:repo_hook",
     });
 
     if (response?.error) {
