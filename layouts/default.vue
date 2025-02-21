@@ -41,8 +41,8 @@ watch(
 
 <template>
   <Loading />
- 
-  <div class="min-h-screen bg-gray-100">
+
+  <div class="min-h-dvh bg-gray-100">
     <div class="relative h-dvh bg-gray-100">
       <Sidebar />
       <div

@@ -1,4 +1,9 @@
 <script setup>
+definePageMeta({
+  middleware: "auth",
+  authRequired: true,
+});
+
 const githubStore = useGitHubStore();
 const { currentStep } = storeToRefs(githubStore);
 </script>

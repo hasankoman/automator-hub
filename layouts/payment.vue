@@ -15,7 +15,7 @@ useHead({
     }"
   />
   <div
-    class="min-h-screen bg-gray-100 md:p-4 flex flex-col items-center justify-center"
+    class="min-h-dvh bg-gray-100 md:p-4 flex flex-col items-center justify-center"
   >
     <div class="max-w-4xl mx-auto">
       <NuxtPage />

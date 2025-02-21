@@ -47,10 +47,10 @@ const handleGetStarted = () => {
         class="bg-gradient-to-t from-gray-100 to-gray-300 rounded-xl p-8 shadow-md"
       >
         <div class="max-w-4xl mx-auto text-center">
-          <h1 class="text-5xl font-bold mb-4">
+          <h1 class="text-3xl md:text-5xl font-bold mb-4">
             Automate Your GitHub Documentation
           </h1>
-          <p class="text-xl mb-8">
+          <p class="text-lg md:text-xl mb-8">
             Transform your repository documentation with AI-powered README
             generation and management
           </p>
@@ -109,10 +109,10 @@ const handleGetStarted = () => {
       </div>
 
       <div class="rounded-xl p-8 text-center">
-        <h2 class="text-3xl font-bold text-gray-800 mb-4">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
           Ready to enhance your GitHub workflow?
         </h2>
-        <p class="text-gray-600 mb-6 text-lg">
+        <p class="text-gray-600 mb-6 text-base md:text-lg">
           Join developers who are streamlining their documentation process with
           AI
         </p>

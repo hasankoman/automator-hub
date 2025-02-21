@@ -45,16 +45,16 @@ const selectPlan = async (plan) => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-3 w-full overflow-hidden">
-    <div
-      class="grid grid-cols-1 gap-5 p-5 bg-white rounded-2xl overflow-auto border-1 border-gray-200 shadow-inner"
-    >
-      <div class="flex flex-col gap-2">
-        <h2 class="text-3xl m-0 font-bold">Pricing Plans</h2>
-        <span class="text-gray-500"
-          >Select the plan that best suits your needs.
-        </span>
-      </div>
+  <div
+    class="flex flex-col h-full bg-gray-50 rounded-2xl overflow-hidden border-1 border-gray-200"
+  >
+    <div class="p-5 bg-white border-b border-gray-200">
+      <h2 class="text-2xl font-bold text-gray-900">Pricing Plans</h2>
+      <p class="mt-2 text-gray-600">
+        Select the plan that best suits your needs.
+      </p>
+    </div>
+    <div class="flex-1 p-5 space-y-8 overflow-auto">
       <div
         class="grid grid-cols-1"
         :class="
