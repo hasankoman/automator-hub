@@ -29,6 +29,26 @@ export default defineEventHandler(async (event) => {
       }
     );
 
+    await prisma.monitoredRepository.upsert({
+      where: {
+        userId_repositoryId: {
+          userId: session.user.id,
+          repositoryId: repository.id,
+        },
+      },
+      update: {
+        webhookId: response.id,
+        isActive: true,
+      },
+      create: {
+        userId: session.user.id,
+        repositoryId: repository.id,
+        fullName: repository.fullName,
+        webhookId: response.id,
+        isActive: true,
+      },
+    });
+
     return createApiResponse(response);
   } catch (error) {
     console.error("Webhook setup error:", error);

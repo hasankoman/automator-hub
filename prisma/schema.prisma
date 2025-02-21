@@ -8,51 +8,67 @@ datasource db {
 }
 
 model User {
-  id              Int       @id @default(autoincrement())
-  email           String?   @unique
-  name            String?
-  githubId        String?   @unique
-  githubUsername  String?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @default(now()) @updatedAt
-  subscription    Subscription?
-  usage           Usage?
+  id             Int                   @id @default(autoincrement())
+  email          String?               @unique
+  name           String?
+  githubId       String?               @unique
+  githubUsername String?
+  createdAt      DateTime              @default(now())
+  updatedAt      DateTime              @default(now()) @updatedAt
+  subscription   Subscription?
+  usage          Usage?
+  monitoredRepos MonitoredRepository[]
+}
+
+model MonitoredRepository {
+  id           Int      @id @default(autoincrement())
+  userId       Int
+  repositoryId String
+  fullName     String
+  webhookId    Int?
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now()) @updatedAt
+  user         User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, repositoryId])
+  @@index([fullName])
 }
 
 model Plan {
-  id                      Int           @id @default(autoincrement())
-  name                    String        @unique
+  id                      Int            @id @default(autoincrement())
+  name                    String         @unique
   description             String?
   price                   Float
   features                Json[]
-  manualReadmeUpdateLimit Int           @default(10)
-  allowBranchSelection    Boolean       @default(false)
-  isActive                Boolean       @default(true)
-  createdAt               DateTime      @default(now())
-  updatedAt               DateTime      @default(now()) @updatedAt
-  isFree                  Boolean       @default(false)
+  manualReadmeUpdateLimit Int            @default(10)
+  allowBranchSelection    Boolean        @default(false)
+  isActive                Boolean        @default(true)
+  createdAt               DateTime       @default(now())
+  updatedAt               DateTime       @default(now()) @updatedAt
+  isFree                  Boolean        @default(false)
   subscriptions           Subscription[]
 }
 
 model Subscription {
-  id              Int       @id @default(autoincrement())
-  userId          Int       @unique
-  planId          Int
-  startDate       DateTime  @default(now())
-  endDate         DateTime?
-  status          String    @default("active")
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @default(now()) @updatedAt
-  user            User      @relation(fields: [userId], references: [id])
-  plan            Plan      @relation(fields: [planId], references: [id])
+  id        Int       @id @default(autoincrement())
+  userId    Int       @unique
+  planId    Int
+  startDate DateTime  @default(now())
+  endDate   DateTime?
+  status    String    @default("active")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  user      User      @relation(fields: [userId], references: [id])
+  plan      Plan      @relation(fields: [planId], references: [id])
 }
 
 model Usage {
-  id                    Int       @id @default(autoincrement())
-  userId                Int       @unique
-  lastResetDate         DateTime  @default(now())
-  manualUpdatesUsed     Int       @default(0)
-  createdAt             DateTime  @default(now())
-  updatedAt             DateTime  @default(now()) @updatedAt
-  user                  User      @relation(fields: [userId], references: [id])
+  id                Int      @id @default(autoincrement())
+  userId            Int      @unique
+  lastResetDate     DateTime @default(now())
+  manualUpdatesUsed Int      @default(0)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @default(now()) @updatedAt
+  user              User     @relation(fields: [userId], references: [id])
 }
