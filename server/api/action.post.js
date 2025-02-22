@@ -1,19 +1,13 @@
-import { getUserUsage, incrementMetric } from "../db/usage";
+import { incrementMetric } from "../db/usage";
+import { validateAccess } from "../utils/subscriptionHandler";
 
 export default defineEventHandler(async (event) => {
   try {
     const session = await requireGithubAuth(event);
-
     const body = await readBody(event);
     const userId = session.user.id;
-    const usage = await getUserUsage(userId);
 
-    if (usage.manualReadme.used >= usage.manualReadme.limit) {
-      throw createApiError(
-        ErrorTypes.PLAN_LIMIT_REACHED,
-        "You've reached your plan's action limit. Please upgrade to continue."
-      );
-    }
+    await validateAccess(userId, "manualReadme");
 
     await $fetch(useRuntimeConfig().public.webhookUrl, {
       method: "POST",

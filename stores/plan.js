@@ -7,7 +7,7 @@ export const usePlanStore = defineStore("plan", {
 
   actions: {
     async fetchPlans() {
-      const { data } = await useFetchWrapper("/api/plans");
+      const { data } = await useFetchWrapper("/api/plan");
       this.plans = data;
     },
   },

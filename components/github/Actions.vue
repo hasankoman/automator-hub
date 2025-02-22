@@ -16,44 +16,30 @@ onMounted(() => {
 });
 
 const triggerAction = async (repository) => {
-  try {
-    loadingStatus.value[repository.id] = "loading";
-    if (selectedAction.value === "auto") {
-      await handleAutoSetup(repository);
-    } else {
-      await githubStore.triggerAction(selectedAction.value, repository);
-      loadingStatus.value[repository.id] = "success";
-      toast.add({
-        severity: "success",
-        summary: "Success!",
-        detail: `README updated for ${repository.name}`,
-        life: 3000,
-      });
-    }
-  } catch (err) {
-    loadingStatus.value[repository.id] = "error";
+  loadingStatus.value[repository.id] = "loading";
+  if (selectedAction.value === "auto") {
+    await handleAutoSetup(repository);
+  } else {
+    await githubStore.triggerAction(selectedAction.value, repository);
+    loadingStatus.value[repository.id] = "success";
     toast.add({
-      severity: "error",
-      summary: "Error",
-      detail: `Failed to update ${repository.name}`,
+      severity: "success",
+      summary: "Success!",
+      detail: `README updated for ${repository.name}`,
       life: 3000,
     });
   }
 };
 
 const handleAutoSetup = async (repository) => {
-  try {
-    await githubStore.setupWebhook(repository);
-    loadingStatus.value[repository.id] = "success";
-    toast.add({
-      severity: "success",
-      summary: "Auto-Update Enabled",
-      detail: `${repository.name} will now update automatically`,
-      life: 3000,
-    });
-  } catch (err) {
-    throw new Error(`Auto-update setup failed: ${err.message}`);
-  }
+  await githubStore.setupWebhook(repository);
+  loadingStatus.value[repository.id] = "success";
+  toast.add({
+    severity: "success",
+    summary: "Auto-Update Enabled",
+    detail: `${repository.name} will now update automatically`,
+    life: 3000,
+  });
 };
 
 const handleStartAction = () => {

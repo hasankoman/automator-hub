@@ -10,81 +10,68 @@ export const useGitHubStore = defineStore("github", {
 
   actions: {
     async fetchRepositories() {
-      const { data } = await useFetchWrapper("/api/github-repos");
+      const response = await useFetchWrapper("/api/github-repos");
 
-      this.repositories = data || [];
+      console.log("response", response);
+
+      this.repositories = response.data || [];
     },
     async triggerAction(type, repository) {
       if (type === "manual") {
-        const { data, error } = await useFetch("/api/action", {
+        const response = await useFetchWrapper("/api/action", {
           method: "POST",
           body: repository,
         });
-
-        if (error.value) {
-          throw new Error(error.value);
-        }
       }
     },
     async setupWebhook(repository) {
-      const { data, error } = await useFetch("/api/github-webhooks/setup", {
+      const response = await useFetchWrapper("/api/github-webhooks/setup", {
         method: "POST",
         body: { repository },
       });
 
-      if (error.value) {
-        throw new Error(error.value);
-      }
-
-      return data;
+      return response.data;
     },
 
     async removeWebhook(repository) {
-      const { data, error } = await useFetch(
+      const response = await useFetchWrapper(
         `/api/github-webhooks/${repository.fullName}`,
         {
           method: "DELETE",
         }
       );
 
-      if (error.value) {
-        throw new Error(error.value);
-      }
+      this.hooks = this.hooks.filter(
+        (hook) => hook.id !== repository.webhookId
+      );
 
-      this.hooks = this.hooks.filter((hook) => hook.id !== repository.id);
-
-      return data;
+      return response.data;
     },
 
     async fetchHooks() {
-      const { data } = await useFetchWrapper(`/api/github-webhooks/list`);
+      const response = await useFetchWrapper(`/api/github-webhooks/list`);
 
-      this.hooks = data;
+      this.hooks = response.data || [];
     },
     async updateWebhook(repository, isActive) {
-      try {
-        const response = await $fetch(
-          `/api/github-webhooks/${repository.fullName}`,
-          {
-            method: "POST",
-            body: {
-              isActive,
-            },
-          }
-        );
+      const response = await useFetchWrapper(
+        `/api/github-webhooks/${repository.fullName}`,
+        {
+          method: "POST",
+          body: {
+            isActive,
+          },
+        }
+      );
 
-        this.hooks = this.hooks.map((hook) => {
-          if (hook.id === repository.webhookId) {
-            return { ...hook, active: isActive };
-          }
-          return hook;
-        });
+      this.hooks = this.hooks.map((hook) => {
+        if (hook.id === repository.webhookId) {
+          return { ...hook, active: isActive };
+        }
+        return hook;
+      });
 
-        return response;
-      } catch (error) {
-        console.error("Error deactivating webhook:", error);
-        throw error;
-      }
+      return response.data;
     },
   },
 });

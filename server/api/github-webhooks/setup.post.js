@@ -1,8 +1,12 @@
+import { validateAccess } from "../../utils/subscriptionHandler";
+
 export default defineEventHandler(async (event) => {
   try {
     const session = await requireGithubAuth(event);
     const body = await readBody(event);
     const { repository } = body;
+
+    await validateAccess(session.user.id, "autoReadme");
 
     const response = await $fetch(
       `https://api.github.com/repos/${repository.fullName}/hooks`,

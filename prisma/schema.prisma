@@ -43,6 +43,7 @@ model Plan {
   features                Json[]
   manualReadmeUpdateLimit Int            @default(10)
   allowBranchSelection    Boolean        @default(false)
+  allowAutoReadme         Boolean        @default(false)
   isActive                Boolean        @default(true)
   createdAt               DateTime       @default(now())
   updatedAt               DateTime       @default(now()) @updatedAt
