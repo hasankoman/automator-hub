@@ -9,9 +9,7 @@ const { selectedRepositories, repositories, currentStep } =
   storeToRefs(githubStore);
 
 onMounted(() => {
-  if (repositories.value.length === 0) {
-    githubStore.fetchRepositories();
-  }
+  githubStore.fetchRepositories();
 });
 
 const filteredRepositories = computed(() =>

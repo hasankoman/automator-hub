@@ -36,7 +36,22 @@ async function enrichReposWithLanguages(repos, headers) {
   const enrichedRepos = await Promise.all(
     repos.map(async (repo) => {
       try {
-        const languages = await fetchLanguages(repo.languages_url, headers);
+        const [languages, webhooks] = await Promise.all([
+          fetchLanguages(repo.languages_url, headers),
+          fetchWebhooks(
+            `https://api.github.com/repos/${repo.full_name}/hooks`,
+            headers
+          ),
+        ]);
+
+        const hasWebhook = webhooks.some(
+          (hook) =>
+            hook.config.url ===
+              `${
+                useRuntimeConfig().public.appUrl
+              }/api/github-webhooks/receive` && hook.active
+        );
+
         return {
           ...repo,
           id: String(repo.id),
@@ -48,10 +63,11 @@ async function enrichReposWithLanguages(repos, headers) {
           stars: repo.stargazers_count,
           defaultBranch: repo.default_branch,
           languages,
+          hasWebhook,
         };
       } catch (err) {
         console.error(
-          `Language information for ${repo.name} could not be retrieved:`,
+          `Repository information for ${repo.name} could not be retrieved:`,
           err
         );
         return null;
@@ -71,4 +87,20 @@ async function fetchLanguages(url, headers) {
     );
   }
   return res.json();
+}
+
+async function fetchWebhooks(url, headers) {
+  try {
+    const res = await fetch(url, { headers });
+    if (!res.ok) {
+      console.warn(
+        `Webhook information could not be retrieved: ${res.status} ${res.statusText}`
+      );
+      return [];
+    }
+    return res.json();
+  } catch (error) {
+    console.warn("Error fetching webhooks:", error);
+    return [];
+  }
 }

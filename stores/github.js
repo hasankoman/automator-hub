@@ -5,6 +5,7 @@ export const useGitHubStore = defineStore("github", {
     repositories: [],
     selectedRepositories: {},
     currentStep: 1,
+    hooks: [],
   }),
 
   actions: {
@@ -50,15 +51,40 @@ export const useGitHubStore = defineStore("github", {
         throw new Error(error.value);
       }
 
+      this.hooks = this.hooks.filter((hook) => hook.id !== repository.id);
+
       return data;
     },
 
-    async fetchRepositoryHooks(repository) {
-      const { data } = await useFetchWrapper(
-        `/api/github-webhooks/${repository.fullName}/list`
-      );
+    async fetchHooks() {
+      const { data } = await useFetchWrapper(`/api/github-webhooks/list`);
 
-      return data;
+      this.hooks = data;
+    },
+    async updateWebhook(repository, isActive) {
+      try {
+        const response = await $fetch(
+          `/api/github-webhooks/${repository.fullName}`,
+          {
+            method: "POST",
+            body: {
+              isActive,
+            },
+          }
+        );
+
+        this.hooks = this.hooks.map((hook) => {
+          if (hook.id === repository.webhookId) {
+            return { ...hook, active: isActive };
+          }
+          return hook;
+        });
+
+        return response;
+      } catch (error) {
+        console.error("Error deactivating webhook:", error);
+        throw error;
+      }
     },
   },
 });

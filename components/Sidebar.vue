@@ -38,13 +38,15 @@ const menuItems = [
     command: () => handleSignOut(),
   },
 ];
-
-const githubLinks = [
+const mainLinks = [
   {
     to: "/",
     icon: "hugeicons:home-02",
     label: "Home",
   },
+];
+
+const githubLinks = [
   {
     to: "/github",
     icon: "hugeicons:ease-curve-control-points",
@@ -53,7 +55,7 @@ const githubLinks = [
   },
   {
     to: "/github/hooks",
-    icon: "hugeicons:webhook",
+    icon: "material-symbols-light:webhook-rounded",
     label: "Webhooks",
     requiresAuth: "github",
   },
@@ -78,7 +80,7 @@ const handleSignOut = async () => {
     loadingStore.startLoading();
     await meStore.signOut();
   } catch (error) {
-    toastStore.error(error);
+    loadingStore.setError(error.message || "An unexpected error occurred");
   } finally {
     loadingStore.stopLoading();
   }
@@ -115,6 +117,36 @@ const handleMenuBlur = () => {
 
       <h1 class="text-xl font-semibold">AUTOMATION MANAGER</h1>
     </div>
+
+    <nav class="mb-8">
+      <h2 class="text-xs uppercase tracking-wider text-gray-400 mb-3">MAIN</h2>
+      <div class="flex flex-col gap-2">
+        <NuxtLink
+          v-for="link in mainLinks"
+          :key="link.to"
+          :to="link.to"
+          :class="[
+            'flex items-center border-1 p-2 rounded-xl transition-all duration-300 ease-in-out font-medium',
+            isActive(link.to)
+              ? 'bg-white border-gray-300 shadow-sm  text-black'
+              : 'hover:bg-gray-200 border-transparent text-slate-700',
+            link.requiresAuth
+              ? data?.user[link.requiresAuth]
+                ? ''
+                : 'pointer-events-none opacity-50'
+              : '',
+          ]"
+        >
+          <Icon :name="link.icon" :class="['mr-3', link.iconClass]" />
+          <span>{{ link.label }}</span>
+          <Icon
+            v-if="link.requiresAuth && !data?.user[link.requiresAuth]"
+            name="mdi:lock-outline"
+            class="ml-auto"
+          />
+        </NuxtLink>
+      </div>
+    </nav>
 
     <nav class="mb-8">
       <h2 class="text-xs uppercase tracking-wider text-gray-400 mb-3">

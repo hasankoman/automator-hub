@@ -125,6 +125,14 @@ const isSelected = computed(() => {
           {{ repository.forks_count }}
         </div>
 
+        <Icon
+          name="material-symbols-light:webhook-rounded"
+          :class="[
+            'text-lg',
+            repository.hasWebhook ? 'text-green-500' : 'text-red-500',
+          ]"
+        />
+
         <div
           v-if="repository.default_branch"
           class="flex items-center gap-1 bg-gray-200 px-2 py-1 rounded text-xs"
