@@ -16,18 +16,22 @@ onMounted(() => {
 });
 
 const triggerAction = async (repository) => {
-  loadingStatus.value[repository.id] = "loading";
-  if (selectedAction.value === "auto") {
-    await handleAutoSetup(repository);
-  } else {
-    await githubStore.triggerAction(selectedAction.value, repository);
-    loadingStatus.value[repository.id] = "success";
-    toast.add({
-      severity: "success",
-      summary: "Success!",
-      detail: `README updated for ${repository.name}`,
-      life: 3000,
-    });
+  try {
+    loadingStatus.value[repository.id] = "loading";
+    if (selectedAction.value === "auto") {
+      await handleAutoSetup(repository);
+    } else {
+      await githubStore.triggerAction(selectedAction.value, repository);
+      loadingStatus.value[repository.id] = "success";
+      toast.add({
+        severity: "success",
+        summary: "Success!",
+        detail: `README updated for ${repository.name}`,
+        life: 3000,
+      });
+    }
+  } catch (error) {
+    loadingStatus.value[repository.id] = "error";
   }
 };
 

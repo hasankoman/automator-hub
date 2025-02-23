@@ -10,7 +10,7 @@ export const useFetchWrapper = async (url, options) => {
     return response;
   } catch (error) {
     loadingStore.setError(error.message || "An unexpected error occurred");
-    return null;
+    throw error;
   } finally {
     loadingStore.stopLoading();
   }

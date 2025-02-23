@@ -26,15 +26,15 @@ export const checkAccess = async (userId, feature) => {
 
     const { subscription } = usage.user;
 
-    console.log(subscription);
-
     switch (feature) {
       case "manualReadme":
         return {
-          hasAccess: usage.manualReadme.used < usage.manualReadme.limit,
-          limit: usage.manualReadme.limit,
-          used: usage.manualReadme.used,
-          remaining: usage.manualReadme.limit - usage.manualReadme.used,
+          hasAccess:
+            usage.manualUpdatesUsed < subscription.plan.manualReadmeUpdateLimit,
+          limit: subscription.plan.manualReadmeUpdateLimit,
+          used: usage.manualUpdatesUsed,
+          remaining:
+            subscription.plan.manualReadmeUpdateLimit - usage.manualUpdatesUsed,
         };
 
       case "autoReadme":
