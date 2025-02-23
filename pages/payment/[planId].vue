@@ -13,9 +13,7 @@ const planStore = usePlanStore();
 const { plans } = storeToRefs(planStore);
 const loading = ref(false);
 
-const selectedPlan = computed(() => {
-  return plans.value.find((plan) => plan.id === parseInt(route.params.planId));
-});
+const selectedPlan = ref(null);
 
 const cardForm = ref({
   number: "",
@@ -115,6 +113,17 @@ const handleSubmit = async () => {
 onMounted(() => {
   if (plans.value.length === 0) {
     planStore.fetchPlans();
+  }
+
+  selectedPlan.value = plans.value.find(
+    (plan) =>
+      plan.id === parseInt(route.params.planId) &&
+      !plan.comingSoon &&
+      !plan.isFree
+  );
+
+  if (!selectedPlan.value) {
+    router.push("/pricing");
   }
 });
 </script>

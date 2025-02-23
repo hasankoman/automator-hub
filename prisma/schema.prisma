@@ -25,6 +25,7 @@ model MonitoredRepository {
   userId       Int
   repositoryId String
   fullName     String
+  branch       String?
   webhookId    Int?
   isActive     Boolean  @default(true)
   createdAt    DateTime @default(now())
@@ -48,6 +49,7 @@ model Plan {
   createdAt               DateTime       @default(now())
   updatedAt               DateTime       @default(now()) @updatedAt
   isFree                  Boolean        @default(false)
+  comingSoon              Boolean        @default(false)
   subscriptions           Subscription[]
 }
 

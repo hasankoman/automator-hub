@@ -11,7 +11,9 @@ const { open: isSidebarOpen } = storeToRefs(sidebarStore);
 const { plans } = storeToRefs(planStore);
 
 onMounted(async () => {
-  await planStore.fetchPlans();
+  if (plans.value.length === 0) {
+    await planStore.fetchPlans();
+  }
 });
 
 const formattedPlans = computed(() => {
@@ -71,12 +73,6 @@ const selectPlan = async (plan) => {
             plan.spanClass,
           ]"
         >
-          <span
-            v-if="plan.comingSoon"
-            class="absolute right-0 top-0 text-2xl text-white bg-black rounded-bl-2xl pl-3 pr-4 py-2 shadow-xl border-b-1 border-l-1 border-gray-200"
-          >
-            Coming Soon
-          </span>
           <div
             class="absolute left-[50%] top-0 translate-[-50%] rounded-xl py-1 px-2 bg-white text-black border-[2.5px] border-black"
             v-if="subscription?.planId === plan.id"
@@ -148,11 +144,16 @@ const selectPlan = async (plan) => {
                 </div>
                 <div class="pt-4" v-if="subscription?.planId !== plan.id">
                   <Button
+                    :disabled="plan.comingSoon"
                     :label="
-                      !subscription?.planId
+                      plan.comingSoon
+                        ? 'Coming Soon'
+                        : !subscription?.planId
                         ? `Start with ${plan.name}`
                         : !subscription?.plan?.isFree
-                        ? 'Downgrade to Free Plan'
+                        ? plan.isFree
+                          ? 'Downgrade to Free Plan'
+                          : `Upgrade to ${plan.name} Plan`
                         : `Upgrade to ${plan.name} Plan`
                     "
                     @click="selectPlan(plan)"

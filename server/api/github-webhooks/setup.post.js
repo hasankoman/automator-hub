@@ -47,6 +47,7 @@ export default defineEventHandler(async (event) => {
       create: {
         userId: session.user.id,
         repositoryId: repository.id,
+        branch: repository.default_branch,
         fullName: repository.fullName,
         webhookId: response.id,
         isActive: true,
