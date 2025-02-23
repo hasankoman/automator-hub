@@ -6,6 +6,7 @@ export const useGitHubStore = defineStore("github", {
     selectedRepositories: {},
     currentStep: 1,
     hooks: [],
+    selectedAction: null,
   }),
 
   actions: {
@@ -72,6 +73,13 @@ export const useGitHubStore = defineStore("github", {
       });
 
       return response.data;
+    },
+    resetState() {
+      this.repositories = [];
+      this.selectedRepositories = {};
+      this.currentStep = 1;
+      this.hooks = [];
+      this.selectedAction = null;
     },
   },
 });

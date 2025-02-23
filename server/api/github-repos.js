@@ -44,12 +44,10 @@ async function enrichReposWithLanguages(repos, headers) {
           ),
         ]);
 
-        const hasWebhook = webhooks.some(
+        const webhook = webhooks.find(
           (hook) =>
             hook.config.url ===
-              `${
-                useRuntimeConfig().public.appUrl
-              }/api/github-webhooks/receive` && hook.active
+            `${useRuntimeConfig().public.appUrl}/api/github-webhooks/receive`
         );
 
         return {
@@ -63,7 +61,11 @@ async function enrichReposWithLanguages(repos, headers) {
           stars: repo.stargazers_count,
           defaultBranch: repo.default_branch,
           languages,
-          hasWebhook,
+          webhook: webhook
+            ? {
+                active: webhook.active,
+              }
+            : null,
         };
       } catch (err) {
         console.error(

@@ -88,5 +88,12 @@ export const useMeStore = defineStore("me", {
       this.subscription = data;
       return data;
     },
+    async checkAccess(feature) {
+      const { data } = await useFetchWrapper("/api/subscription/check-access", {
+        method: "POST",
+        body: { feature },
+      });
+      return data;
+    },
   },
 });
