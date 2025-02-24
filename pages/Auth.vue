@@ -6,7 +6,6 @@ definePageMeta({
 });
 
 const loadingStore = useLoadingStore();
-const toastStore = useToastStore();
 const meStore = useMeStore();
 
 const handleSignIn = async () => {
@@ -14,7 +13,7 @@ const handleSignIn = async () => {
     loadingStore.startLoading();
     await meStore.signIn();
   } catch (error) {
-    toastStore.error(error);
+    loadingStore.setError(error.message || "An unexpected error occurred");
   } finally {
     loadingStore.stopLoading();
   }
