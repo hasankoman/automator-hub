@@ -15,6 +15,10 @@ export const getUserUsage = async (userId) => {
       },
     });
 
+    if (!usage) {
+      return null;
+    }
+
     if (!usage.user?.subscription) {
       throw createApiError(ErrorTypes.NOT_FOUND, "Subscription not found");
     }

@@ -18,26 +18,42 @@ onMounted(async () => {
 });
 
 const handleSelection = async (selection) => {
+  const usageData = usage.value;
+  const subscriptionData = subscription.value;
+
+  const showUpgradeDialog = (type, message) => {
+    upgradeDialog.value = {
+      active: true,
+      type,
+      title: "Upgrade Required",
+      message,
+    };
+  };
+
+  if (!usageData || !subscriptionData) {
+    showUpgradeDialog(
+      "manual",
+      `You need to upgrade your plan to use this feature. Please consider upgrading your plan to continue using the ${selection} update feature without restrictions.`
+    );
+    return;
+  }
+
   if (selection === "auto") {
-    if (subscription.value.plan.allowAutoReadme) {
+    if (subscriptionData.plan.allowAutoReadme) {
       selectedAction.value = "auto";
     } else {
-      upgradeDialog.value = {
-        active: true,
-        type: "auto",
-        title: "Upgrade Required",
-        message:
-          "Auto-update feature is only available with our Pro plan. Upgrade now to enable automatic README updates.",
-      };
+      showUpgradeDialog(
+        "auto",
+        "Auto-update feature is only available with our Pro plan. Upgrade now to enable automatic README updates."
+      );
     }
   } else if (selection === "manual") {
-    if (usage.value["manualReadme"].used >= usage.value["manualReadme"].limit) {
-      upgradeDialog.value = {
-        active: true,
-        type: "manual",
-        title: "Upgrade Required",
-        message: `You've reached your manual update limit of ${usage.value["manualReadme"].limit} updates. Please consider upgrading your plan to continue using the manual update feature without restrictions.`,
-      };
+    const manualUsage = usageData["manualReadme"];
+    if (manualUsage.used >= manualUsage.limit) {
+      showUpgradeDialog(
+        "manual",
+        `You've reached your manual update limit of ${manualUsage.limit} updates. Please consider upgrading your plan to continue using the manual update feature without restrictions.`
+      );
     } else {
       selectedAction.value = "manual";
     }
@@ -86,14 +102,11 @@ const navigateToPricing = () => {
                 <h3 class="text-lg font-semibold text-gray-900">
                   Manual Update
                 </h3>
-                <span
-                  v-if="usage['manualReadme']"
-                  class="text-sm text-gray-500"
-                >
-                  {{ usage["manualReadme"].used }}/{{
-                    usage["manualReadme"].limit === 999999999
+                <span v-if="usage?.manualReadme" class="text-sm text-gray-500">
+                  {{ usage?.manualReadme?.used }}/{{
+                    usage?.manualReadme?.limit === 999999999
                       ? "∞"
-                      : usage["manualReadme"].limit
+                      : usage?.manualReadme?.limit
                   }}
                 </span>
               </div>
