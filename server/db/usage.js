@@ -25,6 +25,11 @@ export const getUserUsage = async (userId) => {
         used: usage.manualUpdatesUsed,
         lastResetDate: usage.lastResetDate,
       },
+      autoReadme: {
+        limit: usage.user.subscription.plan.autoReadmeUpdateLimit,
+        used: usage.autoReadmeUsed,
+        lastResetDate: usage.lastResetDate,
+      },
     };
   } catch (error) {
     if (error.statusCode) throw error;
@@ -42,6 +47,21 @@ export const incrementMetric = async (userId, metric) => {
     throw createApiError(
       ErrorTypes.INTERNAL,
       "Error incrementing usage",
+      error
+    );
+  }
+};
+
+export const decrementMetric = async (userId, metric) => {
+  try {
+    return await prisma.usage.update({
+      where: { userId },
+      data: { [metric]: { decrement: 1 } },
+    });
+  } catch (error) {
+    throw createApiError(
+      ErrorTypes.INTERNAL,
+      "Error decrementing usage",
       error
     );
   }

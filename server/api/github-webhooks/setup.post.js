@@ -1,3 +1,4 @@
+import { incrementMetric } from "~/server/db/usage";
 import { validateAccess } from "../../utils/subscriptionHandler";
 
 export default defineEventHandler(async (event) => {
@@ -53,6 +54,8 @@ export default defineEventHandler(async (event) => {
         isActive: true,
       },
     });
+
+    await incrementMetric(session.user.id, "autoReadmeUsed");
 
     return createApiResponse(response);
   } catch (error) {

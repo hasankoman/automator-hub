@@ -1,3 +1,5 @@
+import { decrementMetric } from "~/server/db/usage";
+
 export default defineEventHandler(async (event) => {
   try {
     const session = await requireGithubAuth(event);
@@ -28,7 +30,6 @@ export default defineEventHandler(async (event) => {
         }
       );
 
-
       if (!response.ok) {
         throw new Error(`GitHub API error: ${response.statusText}`);
       }
@@ -40,6 +41,8 @@ export default defineEventHandler(async (event) => {
         fullName: `${username}/${repo}`,
       },
     });
+
+    await decrementMetric(session.user.id, "autoReadmeUsed");
 
     return createApiResponse({ success: true });
   } catch (error) {

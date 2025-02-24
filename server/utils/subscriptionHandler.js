@@ -39,7 +39,9 @@ export const checkAccess = async (userId, feature) => {
 
       case "autoReadme":
         return {
-          hasAccess: subscription.plan.allowAutoReadme,
+          hasAccess:
+            subscription.plan.allowAutoReadme &&
+            usage.autoReadmeUsed < subscription.plan.autoReadmeUpdateLimit,
           reason: subscription.plan.allowAutoReadme
             ? null
             : "Feature not available in your plan",

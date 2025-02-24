@@ -14,7 +14,6 @@ const upgradeDialog = ref({
 });
 
 onMounted(async () => {
-  await meStore.fetchSubscription();
   await meStore.fetchUsage();
 });
 
@@ -58,9 +57,9 @@ const navigateToPricing = () => {
 
 <template>
   <div class="flex-1 p-5 gap-8 overflow-auto">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-48">
+    <div class="flex flex-col md:flex-row gap-6">
       <div
-        class="relative group cursor-pointer transition-all duration-300"
+        class="relative group cursor-pointer transition-all duration-300 h-48"
         @click="handleSelection('manual')"
       >
         <div
@@ -107,7 +106,7 @@ const navigateToPricing = () => {
       </div>
 
       <div
-        class="relative group cursor-pointer transition-all duration-300"
+        class="relative group cursor-pointer transition-all duration-300 h-48"
         @click="handleSelection('auto')"
       >
         <div
