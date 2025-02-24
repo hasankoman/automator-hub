@@ -58,7 +58,7 @@ const selectPlan = async (plan) => {
     <div
       class="p-5 bg-white/70 backdrop-blur-sm border-b border-gray-200 absolute top-0 z-20 transition-all duration-300 w-full"
       :style="{
-        height: scrollPosition > 40 ? '64px' : '128px',
+        height: scrollPosition > 40 ? '64px' : '110px',
       }"
     >
       <h2
