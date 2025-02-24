@@ -45,6 +45,7 @@ export default defineNuxtConfig({
     githubClientSecret: process.env.GITHUB_CLIENT_SECRET,
     authSecret: process.env.AUTH_SECRET,
     webhookSecret: process.env.WEBHOOK_SECRET,
+    tokenEncryptionKey: process.env.TOKEN_ENCRYPTION_KEY,
   },
   css: ["~/assets/css/main.css", "animate.css"],
   compatibilityDate: "2025-02-06",

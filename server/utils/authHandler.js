@@ -29,7 +29,7 @@ export const requireGithubAuth = async (event) => {
 
     session.user.github = {
       ...session.user.github,
-      accessToken: user.githubToken,
+      accessToken: decrypt(user.githubToken),
     };
   }
 
