@@ -24,7 +24,7 @@ export default NuxtAuthHandler({
   callbacks: {
     async signIn({ user, account, profile }) {
       if (account.provider === "github") {
-        await createOrUpdateFromGithub(profile);
+        await createOrUpdateFromGithub(profile, account.access_token);
         return true;
       }
       return true;
@@ -33,7 +33,10 @@ export default NuxtAuthHandler({
     async jwt({ token, user, account, profile }) {
       if (account) {
         if (account.provider === "github") {
-          const dbUser = await createOrGetFromGithub(profile);
+          const dbUser = await createOrGetFromGithub(
+            profile,
+            account.access_token
+          );
           token.userId = dbUser.id;
           token.github = {
             username: profile?.login,

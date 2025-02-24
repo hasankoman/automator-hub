@@ -11,9 +11,41 @@ export default defineEventHandler(async (event) => {
       );
     }
 
+    const repository = await prisma.monitoredRepository.findFirst({
+      where: {
+        fullName: body.repository.full_name,
+        isActive: true,
+      },
+      include: {
+        user: true,
+      },
+    });
+
+    if (!repository) {
+      throw createApiError(
+        ErrorTypes.NOT_FOUND,
+        "Repository not found or webhook inactive"
+      );
+    }
+
     switch (githubEvent) {
       case "push":
-        await handlePushEvent(body);
+        if (
+          body.ref === `refs/heads/${repository.branch}` &&
+          !body.commits[0].message.includes("readme file updated")
+        ) {
+          await $fetch(useRuntimeConfig().public.webhookUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: repository.user.githubToken,
+            },
+            body: {
+              defaultBranch: body.repository.default_branch,
+              fullName: body.repository.full_name,
+            },
+          });
+        }
         break;
     }
 

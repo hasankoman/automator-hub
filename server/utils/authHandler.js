@@ -15,10 +15,22 @@ export const requireGithubAuth = async (event) => {
   const session = await requireAuth(event);
 
   if (!session?.user?.github?.accessToken) {
-    throw createApiError(
-      ErrorTypes.UNAUTHORIZED,
-      "GitHub authentication required"
-    );
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { githubToken: true },
+    });
+
+    if (!user?.githubToken) {
+      throw createApiError(
+        ErrorTypes.UNAUTHORIZED,
+        "GitHub authentication required"
+      );
+    }
+
+    session.user.github = {
+      ...session.user.github,
+      accessToken: user.githubToken,
+    };
   }
 
   return session;

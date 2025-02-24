@@ -3,19 +3,21 @@ export const getByGithubId = (githubId) =>
 
 export const getById = (id) => prisma.user.findUnique({ where: { id } });
 
-export const createOrUpdateFromGithub = (profile) =>
+export const createOrUpdateFromGithub = (profile, accessToken) =>
   prisma.user.upsert({
     where: { githubId: String(profile.id) },
     update: {
       email: profile.email,
       name: profile.name,
       githubUsername: profile.login,
+      githubToken: accessToken,
     },
     create: {
       email: profile.email,
       name: profile.name,
       githubId: String(profile.id),
       githubUsername: profile.login,
+      githubToken: accessToken,
     },
   });
 
@@ -58,10 +60,13 @@ export const deleteUser = async (id) => {
   }
 };
 
-export const createOrGetFromGithub = async (profile) => {
+export const createOrGetFromGithub = async (profile, accessToken) => {
   const existingUser = await getByGithubId(profile.id);
   if (existingUser) {
-    return existingUser;
+    return prisma.user.update({
+      where: { id: existingUser.id },
+      data: { githubToken: accessToken },
+    });
   }
 
   return prisma.user.create({
@@ -70,6 +75,7 @@ export const createOrGetFromGithub = async (profile) => {
       name: profile.name,
       githubId: String(profile.id),
       githubUsername: profile.login,
+      githubToken: accessToken,
     },
   });
 };
