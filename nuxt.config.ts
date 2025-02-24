@@ -135,5 +135,8 @@ export default defineNuxtConfig({
   },
   nitro: {
     plugins: ["~/server/cron/index.js"],
+    experimental: {
+      websocket: true,
+    },
   },
 });
