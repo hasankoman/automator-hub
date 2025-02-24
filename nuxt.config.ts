@@ -133,5 +133,7 @@ export default defineNuxtConfig({
       },
     },
   },
-
+  nitro: {
+    plugins: ["~/server/cron/index.js"],
+  },
 });
