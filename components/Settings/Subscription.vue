@@ -92,7 +92,7 @@ const reactivateSubscription = async () => {
             subscription.status === 'active' ||
             subscription.status === 'cancelled'
           "
-          class="space-y-3"
+          class="gap-3"
         >
           <div class="flex justify-between items-center">
             <span class="text-gray-500">Current Plan</span>

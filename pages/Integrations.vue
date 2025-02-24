@@ -94,7 +94,7 @@ const navigateToLogin = () => {
       </div>
 
       <template v-if="data">
-        <div class="flex-1 p-5 space-y-8 overflow-auto">
+        <div class="flex-1 p-5 gap-8 overflow-auto">
           <div
             class="p-4 bg-white rounded-xl shadow-xs flex flex-col gap-3 col-span-1 border border-gray-200"
           >
@@ -144,7 +144,7 @@ const navigateToLogin = () => {
       </template>
 
       <template v-else>
-        <div class="flex-1 p-5 space-y-8 overflow-auto">
+        <div class="flex-1 p-5 gap-8 overflow-auto">
           <div
             class="p-4 bg-white rounded-xl shadow-xs flex flex-col items-center justify-between gap-1 col-span-1 border border-gray-200"
           >

@@ -79,10 +79,7 @@ const selectPlan = async (plan) => {
       </p>
     </div>
 
-    <div
-      class="flex-1 p-5 pt-36 space-y-8 overflow-auto"
-      @scroll="handleScroll"
-    >
+    <div class="flex-1 p-5 pt-36 gap-8 overflow-auto" @scroll="handleScroll">
       <div
         class="grid grid-cols-1"
         :class="

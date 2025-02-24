@@ -224,6 +224,7 @@ const handleMenuBlur = () => {
             shape="circle"
             :pt="{
               image: {
+                class: 'w-8 h-8 !rounded-full',
                 alt: data.user.name,
               },
             }"

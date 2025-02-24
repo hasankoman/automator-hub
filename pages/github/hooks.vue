@@ -64,7 +64,7 @@ const toggle = (event) => {
         </div>
       </div>
 
-      <div class="flex-1 p-6 space-y-4">
+      <div class="flex-1 p-6 gap-4">
         <div
           v-if="hooks.length === 0"
           class="flex flex-col items-center justify-center py-12 px-4"
@@ -96,7 +96,7 @@ const toggle = (event) => {
                     class="text-2xl text-gray-700"
                   />
                 </div>
-                <div class="space-y-1">
+                <div class="gap-1">
                   <h3 class="font-medium text-gray-900">
                     {{ hook.repository.fullName }}
                   </h3>

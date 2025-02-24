@@ -57,7 +57,7 @@ const navigateToPricing = () => {
 </script>
 
 <template>
-  <div class="flex-1 p-5 space-y-8 overflow-auto">
+  <div class="flex-1 p-5 gap-8 overflow-auto">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-48">
       <div
         class="relative group cursor-pointer transition-all duration-300"
@@ -73,7 +73,7 @@ const navigateToPricing = () => {
             selectedAction === 'manual' ? 'border-gray-800' : 'border-gray-200'
           "
         >
-          <div class="flex items-start space-x-4">
+          <div class="flex items-start gap-4">
             <div
               class="p-3 bg-gray-100 rounded-lg flex items-center justify-center"
             >
@@ -120,7 +120,7 @@ const navigateToPricing = () => {
             selectedAction === 'auto' ? 'border-gray-800' : 'border-gray-200'
           "
         >
-          <div class="flex items-start space-x-4">
+          <div class="flex items-start gap-4">
             <div
               class="p-3 bg-gray-100 rounded-lg flex items-center justify-center"
             >

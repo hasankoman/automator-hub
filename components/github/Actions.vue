@@ -64,12 +64,12 @@ const handleStartAction = () => {
 </script>
 
 <template>
-  <div class="flex-1 p-5 space-y-8 overflow-auto">
+  <div class="flex-1 p-5 gap-8 overflow-auto">
     <div class="bg-white rounded-2xl p-5 border border-gray-200">
       <h3 class="text-lg font-semibold text-gray-900 mb-4">
         Selected Repositories
       </h3>
-      <div class="space-y-3">
+      <div class="gap-3">
         <div
           v-for="repository in Object.values(selectedRepositories)"
           :key="repository.id"
