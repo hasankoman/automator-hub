@@ -2,7 +2,8 @@ import { defineNitroPlugin } from "nitropack/runtime/plugin";
 import subscriptionJob from "./jobs/subscriptionJob";
 import cron from "node-cron";
 
-const jobs = [subscriptionJob];
+//const jobs = [subscriptionJob];
+const jobs = [];
 
 export default defineNitroPlugin(() => {
   const isDev = process.env.NODE_ENV === "development";
