@@ -19,7 +19,7 @@ export const useGitHubStore = defineStore("github", {
     },
     async triggerAction(type, repository) {
       if (type === "manual") {
-        const response = await useFetchWrapper("/api/action", {
+        const response = await $fetch("/api/action", {
           method: "POST",
           body: repository,
         });

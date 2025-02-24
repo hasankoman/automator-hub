@@ -1,28 +1,58 @@
 <script setup>
 import { ref, onMounted } from "vue";
+import { useWebSocket } from "~/composables/useWebSocket";
+import { useActionsStore } from "~/stores/actions";
 
 const githubStore = useGitHubStore();
 const toast = useToast();
+const actionsStore = useActionsStore();
 
-const { selectedRepositories, currentStep, selectedAction } =
-  storeToRefs(githubStore);
+const { selectedRepositories, selectedAction } = storeToRefs(githubStore);
 
+const { subscribe } = useWebSocket();
 const loadingStatus = ref({});
 
 onMounted(() => {
   Object.keys(selectedRepositories.value).forEach((repo) => {
     loadingStatus.value[repo] = "pending";
   });
+
+  subscribe("action-complete", (data) => {
+    const { repositoryId, status, message } = data;
+
+    if (loadingStatus.value[repositoryId]) {
+      loadingStatus.value[repositoryId] = status;
+
+      if (status === "success") {
+        toast.add({
+          severity: "success",
+          summary: "Success!",
+          detail: message,
+          life: 3000,
+        });
+      } else if (status === "error") {
+        toast.add({
+          severity: "error",
+          summary: "Error",
+          detail: message,
+          life: 3000,
+        });
+      }
+    }
+  });
 });
 
 const triggerAction = async (repository) => {
   try {
     loadingStatus.value[repository.id] = "loading";
+    actionsStore.addAction(repository, selectedAction.value);
+
     if (selectedAction.value === "auto") {
       await handleAutoSetup(repository);
     } else {
       await githubStore.triggerAction(selectedAction.value, repository);
       loadingStatus.value[repository.id] = "success";
+      actionsStore.updateActionStatus(repository.id, "success");
       toast.add({
         severity: "success",
         summary: "Success!",
@@ -32,6 +62,7 @@ const triggerAction = async (repository) => {
     }
   } catch (error) {
     loadingStatus.value[repository.id] = "error";
+    actionsStore.updateActionStatus(repository.id, "error");
   }
 };
 

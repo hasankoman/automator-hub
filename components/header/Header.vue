@@ -62,7 +62,7 @@ watch(sidebarOpen, (newValue) => {
           </client-only>
         </template>
       </Button>
-      <slot name="right"></slot>
+      <HeaderRight />
     </div>
   </div>
 </template>
