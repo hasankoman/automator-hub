@@ -59,21 +59,45 @@ const stepComponents = computed(() => {
     },
   };
 });
+
+const scrollPosition = ref(0);
+
+const handleScroll = (event) => {
+  const target = event.target;
+  scrollPosition.value = target.scrollTop;
+};
 </script>
 
 <template>
   <div
     class="flex flex-col h-full bg-gray-50 rounded-2xl overflow-hidden border-1 border-gray-200"
   >
-    <div class="p-4 md:p-5 bg-white border-b border-gray-200">
-      <h2 class="text-xl md:text-2xl font-bold text-gray-900">
+    <div
+      class="block p-5 bg-white/10 backdrop-blur-md border-b border-gray-200 sticky top-0 z-10 transition-all duration-300"
+      :style="{
+        height: scrollPosition > 40 ? '64px' : '100px',
+      }"
+    >
+      <h2
+        class="font-bold text-gray-900 transition-all duration-300"
+        :style="{ fontSize: scrollPosition > 40 ? '1rem' : '1.25rem' }"
+      >
         {{ stepComponents[currentStep].header.title }}
       </h2>
-      <p class="mt-2 text-sm md:text-base text-gray-600">
+      <p
+        class="mt-2 text-gray-600 transition-all duration-300"
+        :style="{
+          opacity: scrollPosition > 40 ? 0 : 1,
+          transform:
+            scrollPosition > 40 ? 'translateY(-12px)' : 'translateY(0)',
+        }"
+      >
         {{ stepComponents[currentStep].header.description }}
       </p>
     </div>
-    <component :is="stepComponents[currentStep].component" />
+    <div class="flex-1 overflow-auto" @scroll="handleScroll">
+      <component :is="stepComponents[currentStep].component" />
+    </div>
     <div class="p-5 bg-white border-t border-gray-200">
       <div class="flex justify-between items-center">
         <Button
