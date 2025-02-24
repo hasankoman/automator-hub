@@ -53,12 +53,12 @@ const selectPlan = async (plan) => {
 
 <template>
   <div
-    class="flex flex-col h-full bg-gray-50 rounded-2xl overflow-hidden border-1 border-gray-200"
+    class="flex flex-col h-full bg-gray-50 rounded-2xl overflow-hidden border-1 border-gray-200 relative"
   >
     <div
-      class="p-5 bg-white/10 backdrop-blur-md border-b border-gray-200 sticky top-0 z-10 transition-all duration-300"
+      class="p-5 bg-white/70 backdrop-blur-sm border-b border-gray-200 absolute top-0 z-20 transition-all duration-300 w-full"
       :style="{
-        height: scrollPosition > 40 ? '64px' : '100px',
+        height: scrollPosition > 40 ? '64px' : '128px',
       }"
     >
       <h2
@@ -79,7 +79,10 @@ const selectPlan = async (plan) => {
       </p>
     </div>
 
-    <div class="flex-1 p-5 space-y-8 overflow-auto" @scroll="handleScroll">
+    <div
+      class="flex-1 p-5 pt-36 space-y-8 overflow-auto"
+      @scroll="handleScroll"
+    >
       <div
         class="grid grid-cols-1"
         :class="
