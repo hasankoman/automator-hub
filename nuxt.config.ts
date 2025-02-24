@@ -64,6 +64,13 @@ export default defineNuxtConfig({
       },
     ],
   },
+  app: {
+    head: {
+      htmlAttrs: {
+        lang: "en",
+      },
+    },
+  },
   primevue: {
     options: {
       theme: {
@@ -125,4 +132,5 @@ export default defineNuxtConfig({
       },
     },
   },
+
 });

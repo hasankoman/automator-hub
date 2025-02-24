@@ -45,6 +45,7 @@ watch(sidebarOpen, (newValue) => {
       <Button
         class="w-10 h-10 !bg-white !border-gray-200 mr-auto"
         @click.stop="toggleSidebar"
+        aria-label="Toggle sidebar"
       >
         <template #icon>
           <client-only>

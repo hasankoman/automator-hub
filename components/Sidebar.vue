@@ -119,7 +119,9 @@ const handleMenuBlur = () => {
     </div>
 
     <nav class="mb-8">
-      <h2 class="text-xs uppercase tracking-wider text-gray-400 mb-3">MAIN</h2>
+      <h2 class="text-xs uppercase tracking-wider text-gray-600 font mb-3">
+        MAIN
+      </h2>
       <div class="flex flex-col gap-2">
         <NuxtLink
           v-for="link in mainLinks"
@@ -149,7 +151,9 @@ const handleMenuBlur = () => {
     </nav>
 
     <nav class="mb-8">
-      <h2 class="text-xs uppercase tracking-wider text-gray-400 mb-3">
+      <h2
+        class="text-xs uppercase tracking-wider text-gray-600 font-medium mb-3"
+      >
         GITHUB
       </h2>
       <div class="flex flex-col gap-2">
@@ -181,7 +185,7 @@ const handleMenuBlur = () => {
     </nav>
 
     <nav class="mb-8">
-      <h2 class="text-xs uppercase tracking-wider text-gray-400 mb-3">
+      <h2 class="text-xs uppercase tracking-wider text-gray-600 font mb-3">
         ACCOUNT
       </h2>
       <div class="flex flex-col gap-2">
@@ -215,7 +219,15 @@ const handleMenuBlur = () => {
         @click="toggle"
       >
         <div class="flex gap-2 items-center">
-          <Avatar :image="data.user.image" shape="circle" />
+          <Avatar
+            :image="data.user.image"
+            shape="circle"
+            :pt="{
+              image: {
+                alt: data.user.name,
+              },
+            }"
+          />
           <span class="inline-flex flex-col items-start select-none">
             <span class="font-bold">{{ data.user.name }}</span>
           </span>
