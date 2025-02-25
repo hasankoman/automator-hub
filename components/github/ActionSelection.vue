@@ -72,10 +72,10 @@ const navigateToPricing = () => {
 </script>
 
 <template>
-  <div class="flex-1 p-5 gap-8 overflow-auto">
-    <div class="flex flex-col md:flex-row gap-6">
+  <div class="flex-1 h-full p-5 gap-8 overflow-auto">
+    <div class="flex flex-col sm:flex-row md:flex-col lg:flex-row gap-6">
       <div
-        class="relative group cursor-pointer transition-all duration-300 h-48"
+        class="relative group cursor-pointer transition-all duration-300 h-48 flex-1"
         @click="handleSelection('manual')"
       >
         <div
@@ -119,7 +119,7 @@ const navigateToPricing = () => {
       </div>
 
       <div
-        class="relative group cursor-pointer transition-all duration-300 h-48"
+        class="relative group cursor-pointer transition-all duration-300 h-48 flex-1"
         @click="handleSelection('auto')"
       >
         <div

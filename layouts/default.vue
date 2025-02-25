@@ -46,7 +46,7 @@ watch(
     <div class="relative h-dvh bg-gray-100">
       <Sidebar />
       <div
-        class="h-full transition-all duration-300"
+        class="h-full transition-all duration-500"
         :class="sidebarOpen ? 'md:ml-[275px] blur-xs md:blur-none' : '0px'"
         @click="handleOutClick"
       >

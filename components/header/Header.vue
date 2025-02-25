@@ -38,28 +38,31 @@ watch(sidebarOpen, (newValue) => {
 </script>
 
 <template>
-  <div class="!sticky top-0 z-10 bg-gray-100 h-[60px]">
+  <div class="!sticky top-0 z-50 bg-gray-100 h-[60px]">
     <div
       class="flex items-center justify-end gap-3 bg-white p-2 border-1 border-gray-200 rounded-2xl h-full"
     >
       <Button
-        class="w-10 h-10 !bg-white !border-gray-200 mr-auto"
+        class="w-10 h-10 mr-auto transition-all duration-1000"
         @click.stop="toggleSidebar"
         aria-label="Toggle sidebar"
+        :class="{
+          '!bg-transparent !border-transparent': sidebarOpen,
+          '!bg-white !border-gray-200': !sidebarOpen,
+        }"
+        :style="{
+          transform: sidebarOpen
+            ? 'translateX(calc(-100% - 15px))'
+            : 'translateX(0)',
+          transition: 'transform 0.5s ease-in-out',
+        }"
       >
         <template #icon>
-          <client-only>
-            <Vue3Lottie
-              ref="lottieRef"
-              :scale="4"
-              class="w-full h-full"
-              width="100%"
-              height="100%"
-              :animationData="hamburgerArrowAnimation"
-              :loop="false"
-              :autoPlay="false"
-            />
-          </client-only>
+          <Icon
+            name="hugeicons:sidebar-right-01"
+            :class="sidebarOpen ? 'rotate-y-180' : 'rotate-y-0'"
+            class="text-lg text-black transition-all duration-500"
+          />
         </template>
       </Button>
       <slot name="right"></slot>

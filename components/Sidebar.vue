@@ -101,10 +101,10 @@ const handleMenuBlur = () => {
 
 <template>
   <aside
-    class="h-dvh text-black py-3 px-2 md:p-5 flex flex-col z-50 bg-white md:bg-transparent w-72 fixed left-0 top-0 shadow-2xl md:shadow-none transition-all duration-300 overflow-auto"
+    class="h-dvh text-black py-3 px-2 md:p-5 flex flex-col z-40 bg-white md:bg-transparent w-72 fixed left-0 top-0 shadow-2xl md:shadow-none transition-all duration-500 overflow-auto"
     :class="!sidebarOpen ? '-translate-x-100' : 'translate-x-0'"
   >
-    <div class="flex items-center gap-3 mb-8">
+    <div class="flex flex-col gap-3 mb-8">
       <div
         class="flex items-center justify-center w-12 h-12 bg-[#D2CECF] rounded-full"
       >

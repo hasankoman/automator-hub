@@ -20,7 +20,10 @@ const stepComponents = computed(() => {
   return {
     1: {
       component: ActionSelection,
-      buttonDisabled: !selectedAction.value,
+      buttonDisabled: {
+        prev: currentStep.value === 1,
+        next: !selectedAction.value,
+      },
       action: () => {
         currentStep.value += 1;
       },
@@ -32,7 +35,10 @@ const stepComponents = computed(() => {
     },
     2: {
       component: RepositoryList,
-      buttonDisabled: Object.keys(selectedRepositories.value).length === 0,
+      buttonDisabled: {
+        prev: false,
+        next: Object.keys(selectedRepositories.value).length === 0,
+      },
       action: () => {
         currentStep.value += 1;
       },
@@ -47,6 +53,10 @@ const stepComponents = computed(() => {
     },
     3: {
       component: Actions,
+      buttonDisabled: {
+        prev: false,
+        next: true,
+      },
       action: () => {
         currentStep.value += 1;
       },
@@ -74,55 +84,67 @@ const handleScroll = (event) => {
   >
     <div
       class="block p-5 bg-white/10 backdrop-blur-md border-b border-gray-200 sticky top-0 z-10 transition-all duration-300"
-      :style="{
-        height: scrollPosition > 40 ? '64px' : '100px',
-      }"
     >
-      <h2
-        class="font-bold text-gray-900 transition-all duration-300"
-        :style="{ fontSize: scrollPosition > 40 ? '1rem' : '1.25rem' }"
-      >
-        {{ stepComponents[currentStep].header.title }}
-      </h2>
-      <p
-        class="mt-2 text-gray-600 transition-all duration-300"
-        :style="{
-          opacity: scrollPosition > 40 ? 0 : 1,
-          transform:
-            scrollPosition > 40 ? 'translateY(-12px)' : 'translateY(0)',
-        }"
-      >
-        {{ stepComponents[currentStep].header.description }}
-      </p>
+      <div class="flex gap-4 justify-between">
+        <div class="">
+          <h2 class="font-bold text-gray-900">
+            {{ stepComponents[currentStep].header.title }}
+          </h2>
+          <p class="mt-2 text-gray-600">
+            {{ stepComponents[currentStep].header.description }}
+          </p>
+        </div>
+        <div class="flex h-full gap-3 border-gray-200">
+          <Button
+            outlined
+            size="small"
+            class="w-10 h-10"
+            :disabled="stepComponents[currentStep].buttonDisabled.prev"
+            @click="currentStep -= 1"
+          >
+            <template #icon>
+              <Icon
+                name="hugeicons:arrow-left-01"
+                class="!text-black"
+                size="18"
+              />
+            </template>
+          </Button>
+          <Button
+            iconPos="right"
+            size="small"
+            class="w-10 h-10"
+            :disabled="stepComponents[currentStep].buttonDisabled.next"
+            @click="stepComponents[currentStep].action()"
+          >
+            <template #icon="slotProps">
+              <Icon
+                v-bind="slotProps"
+                class="!text-white"
+                name="hugeicons:arrow-right-01"
+                size="18"
+              />
+            </template>
+          </Button>
+        </div>
+      </div>
     </div>
     <div class="flex-1 overflow-auto" @scroll="handleScroll">
       <component :is="stepComponents[currentStep].component" />
     </div>
-    <div class="p-5 bg-white border-t border-gray-200">
-      <div class="flex justify-between items-center">
-        <Button
-          label="Back"
-          outlined
-          @click="currentStep -= 1"
-          v-if="currentStep > 1"
-        >
-          <template #icon>
-            <Icon name="hugeicons:arrow-left-01" />
-          </template>
-        </Button>
-        <Button
-          v-if="currentStep !== Object.keys(stepComponents).length"
-          label="Next"
-          iconPos="right"
-          class="ml-auto !px-4"
-          :disabled="stepComponents[currentStep].buttonDisabled"
-          @click="stepComponents[currentStep].action()"
-        >
-          <template #icon="slotProps">
-            <Icon v-bind="slotProps" name="hugeicons:arrow-right-01" />
-          </template>
-        </Button>
-      </div>
-    </div>
   </div>
 </template>
+
+<style>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  transform: translateY(0);
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(-80%);
+}
+</style>
