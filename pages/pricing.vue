@@ -8,13 +8,6 @@ const { user, subscription } = storeToRefs(meStore);
 const { open: isSidebarOpen } = storeToRefs(sidebarStore);
 const { plans } = storeToRefs(planStore);
 
-const scrollPosition = ref(0);
-
-const handleScroll = (event) => {
-  const target = event.target;
-  scrollPosition.value = target.scrollTop;
-};
-
 onMounted(async () => {
   if (plans.value.length === 0) {
     await planStore.fetchPlans();
@@ -56,30 +49,15 @@ const selectPlan = async (plan) => {
     class="flex flex-col h-full bg-gray-50 rounded-2xl overflow-hidden border-1 border-gray-200 relative"
   >
     <div
-      class="p-5 bg-white/70 backdrop-blur-sm border-b border-gray-200 absolute top-0 z-20 transition-all duration-300 w-full"
-      :style="{
-        height: scrollPosition > 40 ? '64px' : '110px',
-      }"
+      class="p-5 bg-white/70 backdrop-blur-sm border-b border-gray-200 absolute top-0 z-20 w-full"
     >
-      <h2
-        class="font-bold text-gray-900 transition-all duration-300"
-        :style="{ fontSize: scrollPosition > 40 ? '1rem' : '1.25rem' }"
-      >
-        Pricing Plans
-      </h2>
-      <p
-        class="mt-2 text-gray-600 transition-all duration-300"
-        :style="{
-          opacity: scrollPosition > 40 ? 0 : 1,
-          transform:
-            scrollPosition > 40 ? 'translateY(-12px)' : 'translateY(0)',
-        }"
-      >
+      <h2 class="font-bold text-gray-900">Pricing Plans</h2>
+      <p class="mt-2 text-gray-600">
         Select the plan that best suits your needs.
       </p>
     </div>
 
-    <div class="flex-1 p-5 pt-36 gap-8 overflow-auto" @scroll="handleScroll">
+    <div class="flex-1 p-5 pt-32 gap-8 overflow-auto" @scroll="handleScroll">
       <div
         class="grid grid-cols-1"
         :class="

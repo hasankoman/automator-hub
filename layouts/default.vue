@@ -61,7 +61,7 @@ watch(
           <Header>
             <template #right>
               <HeaderRight
-                v-if="$route.path.includes('github') && currentStep === 1"
+                v-if="$route.path.includes('github') && currentStep === 2"
               />
             </template>
           </Header>

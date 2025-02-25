@@ -19,10 +19,14 @@ export const useGitHubStore = defineStore("github", {
     },
     async triggerAction(type, repository) {
       if (type === "manual") {
-        const response = await useFetchWrapper("/api/action", {
-          method: "POST",
-          body: repository,
-        });
+        await useFetchWrapper(
+          "/api/action",
+          {
+            method: "POST",
+            body: repository,
+          },
+          false
+        );
       }
     },
     async setupWebhook(repository) {

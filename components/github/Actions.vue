@@ -17,18 +17,25 @@ onMounted(() => {
 
 const triggerAction = async (repository) => {
   try {
-    loadingStatus.value[repository.id] = "loading";
-    if (selectedAction.value === "auto") {
-      await handleAutoSetup(repository);
-    } else {
-      await githubStore.triggerAction(selectedAction.value, repository);
-      loadingStatus.value[repository.id] = "success";
-      toast.add({
-        severity: "success",
-        summary: "Success!",
-        detail: `README updated for ${repository.name}`,
-        life: 3000,
-      });
+    if (
+      loadingStatus.value[repository.id] === "error" ||
+      loadingStatus.value[repository.id] === "pending"
+    ) {
+      loadingStatus.value[repository.id] = "loading";
+      if (selectedAction.value === "auto") {
+        await handleAutoSetup(repository);
+      } else {
+        await githubStore.triggerAction(selectedAction.value, repository);
+        loadingStatus.value[repository.id] = "success";
+        toast.add({
+          severity: "success",
+          summary: "Success!",
+          detail: `README updated for ${repository.name}`,
+          life: 3000,
+        });
+      }
+    } else if (loadingStatus.value[repository.id] === "success") {
+      openNewTab(repository.html_url);
     }
   } catch (error) {
     loadingStatus.value[repository.id] = "error";
@@ -69,11 +76,12 @@ const handleStartAction = () => {
       <h3 class="text-lg font-semibold text-gray-900 mb-4">
         Selected Repositories
       </h3>
-      <div class="gap-3">
+      <div class="flex flex-col gap-3">
         <div
           v-for="repository in Object.values(selectedRepositories)"
           :key="repository.id"
-          class="transition-all duration-200 ease-in-out"
+          class="transition-all duration-200 ease-in-out cursor-pointer"
+          @click="triggerAction(repository)"
         >
           <div
             class="relative flex items-center justify-between p-4 rounded-xl border-1"
@@ -144,39 +152,22 @@ const handleStartAction = () => {
                 </div>
               </div>
 
-              <div class="flex-shrink-0">
-                <Button
+              <div class="flex items-center justify-center">
+                <Icon
                   v-if="loadingStatus[repository.id] === 'error'"
-                  @click="triggerAction(repository)"
-                  class="!w-8 !h-8 !min-w-8 !p-0"
-                  severity="danger"
-                  text
-                >
-                  <template #icon>
-                    <Icon name="hugeicons:refresh" class="!w-4 !h-4" />
-                  </template>
-                </Button>
-                <Button
+                  name="hugeicons:refresh"
+                  class="!w-4 !h-4 text-red-500"
+                />
+                <Icon
                   v-else-if="loadingStatus[repository.id] === 'pending'"
-                  @click="triggerAction(repository)"
-                  class="!w-8 !h-8 !min-w-8 !p-0"
-                  text
-                >
-                  <template #icon>
-                    <Icon name="hugeicons:play" class="!w-4 !h-4" />
-                  </template>
-                </Button>
-                <Button
+                  name="hugeicons:play"
+                  class="!w-4 !h-4"
+                />
+                <Icon
                   v-else-if="loadingStatus[repository.id] === 'success'"
-                  @click="openNewTab(repository.html_url)"
-                  class="!w-8 !h-8 !min-w-8 !p-0"
-                  severity="success"
-                  text
-                >
-                  <template #icon>
-                    <Icon name="hugeicons:link-square-02" class="!w-4 !h-4" />
-                  </template>
-                </Button>
+                  name="hugeicons:link-square-02"
+                  class="!w-4 !h-4"
+                />
               </div>
             </div>
           </div>
