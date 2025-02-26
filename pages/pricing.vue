@@ -35,7 +35,8 @@ const chunkFeatures = (features) => {
 
 const selectPlan = async (plan) => {
   if (!user.value) {
-    return router.push("/auth");
+    return router.push(`/payment/${plan.id}`);
+    //return router.push("/auth");
   } else if (plan.isFree) {
     await meStore.updateSubscription(plan.id);
   } else {
@@ -57,7 +58,7 @@ const selectPlan = async (plan) => {
       </p>
     </div>
 
-    <div class="flex-1 p-5 pt-32 gap-8 overflow-auto" @scroll="handleScroll">
+    <div class="flex-1 p-5 pt-32 gap-8 overflow-auto">
       <div
         class="grid grid-cols-1"
         :class="

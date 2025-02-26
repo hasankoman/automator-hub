@@ -1,7 +1,6 @@
 <script setup>
 definePageMeta({
   layout: "payment",
-  middleware: "auth",
 });
 
 const route = useRoute();
