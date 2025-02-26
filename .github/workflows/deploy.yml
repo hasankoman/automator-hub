@@ -1,9 +1,9 @@
- name: Deploy to Hostinger
+name: Deploy to Hostinger
 
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   build:
