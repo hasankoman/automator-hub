@@ -1,0 +1,36 @@
+ name: Deploy to Hostinger
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "23.8.0"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: Deploy to Hostinger
+        uses: appleboy/ssh-action@v0.1.2
+        with:
+          host: ${{ secrets.HOSTINGER_IP }}
+          username: ${{ secrets.HOSTINGER_USER }}
+          password: ${{ secrets.HOSTINGER_PASSWORD }}
+          port: 65002 # Replace with your actual SSH port if different
+          script: |
+            rsync -rltgoDzvO --delete output/ /
+          debug: true
