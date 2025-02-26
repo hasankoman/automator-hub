@@ -27,12 +27,13 @@ jobs:
       - name: Verify build output
         run: ls -la
 
-      - name: Deploy to Hostinger
-        uses: appleboy/rsync-action@master
+      - name: Deploy to Hostinger via rsync-deploy-action
+        uses: akshaypp/rsync-deploy-action@v2.1.2
         with:
-          host: ${{ secrets.HOSTINGER_IP }}
-          username: ${{ secrets.HOSTINGER_USER }}
+          switches: -avzr --delete
+          path: .output/
+          remote_path: /home/${{ secrets.HOSTINGER_USER }}/domains/chocolate-dunlin-899687.hostingersite.com/public_html/
+          remote_host: ${{ secrets.HOSTINGER_IP }}
+          remote_user: ${{ secrets.HOSTINGER_USER }}
+          remote_port: 65002
           password: ${{ secrets.HOSTINGER_PASSWORD }}
-          port: 65002
-          source: ".output/"
-          target: "/home/${{ secrets.HOSTINGER_USER }}/domains/chocolate-dunlin-899687.hostingersite.com/public_html/"
