@@ -22,6 +22,7 @@ export default defineNuxtConfig({
       allowedHosts: [
         "unified-moderately-mule.ngrok-free.app", 
         "localhost",
+        "https://chocolate-dunlin-899687.hostingersite.com",
         "https://authomation-manager.vercel.app"
       ],
     },

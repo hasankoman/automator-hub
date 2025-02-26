@@ -1,11 +1,11 @@
-import { createOrUpdateReadmeOperation } from "~/server/db/readmeOperation";
+import { createReadmeOperation } from "~/server/db/readmeOperation";
 
 export default defineEventHandler(async (event) => {
   try {
     const session = await requireAuth(event);
     const body = await readBody(event);
 
-    const operation = await createOrUpdateReadmeOperation(
+    const operation = await createReadmeOperation(
       session.user.id,
       body.repositoryId,
       body.repositoryName,
