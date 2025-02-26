@@ -2,6 +2,7 @@
 import { ref, onMounted } from "vue";
 
 const githubStore = useGitHubStore();
+const readmeOperationsStore = useReadmeOperationsStore();
 const toast = useToast();
 
 const { selectedRepositories, currentStep, selectedAction } =
@@ -22,11 +23,27 @@ const triggerAction = async (repository) => {
       loadingStatus.value[repository.id] === "pending"
     ) {
       loadingStatus.value[repository.id] = "loading";
+
+      await readmeOperationsStore.createOrUpdateOperation({
+        repositoryId: repository.id,
+        repositoryName: repository.name,
+        operationType: selectedAction.value,
+        status: "pending",
+      });
+
       if (selectedAction.value === "auto") {
         await handleAutoSetup(repository);
       } else {
         await githubStore.triggerAction(selectedAction.value, repository);
         loadingStatus.value[repository.id] = "success";
+
+        await readmeOperationsStore.createOrUpdateOperation({
+          repositoryId: repository.id,
+          repositoryName: repository.name,
+          operationType: selectedAction.value,
+          status: "success",
+        });
+
         toast.add({
           severity: "success",
           summary: "Success!",
@@ -39,18 +56,54 @@ const triggerAction = async (repository) => {
     }
   } catch (error) {
     loadingStatus.value[repository.id] = "error";
+
+    // İşlem başarısız olduğunda güncelle
+    await readmeOperationsStore.createOrUpdateOperation({
+      repositoryId: repository.id,
+      repositoryName: repository.name,
+      operationType: selectedAction.value,
+      status: "failed",
+    });
   }
 };
 
 const handleAutoSetup = async (repository) => {
-  await githubStore.setupWebhook(repository);
-  loadingStatus.value[repository.id] = "success";
-  toast.add({
-    severity: "success",
-    summary: "Auto-Update Enabled",
-    detail: `${repository.name} will now update automatically`,
-    life: 3000,
-  });
+  try {
+    await githubStore.setupWebhook(repository);
+    loadingStatus.value[repository.id] = "success";
+
+    // İşlem başarılı olduğunda güncelle
+    await readmeOperationsStore.createOrUpdateOperation({
+      repositoryId: repository.id,
+      repositoryName: repository.name,
+      operationType: "auto",
+      status: "success",
+    });
+
+    toast.add({
+      severity: "success",
+      summary: "Auto-Update Enabled",
+      detail: `${repository.name} will now update automatically`,
+      life: 3000,
+    });
+  } catch (error) {
+    loadingStatus.value[repository.id] = "error";
+
+    // İşlem başarısız olduğunda güncelle
+    await readmeOperationsStore.createOrUpdateOperation({
+      repositoryId: repository.id,
+      repositoryName: repository.name,
+      operationType: "auto",
+      status: "failed",
+    });
+
+    toast.add({
+      severity: "error",
+      summary: "Error",
+      detail: `Failed to setup auto-update for ${repository.name}`,
+      life: 3000,
+    });
+  }
 };
 
 const handleStartAction = () => {

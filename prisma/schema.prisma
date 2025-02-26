@@ -8,17 +8,18 @@ datasource db {
 }
 
 model User {
-  id             Int                   @id @default(autoincrement())
-  email          String?               @unique
-  name           String?
-  githubId       String?               @unique
-  githubUsername String?
-  githubToken    String?
-  createdAt      DateTime              @default(now())
-  updatedAt      DateTime              @default(now()) @updatedAt
-  subscription   Subscription?
-  usage          Usage?
-  monitoredRepos MonitoredRepository[]
+  id               Int                   @id @default(autoincrement())
+  email            String?               @unique
+  name             String?
+  githubId         String?               @unique
+  githubUsername   String?
+  githubToken      String?
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @default(now()) @updatedAt
+  subscription     Subscription?
+  usage            Usage?
+  monitoredRepos   MonitoredRepository[]
+  readmeOperations ReadmeOperation[]
 }
 
 model MonitoredRepository {
@@ -77,4 +78,19 @@ model Usage {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @default(now()) @updatedAt
   user              User     @relation(fields: [userId], references: [id])
+}
+
+model ReadmeOperation {
+  id             Int      @id @default(autoincrement())
+  userId         Int
+  repositoryId   String
+  repositoryName String
+  operationType  String // "manual" or "auto"
+  status         String // "success", "failed", "pending"
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
+  user           User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([repositoryId])
 }
