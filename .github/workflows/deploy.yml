@@ -24,6 +24,9 @@ jobs:
       - name: Build project
         run: npm run build
 
+      - name: Verify build output
+        run: ls -la
+
       - name: Deploy to Hostinger
         uses: appleboy/ssh-action@v0.1.2
         with:
