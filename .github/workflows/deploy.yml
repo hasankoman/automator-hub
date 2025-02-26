@@ -30,5 +30,7 @@ jobs:
           host: ${{ secrets.HOSTINGER_IP }}
           username: ${{ secrets.HOSTINGER_USER }}
           password: ${{ secrets.HOSTINGER_PASSWORD }}
+          port: 65002 # Replace with your actual SSH port if different
           script: |
-            rsync -rltgoDzvO --delete dist/ /path/to/your/hostinger/directory
+            rsync -rltgoDzvO --delete dist/ /domains/chocolate-dunlin-899687.hostingersite.com/public_html/
+          debug: true
