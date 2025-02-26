@@ -135,9 +135,12 @@ export default defineNuxtConfig({
     },
   },
   nitro: {
-    plugins: ["~/server/cron/index.js"],
-    experimental: {
-      websocket: true,
-    },
+    preset: 'vercel',
   },
+  experimental: {
+    payloadExtraction: false
+  },
+  routeRules: {
+    '/api/**': { cors: true }
+  }
 });
