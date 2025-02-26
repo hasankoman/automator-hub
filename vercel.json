@@ -5,7 +5,7 @@
     }
   },
   "functions": {
-    "api/**": {
+    "server/api/**": {
       "memory": 1024
     }
   },
