@@ -60,9 +60,7 @@ watch(
         >
           <Header>
             <template #right>
-              <HeaderRight
-                v-if="$route.path.includes('github') && currentStep === 2"
-              />
+              <HeaderRight v-if="$route.path.includes('github')" />
             </template>
           </Header>
           <NuxtPage />

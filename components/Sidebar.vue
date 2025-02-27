@@ -59,6 +59,12 @@ const githubLinks = [
     label: "Webhooks",
     requiresAuth: "github",
   },
+  {
+    to: "/github/operations",
+    icon: "hugeicons:check-circle",
+    label: "Operations",
+    requiresAuth: "github",
+  },
 ];
 
 const accountLinks = [

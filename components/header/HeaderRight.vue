@@ -7,15 +7,11 @@ const readmeOperationsStore = useReadmeOperationsStore();
 const { repositories } = storeToRefs(githubStore);
 const { isExpanded, searchInput, searchTerm, selectedLanguages } =
   storeToRefs(headerStore);
-const { operations } = storeToRefs(readmeOperationsStore);
 const { expandInput, setupListeners, removeListeners } = headerStore;
 
 const languageOptions = computed(() =>
   headerStore.getLanguageOptions(repositories.value)
 );
-
-const menu = ref(null);
-const readmeMenuVisible = ref(false);
 
 onMounted(() => {
   setupListeners();
@@ -26,40 +22,6 @@ onUnmounted(() => {
   removeListeners();
 });
 
-const getStatusIcon = (status) => {
-  switch (status) {
-    case "success":
-      return "hugeicons:check-circle";
-    case "failed":
-      return "hugeicons:close-circle";
-    case "pending":
-      return "hugeicons:clock-circle";
-    default:
-      return "hugeicons:info-circle";
-  }
-};
-
-const getStatusClass = (status) => {
-  switch (status) {
-    case "success":
-      return "text-green-500";
-    case "failed":
-      return "text-red-500";
-    case "pending":
-      return "text-yellow-500";
-    default:
-      return "text-gray-500";
-  }
-};
-
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  return date.toLocaleString();
-};
-
-const toggleReadmeMenu = (event) => {
-  menu.value.toggle(event);
-};
 </script>
 
 <template>
@@ -100,34 +62,5 @@ const toggleReadmeMenu = (event) => {
         <Icon name="hugeicons:filter" class="text-black text-xl" />
       </template>
     </MultiSelect>
-
-    <div class="relative">
-      <Button
-        icon="hugeicons:book-open"
-        class="p-button-rounded p-button-text"
-        @click="toggleReadmeMenu"
-        aria-haspopup="true"
-        aria-controls="readme_menu"
-      />
-
-      <Menu
-        ref="menu"
-        id="readme_menu"
-        :model="
-          operations.map((op) => ({
-            label: `${
-              op.operationType === 'manual' ? 'Manuel' : 'Otomatik'
-            } - ${op.status} - ${op.repositoryName}`,
-            value: op.id,
-          }))
-        "
-        :popup="true"
-        :pt="{
-          root: 'rounded-xl shadow-lg',
-          list: 'p-2 max-h-80 overflow-y-auto',
-        }"
-      >
-      </Menu>
-    </div>
   </div>
 </template>

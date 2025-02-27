@@ -1,9 +1,14 @@
-export const getUserReadmeOperations = (userId) =>
-  prisma.readmeOperation.findMany({
+export const getUserReadmeOperations = async(userId) =>
+{
+  const operations = await prisma.readmeOperation.findMany({
     where: { userId },
     orderBy: { createdAt: "desc" },
     take: 10,
   });
+
+
+  return operations;
+};
 
 export const createReadmeOperation = async (
   userId,
@@ -23,4 +28,11 @@ export const createReadmeOperation = async (
       error
     );
   }
+};
+
+export const updateReadmeOperation = async (id, status) => {
+  return await prisma.readmeOperation.update({
+    where: { id },
+    data: { status },
+  });
 };
