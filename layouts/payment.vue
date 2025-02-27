@@ -21,4 +21,5 @@ useHead({
       <NuxtPage />
     </div>
   </div>
+  <SpeedInsights />
 </template>

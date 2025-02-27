@@ -69,5 +69,6 @@ watch(
         </div>
       </div>
     </div>
+    <SpeedInsights />
   </div>
 </template>

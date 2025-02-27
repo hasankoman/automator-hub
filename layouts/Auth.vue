@@ -12,4 +12,5 @@
   <div class="flex items-center justify-center h-dvh w-dvw bg-black">
     <NuxtPage />
   </div>
+  <SpeedInsights />
 </template>
