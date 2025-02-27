@@ -22,4 +22,5 @@ useHead({
     </div>
   </div>
   <SpeedInsights />
+  <Analytics />
 </template>

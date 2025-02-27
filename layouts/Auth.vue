@@ -13,4 +13,5 @@
     <NuxtPage />
   </div>
   <SpeedInsights />
+  <Analytics />
 </template>
