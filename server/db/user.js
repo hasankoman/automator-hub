@@ -31,6 +31,8 @@ export const deleteUser = async (id) => {
       include: {
         usage: true,
         subscription: true,
+        monitoredRepos: true,
+        readmeOperations: true,
       },
     });
 
@@ -47,6 +49,18 @@ export const deleteUser = async (id) => {
     if (user.subscription) {
       deleteOperations.push(
         prisma.subscription.delete({ where: { userId: id } })
+      );
+    }
+
+    if (user.monitoredRepos && user.monitoredRepos.length > 0) {
+      deleteOperations.push(
+        prisma.monitoredRepository.deleteMany({ where: { userId: id } })
+      );
+    }
+
+    if (user.readmeOperations && user.readmeOperations.length > 0) {
+      deleteOperations.push(
+        prisma.readmeOperation.deleteMany({ where: { userId: id } })
       );
     }
 

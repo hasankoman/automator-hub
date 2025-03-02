@@ -34,14 +34,70 @@ export const handleSubscriptions = async () => {
 
 async function handleCancelledSubscriptions(subscriptions) {
   for (const subscription of subscriptions) {
-    // Burada iptal edilen abonelikler için işlem yapılabilir
+    try {
+      const freePlan = await prisma.plan.findFirst({
+        where: { isFree: true },
+      });
+
+      if (freePlan) {
+        const currentUsage = await prisma.usage.findUnique({
+          where: { userId: subscription.userId },
+        });
+
+        await prisma.subscriptionHistory.create({
+          data: {
+            userId: subscription.userId,
+            planId: subscription.planId,
+            manualUpdatesUsed: currentUsage?.manualUpdatesUsed || 0,
+            autoReadmeUsed: currentUsage?.autoReadmeUsed || 0,
+          },
+        });
+
+        const previousFreeUsage = await prisma.subscriptionHistory.findFirst({
+          where: {
+            userId: subscription.userId,
+            planId: freePlan.id,
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        });
+
+        await prisma.subscription.update({
+          where: { id: subscription.id },
+          data: {
+            planId: freePlan.id,
+            status: "active",
+            startDate: new Date(),
+            endDate: new Date(new Date().setMonth(new Date().getMonth() + 1)),
+          },
+        });
+
+        await prisma.usage.update({
+          where: { userId: subscription.userId },
+          data: {
+            lastResetDate: new Date(),
+            manualUpdatesUsed: previousFreeUsage
+              ? previousFreeUsage.manualUpdatesUsed
+              : 0,
+            autoReadmeUsed: previousFreeUsage
+              ? previousFreeUsage.autoReadmeUsed
+              : 0,
+          },
+        });
+      }
+    } catch (error) {
+      console.error(
+        `Error handling cancelled subscription ${subscription.id}:`,
+        error
+      );
+    }
   }
 }
 
 async function handleNonCancelledSubscriptions(subscriptions) {
   for (const subscription of subscriptions) {
     try {
-      // Burada ödeme işlemi yapılabilir
       console.log(`Attempting payment for subscription ${subscription.id}`);
     } catch (error) {
       console.error(

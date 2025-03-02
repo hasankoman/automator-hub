@@ -12,6 +12,7 @@ export default defineNuxtConfig({
     "@nuxtjs/device",
     "@nuxt/fonts",
     process.env.NODE_ENV === 'development' && "@nuxtjs/ngrok",
+    "nuxt-cron",
   ].filter(Boolean),
   imports: {
     presets: [],
@@ -142,5 +143,10 @@ export default defineNuxtConfig({
   },
   routeRules: {
     '/api/**': { cors: true }
-  }
+  },
+  cron: {
+    runOnInit: true,
+    timeZone: "Europe/Istanbul",
+    jobsDir: "cron/jobs",
+  },
 });
