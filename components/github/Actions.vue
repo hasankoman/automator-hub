@@ -2,7 +2,7 @@
 import { ref, onMounted } from "vue";
 
 const githubStore = useGitHubStore();
-const readmeOperationsStore = useReadmeOperationsStore();
+const readmeHistoryStore = useReadmeHistoryStore();
 const toast = useToast();
 
 const { selectedRepositories, currentStep, selectedAction } =
@@ -24,25 +24,11 @@ const triggerAction = async (repository) => {
     ) {
       loadingStatus.value[repository.id] = "loading";
 
-      await readmeOperationsStore.createOrUpdateOperation({
-        repositoryId: repository.id,
-        repositoryName: repository.name,
-        operationType: selectedAction.value,
-        status: "pending",
-      });
-
       if (selectedAction.value === "auto") {
         await handleAutoSetup(repository);
       } else {
         await githubStore.triggerAction(selectedAction.value, repository);
         loadingStatus.value[repository.id] = "success";
-
-        await readmeOperationsStore.createOrUpdateOperation({
-          repositoryId: repository.id,
-          repositoryName: repository.name,
-          operationType: selectedAction.value,
-          status: "success",
-        });
 
         toast.add({
           severity: "success",
@@ -56,14 +42,6 @@ const triggerAction = async (repository) => {
     }
   } catch (error) {
     loadingStatus.value[repository.id] = "error";
-
-    // İşlem başarısız olduğunda güncelle
-    await readmeOperationsStore.createOrUpdateOperation({
-      repositoryId: repository.id,
-      repositoryName: repository.name,
-      operationType: selectedAction.value,
-      status: "failed",
-    });
   }
 };
 
@@ -73,7 +51,7 @@ const handleAutoSetup = async (repository) => {
     loadingStatus.value[repository.id] = "success";
 
     // İşlem başarılı olduğunda güncelle
-    await readmeOperationsStore.createOrUpdateOperation({
+    await readmeHistoryStore.createOrUpdateHistory({
       repositoryId: repository.id,
       repositoryName: repository.name,
       operationType: "auto",
@@ -90,7 +68,7 @@ const handleAutoSetup = async (repository) => {
     loadingStatus.value[repository.id] = "error";
 
     // İşlem başarısız olduğunda güncelle
-    await readmeOperationsStore.createOrUpdateOperation({
+    await readmeHistoryStore.createOrUpdateHistory({
       repositoryId: repository.id,
       repositoryName: repository.name,
       operationType: "auto",
@@ -230,14 +208,4 @@ const handleStartAction = () => {
   </div>
 </template>
 
-<style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-</style>
+<style scoped></style>

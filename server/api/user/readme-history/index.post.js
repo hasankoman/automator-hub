@@ -1,11 +1,11 @@
-import { createReadmeOperation } from "~/server/db/readmeOperation";
+import { createReadmeHistory } from "~/server/db/readmeHistory";
 
 export default defineEventHandler(async (event) => {
   try {
     const session = await requireAuth(event);
     const body = await readBody(event);
 
-    const operation = await createReadmeOperation(
+    const operation = await createReadmeHistory(
       session.user.id,
       body.repositoryId,
       body.repositoryName,

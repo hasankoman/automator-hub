@@ -1,13 +1,23 @@
+import { createReadmeHistory, updateReadmeHistory } from "../db/readmeHistory";
 import { incrementMetric } from "../db/usage";
 import { validateAccess } from "../utils/subscriptionHandler";
 
 export default defineEventHandler(async (event) => {
+  let readmeHistory;
   try {
     const session = await requireGithubAuth(event);
     const body = await readBody(event);
     const userId = session.user.id;
 
     await validateAccess(userId, "manualReadme");
+
+    readmeHistory = await createReadmeHistory(
+      userId,
+      body.id,
+      body.name,
+      "manual",
+      "pending"
+    );
 
     await $fetch(useRuntimeConfig().public.webhookUrl, {
       method: "POST",
@@ -18,10 +28,13 @@ export default defineEventHandler(async (event) => {
       body,
     });
 
+    await updateReadmeHistory(readmeHistory.id, "success");
+
     await incrementMetric(userId, "manualUpdatesUsed");
 
     return createApiResponse({ success: true });
   } catch (error) {
+    await updateReadmeHistory(readmeHistory.id, "failed");
     throw createApiError(ErrorTypes.INTERNAL, error.message, error);
   }
 });
