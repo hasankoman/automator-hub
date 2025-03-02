@@ -2,9 +2,11 @@
 import { watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useHead } from "#imports";
+import { Analytics } from "@vercel/analytics/nuxt";
+import { SpeedInsights } from "@vercel/speed-insights/nuxt";
 
 useHead({
-  title: "Automation Manager",
+  title: "Automator Hub",
 });
 
 import { Sidebar } from "#components";

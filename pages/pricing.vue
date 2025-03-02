@@ -19,7 +19,6 @@ const formattedPlans = computed(() => {
     ...plan,
     period: "per month",
     billing: "billed monthly",
-    spanClass: plan.name === "Pro" ? "md:col-span-2" : "md:col-span-1",
   }));
 });
 
@@ -35,8 +34,7 @@ const chunkFeatures = (features) => {
 
 const selectPlan = async (plan) => {
   if (!user.value) {
-    return router.push(`/payment/${plan.id}`);
-    //return router.push("/auth");
+    return router.push("/auth");
   } else if (plan.isFree) {
     await meStore.updateSubscription(plan.id);
   } else {

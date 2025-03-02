@@ -1,10 +1,10 @@
-import { getUserReadmeOperations } from "~/server/db/readmeOperation";
+import { getUserReadmeHistory } from "~/server/db/readmeOperation";
 
 export default defineEventHandler(async (event) => {
   try {
     const session = await requireAuth(event);
 
-    const operations = await getUserReadmeOperations(session.user.id);
+    const operations = await getUserReadmeHistory(session.user.id);
 
     return createApiResponse(operations);
   } catch (error) {

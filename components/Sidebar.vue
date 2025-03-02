@@ -60,9 +60,9 @@ const githubLinks = [
     requiresAuth: "github",
   },
   {
-    to: "/github/operations",
-    icon: "mdi:progress-question",
-    label: "Operations",
+    to: "/github/history",
+    icon: "fluent:history-48-regular",
+    label: "History",
     requiresAuth: "github",
   },
 ];
@@ -126,10 +126,12 @@ const toggleSidebar = () => {
 
 <template>
   <aside
-    class="h-dvh text-black py-3 px-2 md:px-5 flex flex-col gap-3 z-50 fixed left-0 top-0 transition-all duration-1000 overflow-auto"
-    :class="sidebarOpen ? 'w-75' : 'w-23 md:w-29'"
+    class="h-dvh text-black py-3 px-2 md:px-5 flex flex-col gap-3 z-50 fixed left-0 top-0 transition-all duration-1000"
+    :class="sidebarOpen ? 'w-75' : 'w-24 md:w-29'"
   >
-    <div class="p-1 rounded-xl bg-white h-full flex flex-col overflow-auto">
+    <div
+      class="p-1 rounded-xl bg-white h-full flex flex-col overflow-hidden border-1 border-gray-200"
+    >
       <div class="flex flex-col gap-3 bg-gray-50 rounded-xl h-full pb-4">
         <div
           class="flex gap-2 items-center border-b pt-4 border-gray-200 px-3 relative transition-all duration-1000 sidebar"
@@ -270,11 +272,20 @@ const toggleSidebar = () => {
         <Button
           label="Sign In"
           v-else
-          class="m-2 shadow-sm rounded-xl p-2 gap-2 flex items-center border-1 border-gray-200 cursor-pointer flex-1"
+          :class="[
+            '!justify-start transition-all !gap-3 duration-1000 shadow-sm rounded-xl p-2 flex items-center border-1 border-gray-200 flex-1',
+            sidebarOpen ? '!w-full' : '!w-11.5',
+          ]"
+          :pt="{
+            label: [
+              'whitespace-nowrap transition-all duration-1000',
+              sidebarOpen ? '!opacity-100' : '!opacity-0',
+            ],
+          }"
           @click="$router.push('/auth')"
         >
           <template #icon>
-            <Icon name="hugeicons:login-02" />
+            <Icon name="hugeicons:login-02" class="!text-xl min-w-5" />
           </template>
         </Button>
         <Menu

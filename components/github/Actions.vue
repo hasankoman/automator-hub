@@ -2,7 +2,7 @@
 import { ref, onMounted } from "vue";
 
 const githubStore = useGitHubStore();
-const readmeOperationsStore = useReadmeOperationsStore();
+const readmeHistoryStore = useReadmeHistoryStore();
 const toast = useToast();
 
 const { selectedRepositories, currentStep, selectedAction } =
@@ -51,7 +51,7 @@ const handleAutoSetup = async (repository) => {
     loadingStatus.value[repository.id] = "success";
 
     // İşlem başarılı olduğunda güncelle
-    await readmeOperationsStore.createOrUpdateOperation({
+    await readmeHistoryStore.createOrUpdateHistory({
       repositoryId: repository.id,
       repositoryName: repository.name,
       operationType: "auto",
@@ -68,7 +68,7 @@ const handleAutoSetup = async (repository) => {
     loadingStatus.value[repository.id] = "error";
 
     // İşlem başarısız olduğunda güncelle
-    await readmeOperationsStore.createOrUpdateOperation({
+    await readmeHistoryStore.createOrUpdateHistory({
       repositoryId: repository.id,
       repositoryName: repository.name,
       operationType: "auto",

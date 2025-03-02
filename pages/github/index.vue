@@ -80,17 +80,17 @@ const handleScroll = (event) => {
 
 <template>
   <div
-    class="flex flex-col h-full bg-gray-50 rounded-2xl overflow-hidden border-1 border-gray-200"
+    class="flex flex-col bg-gray-50 rounded-2xl overflow-hidden border-1 border-gray-200 relative"
   >
     <div
-      class="block p-5 bg-white/10 backdrop-blur-md border-b border-gray-200 sticky top-0 z-10 transition-all duration-300"
+      class="block p-5 bg-white/70 backdrop-blur-sm border-b border-gray-200 absolute top-0 w-full z-10 transition-all duration-300"
     >
       <div class="flex gap-4 justify-between">
-        <div class="">
-          <h2 class="font-bold text-gray-900">
+        <div class="flex flex-col gap-1">
+          <h2 class="text-lg font-bold">
             {{ stepComponents[currentStep].header.title }}
           </h2>
-          <p class="mt-2 text-gray-600">
+          <p class="m-0 text-gray-500 text-sm">
             {{ stepComponents[currentStep].header.description }}
           </p>
         </div>
@@ -129,7 +129,7 @@ const handleScroll = (event) => {
         </div>
       </div>
     </div>
-    <div class="flex-1 overflow-auto" @scroll="handleScroll">
+    <div class="flex-1 overflow-auto pt-40 md:pt-30" @scroll="handleScroll">
       <component :is="stepComponents[currentStep].component" />
     </div>
   </div>

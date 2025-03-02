@@ -1,7 +1,7 @@
 import {
   createReadmeOperation,
   updateReadmeOperation,
-} from "../db/readmeOperation";
+} from "../db/readmeHistory";
 import { incrementMetric } from "../db/usage";
 import { validateAccess } from "../utils/subscriptionHandler";
 
