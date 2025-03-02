@@ -1,12 +1,9 @@
-import {
-  createReadmeOperation,
-  updateReadmeOperation,
-} from "../db/readmeHistory";
+import { createReadmeHistory, updateReadmeHistory } from "../db/readmeHistory";
 import { incrementMetric } from "../db/usage";
 import { validateAccess } from "../utils/subscriptionHandler";
 
 export default defineEventHandler(async (event) => {
-  let readmeOperation;
+  let readmeHistory;
   try {
     const session = await requireGithubAuth(event);
     const body = await readBody(event);
@@ -14,7 +11,7 @@ export default defineEventHandler(async (event) => {
 
     await validateAccess(userId, "manualReadme");
 
-    readmeOperation = await createReadmeOperation(
+    readmeHistory = await createReadmeHistory(
       userId,
       body.id,
       body.name,
@@ -31,13 +28,13 @@ export default defineEventHandler(async (event) => {
       body,
     });
 
-    await updateReadmeOperation(readmeOperation.id, "success");
+    await updateReadmeHistory(readmeHistory.id, "success");
 
     await incrementMetric(userId, "manualUpdatesUsed");
 
     return createApiResponse({ success: true });
   } catch (error) {
-    await updateReadmeOperation(readmeOperation.id, "failed");
+    await updateReadmeHistory(readmeHistory.id, "failed");
     throw createApiError(ErrorTypes.INTERNAL, error.message, error);
   }
 });
