@@ -127,7 +127,7 @@ const toggleSidebar = () => {
 <template>
   <aside
     class="h-dvh text-black py-3 px-2 md:px-5 flex flex-col gap-3 z-50 fixed left-0 top-0 transition-all duration-1000"
-    :class="sidebarOpen ? 'w-75' : 'w-24 md:w-29'"
+    :class="sidebarOpen ? 'w-75' : 'w-24 md:w-30'"
   >
     <div
       class="p-1 rounded-xl bg-white h-full flex flex-col overflow-hidden border-1 border-gray-200"

@@ -86,20 +86,18 @@ const handleRefresh = async (operation) => {
 
     <div class="flex-1 p-4 md:p-6 gap-2 !pt-32">
       <div
+        class="p-4 bg-white rounded-xl shadow-xs flex flex-col items-center justify-between gap-1 col-span-1 border border-gray-200"
         v-if="history.length === 0"
-        class="flex flex-col items-center justify-center py-12 px-4"
       >
-        <div
-          class="w-16 h-16 rounded-2xl bg-gray-50 flex items-center justify-center mb-4"
-        >
-          <Icon
-            name="fluent:history-48-regular"
-            class="text-4xl text-gray-400"
-          />
-        </div>
-        <p class="text-gray-500 text-center">No history found</p>
+        <Icon
+          name="fluent:history-48-regular"
+          class="text-5xl text-black mb-2"
+        />
+        <p class="text-lg font-semibold text-gray-700">No history found</p>
+        <p class="text-sm text-gray-500 m-0">
+          You have not performed any operations yet.
+        </p>
       </div>
-
       <div v-else class="grid gap-4">
         <div
           v-for="h in history"
