@@ -7,7 +7,7 @@ useHead({
   title: "Automation Manager",
 });
 
-import { Sidebar, Header, HeaderRight } from "#components";
+import { Sidebar } from "#components";
 
 const route = useRoute();
 
@@ -43,26 +43,25 @@ watch(
   <Loading />
 
   <div class="min-h-dvh bg-gray-100">
-    <div class="relative h-dvh bg-gray-100">
+    <div class="relative h-dvh">
       <Sidebar />
       <div
-        class="h-full transition-all duration-500"
-        :class="sidebarOpen ? 'md:ml-[275px] blur-xs md:blur-none' : '0px'"
+        class="h-full transition-all duration-1000"
+        :class="
+          sidebarOpen
+            ? 'ml-21 md:ml-[275px] blur-xs md:blur-none'
+            : 'ml-21 md:ml-24'
+        "
         @click="handleOutClick"
       >
         <div
-          class="p-3 flex flex-col gap-3 h-full"
+          class="px-2 md:px-5 py-3 flex flex-col gap-3 h-full"
           :class="
             sidebarOpen
               ? 'select-none pointer-events-none md:select-auto md:pointer-events-auto'
               : ''
           "
         >
-          <Header>
-            <template #right>
-              <HeaderRight v-if="$route.path.includes('github')" />
-            </template>
-          </Header>
           <NuxtPage />
         </div>
       </div>

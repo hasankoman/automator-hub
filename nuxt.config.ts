@@ -48,7 +48,7 @@ export default defineNuxtConfig({
     webhookSecret: process.env.WEBHOOK_SECRET,
     tokenEncryptionKey: process.env.TOKEN_ENCRYPTION_KEY,
   },
-  css: ["~/assets/css/main.css", "animate.css"],
+  css: ["~/assets/css/main.css"],
   compatibilityDate: "2025-02-06",
   ...(process.env.NODE_ENV === 'development' ? {
     ngrok: {
