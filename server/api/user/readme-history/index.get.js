@@ -1,4 +1,4 @@
-import { getUserReadmeHistory } from "~/server/db/readmeOperation";
+import { getUserReadmeHistory } from "~/server/db/readmeHistory";
 
 export default defineEventHandler(async (event) => {
   try {
