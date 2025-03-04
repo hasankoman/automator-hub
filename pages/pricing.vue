@@ -80,7 +80,7 @@ const onSwiperInit = (swiper) => {
     </div>
 
     <div
-      class="flex-1 mb-5 mx-0 lg:mx-5 gap-8 overflow-x-hidden overflow-y-auto flex items-center justify-center"
+      class="flex-1 pb-5 gap-8 overflow-x-hidden overflow-y-auto flex items-center justify-center shadow-inner"
       :style="{ paddingTop: `${headerHeight}px` }"
     >
       <div class="hidden lg:block">
@@ -104,7 +104,7 @@ const onSwiperInit = (swiper) => {
             v-for="plan in formattedPlans"
             :key="plan.id"
             :class="[
-              'p-4 md:p-6 !w-1/3 transition-all duration-200 h-full rounded-xl max-w-80',
+              'p-4 md:p-6 !w-1/3 transition-all duration-200 h-full rounded-xl max-w-80 my-auto',
               plan.recommended
                 ? 'bg-radial-[at_50%_130%] from-black to-gray-400 to-150% text-white'
                 : 'bg-white border-1 border-black/20',
