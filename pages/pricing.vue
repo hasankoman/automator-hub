@@ -59,8 +59,18 @@ const selectPlan = async (plan) => {
   }
 };
 
-const onSwiperInit = (swiper) => {
-  swiper.slideToLoop(1, 1000, true);
+const onSwiperInit = async (swiper) => {
+  swiper.slideToLoop(1, 750, true);
+  return;
+  setTimeout(() => {
+    swiper.slideToLoop(2, 400, true);
+  }, 400);
+  setTimeout(() => {
+    swiper.slideToLoop(1, 400, true);
+  }, 800);
+  setTimeout(() => {
+    swiper.slideToLoop(0, 400, true);
+  }, 1200);
 };
 </script>
 
@@ -204,6 +214,7 @@ const onSwiperInit = (swiper) => {
           effect="cards"
           :cardsEffect="{
             perSlideRotate: 3,
+            slideShadows: false,
           }"
           :grabCursor="true"
           :modules="[EffectCards]"
