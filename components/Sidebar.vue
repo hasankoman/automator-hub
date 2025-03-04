@@ -72,7 +72,6 @@ const accountLinks = [
     to: "/integrations",
     icon: "hugeicons:plug-socket",
     label: "Integrations",
-    iconClass: "text-xl",
   },
   {
     to: "/pricing",
@@ -127,20 +126,20 @@ const toggleSidebar = () => {
 <template>
   <aside
     class="h-dvh text-black py-3 px-2 md:px-5 flex flex-col gap-3 z-50 fixed left-0 top-0 transition-all duration-1000"
-    :class="sidebarOpen ? 'w-75' : 'w-24 md:w-30'"
+    :class="sidebarOpen ? 'w-75' : 'w-19 md:w-30'"
   >
     <div
       class="p-1 rounded-xl bg-white h-full flex flex-col overflow-hidden border-1 border-gray-200"
     >
       <div class="flex flex-col gap-3 bg-gray-50 rounded-xl h-full pb-4">
         <div
-          class="flex gap-2 items-center border-b pt-4 border-gray-200 px-3 relative transition-all duration-1000 sidebar"
+          class="flex gap-2 items-center border-b pt-4 border-gray-200 px-2 md:px-3 relative transition-all duration-1000 sidebar"
           :class="sidebarOpen ? 'pb-4 sidebar-open' : 'pb-16 sidebar-closed'"
         >
           <img
             src="../assets/icons/gh-manager-icon.png"
             alt=""
-            class="min-w-11.5 min-h-11.5 max-w-11.5 max-h-11.5 aspect-auto rounded-xl"
+            class="w-8.5 min-w-8.5 md:min-w-11.5 min-h-8.5 md:min-h-11.5 max-w-8.5 md:max-w-11.5 max-h-8.5 md:max-h-11.5 aspect-auto rounded-xl"
           />
 
           <h1
@@ -175,11 +174,11 @@ const toggleSidebar = () => {
         <nav
           v-for="(category, index) in navCategories"
           :key="category.title"
-          class="flex flex-col gap-2 px-3 w-full overflow-hidden"
+          class="flex flex-col gap-2 px-2 md:px-3 w-full"
         >
           <div>
             <h2
-              class="text-sm tracking-wider text-gray-600 font-medium transition-all duration-1000"
+              class="text-xs md:text-sm tracking-wider text-gray-600 font-medium transition-all duration-1000"
               :class="sidebarOpen ? 'opacity-100' : 'opacity-0'"
             >
               {{ category.title }}
@@ -194,8 +193,10 @@ const toggleSidebar = () => {
               :key="link.to"
               :to="link.to"
               :class="[
-                'flex items-center border-1 px-3 rounded-xl transition-all duration-1000 ease-in-out font-medium overflow-hidden',
-                sidebarOpen ? 'gap-3 w-full h-11.5' : 'w-11.5 h-11.5 gap-10',
+                'flex items-center border-1 px-2 md:px-3 rounded-lg md:rounded-xl transition-all duration-1000 ease-in-out font-medium overflow-hidden',
+                sidebarOpen
+                  ? 'gap-3 w-full h-8.5 md:h-11.5'
+                  : 'w-8.5 md:w-11.5 h-8.5 md:h-11.5 gap-10',
                 isActive(link.path || link.to)
                   ? 'bg-white border-gray-300 shadow-sm text-black'
                   : 'hover:bg-gray-200 border-transparent text-slate-700',
@@ -206,15 +207,11 @@ const toggleSidebar = () => {
                   : '',
               ]"
             >
-              <div class="flex items-center justify-center min-w-5">
-                <Icon
-                  :name="link.icon"
-                  :class="[link.iconClass]"
-                  class="text-xl"
-                />
+              <div class="flex items-center justify-center min-w-4 md:min-w-5">
+                <Icon :name="link.icon" class="text-base md:text-xl" />
               </div>
               <span
-                class="transition-all duration-700"
+                class="text-sm md:text-base transition-all duration-700"
                 :class="sidebarOpen ? 'opacity-100' : 'opacity-0'"
                 >{{ link.label }}</span
               >
@@ -231,10 +228,10 @@ const toggleSidebar = () => {
           />
         </nav>
       </div>
-      <div class="bg-white rounded-2xl flex m-3" id="sidebar-footer">
+      <div class="bg-white rounded-2xl flex m-1 md:m-3" id="sidebar-footer">
         <div
           class="rounded-xl gap-2 flex items-center justify-between cursor-pointer flex-1 transition-all ease-in-out duration-300 overflow-auto"
-          :class="sidebarOpen ? 'w-full' : 'w-11.5'"
+          :class="sidebarOpen ? 'w-full' : 'w-8.5 md:!w-11.5'"
           v-if="status === 'authenticated'"
           @click="toggle"
         >
@@ -243,7 +240,7 @@ const toggleSidebar = () => {
               :image="data.user.image"
               shape="circle"
               :pt="{
-                root: 'min-w-11.5 min-h-11.5 max-w-11.5 max-h-11.5',
+                root: 'w-8.5 min-w-8.5 md:min-w-11.5 min-h-8.5 md:min-h-11.5 max-w-8.5 md:max-w-11.5 max-h-8.5 md:max-h-11.5',
                 image: {
                   class: '!rounded-xl',
                   alt: data.user.name,
@@ -274,7 +271,7 @@ const toggleSidebar = () => {
           v-else
           :class="[
             '!justify-start transition-all !gap-3 duration-1000 shadow-sm rounded-xl p-2 flex items-center border-1 border-gray-200 flex-1',
-            sidebarOpen ? '!w-full' : '!w-11.5',
+            sidebarOpen ? '!w-full' : '!w-8.5 md:!w-11.5',
           ]"
           :pt="{
             label: [
