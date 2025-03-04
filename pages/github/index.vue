@@ -129,7 +129,7 @@ const handleScroll = (event) => {
         </div>
       </div>
     </div>
-    <div class="flex-1 overflow-auto pt-40 md:pt-30" @scroll="handleScroll">
+    <div class="flex-1 overflow-auto pt-40 md:pt-24" @scroll="handleScroll">
       <component :is="stepComponents[currentStep].component" />
     </div>
   </div>

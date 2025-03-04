@@ -131,7 +131,7 @@ const reactivateSubscription = async () => {
       <template v-if="subscription">
         <Button
           v-if="subscription.plan.isFree"
-          label="UPGRADE TO STARTER"
+          label="UPGRADE PLAN"
           class="!text-sm flex-1"
           @click="navigateToPricing"
         />

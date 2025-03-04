@@ -34,7 +34,9 @@ export default defineEventHandler(async (event) => {
 
     return createApiResponse({ success: true });
   } catch (error) {
-    await updateReadmeHistory(readmeHistory.id, "failed");
+    if (readmeHistory) {
+      await updateReadmeHistory(readmeHistory.id, "failed");
+    }
     throw createApiError(ErrorTypes.INTERNAL, error.message, error);
   }
 });

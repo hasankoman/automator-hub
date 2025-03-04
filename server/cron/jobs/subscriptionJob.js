@@ -1,13 +1,4 @@
 import { handleSubscriptions } from "../handlers/subscriptionHandler";
+import { defineCronHandler } from "#nuxt/cron";
 
-export default {
-  name: "subscription-check",
-  schedule: {
-    development: "* * * * *", // Her dakika (development)
-    production: "0 0 * * *", // Her gün gece yarısı (production)
-  },
-  handler: handleSubscriptions,
-  onError: (error) => {
-    console.error("Error in subscription check job:", error);
-  },
-};
+export default defineCronHandler("everySixHours", handleSubscriptions);

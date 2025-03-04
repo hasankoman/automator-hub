@@ -4,13 +4,30 @@ const meStore = useMeStore();
 const sidebarStore = useSidebarStore();
 const router = useRouter();
 
+import { Swiper, SwiperSlide } from "swiper/vue";
+
+import "swiper/css";
+
+import "swiper/css/effect-cards";
+import "swiper/css/effect-coverflow";
+
+import { EffectCards, EffectCoverflow } from "swiper/modules";
+
 const { user, subscription } = storeToRefs(meStore);
 const { open: isSidebarOpen } = storeToRefs(sidebarStore);
 const { plans } = storeToRefs(planStore);
 
+const pricingHeader = ref(null);
+const headerHeight = ref(0);
+
 onMounted(async () => {
   if (plans.value.length === 0) {
     await planStore.fetchPlans();
+  }
+
+  await nextTick();
+  if (pricingHeader.value) {
+    headerHeight.value = pricingHeader.value.offsetHeight + 30;
   }
 });
 
@@ -41,135 +58,265 @@ const selectPlan = async (plan) => {
     return router.push(`/payment/${plan.id}`);
   }
 };
+
+const onSwiperInit = async (swiper) => {
+  swiper.slideToLoop(1, 750, true);
+  return;
+  setTimeout(() => {
+    swiper.slideToLoop(2, 400, true);
+  }, 400);
+  setTimeout(() => {
+    swiper.slideToLoop(1, 400, true);
+  }, 800);
+  setTimeout(() => {
+    swiper.slideToLoop(0, 400, true);
+  }, 1200);
+};
 </script>
 
 <template>
   <div
-    class="flex flex-col h-full bg-gray-50 rounded-2xl overflow-hidden border-1 border-gray-200 relative"
+    class="flex flex-col bg-gray-50 rounded-2xl overflow-hidden border-1 border-gray-200 relative"
+    v-if="formattedPlans.length > 0"
   >
     <div
-      class="p-5 bg-white/70 backdrop-blur-sm border-b border-gray-200 absolute top-0 z-20 w-full"
+      class="p-3 md:p-5 bg-white/70 backdrop-blur-sm border-b border-gray-200 absolute top-0 z-20 w-full"
+      ref="pricingHeader"
     >
       <h2 class="font-bold text-gray-900">Pricing Plans</h2>
-      <p class="mt-2 text-gray-600">
+      <p class="mt-2 text-sm md:text-base text-gray-600">
         Select the plan that best suits your needs.
       </p>
     </div>
 
-    <div class="flex-1 p-5 pt-32 gap-8 overflow-auto">
-      <div
-        class="grid grid-cols-1"
-        :class="
-          isSidebarOpen
-            ? 'xl:grid-cols-3 xl:gap-5 gap-y-8'
-            : 'md:grid-cols-3 xl:gap-5 gap-y-8 md:gap-x-5'
-        "
-      >
-        <div
-          v-for="plan in formattedPlans"
-          :key="plan.id"
-          :class="[
-            'rounded-4xl bg-[#FAFAFA] border-1 border-y-3 border-black p-8 relative shadow-lg',
-            plan.spanClass,
-          ]"
+    <div
+      class="flex-1 pb-5 gap-8 overflow-x-hidden overflow-y-auto flex items-center justify-center shadow-inner"
+      :style="{ paddingTop: `${headerHeight}px` }"
+    >
+      <div class="hidden lg:block">
+        <Swiper
+          @afterInit="onSwiperInit"
+          :effect="'coverflow'"
+          :grabCursor="true"
+          :centeredSlides="true"
+          :slidesPerView="'auto'"
+          :coverflowEffect="{
+            rotate: 30,
+            stretch: -30,
+            depth: 200,
+            modifier: 1,
+            slideShadows: false,
+          }"
+          :modules="[EffectCoverflow]"
+          class="!overflow-visible"
         >
-          <div
-            class="absolute left-[50%] top-0 translate-[-50%] rounded-xl py-1 px-2 bg-white text-black border-[2.5px] border-black"
-            v-if="subscription?.planId === plan.id"
+          <SwiperSlide
+            v-for="plan in formattedPlans"
+            :key="plan.id"
+            :class="[
+              'p-4 md:p-6 !w-1/3 transition-all duration-200 h-full rounded-xl max-w-80 my-auto',
+              plan.recommended
+                ? 'bg-radial-[at_50%_130%] from-black to-gray-400 to-150% text-white'
+                : 'bg-white border-1 border-black/20',
+            ]"
           >
-            Current Plan
-          </div>
-          <div class="h-full">
-            <div class="h-full z-10 relative">
-              <div class="flex flex-col flex-1 justify-between h-full">
-                <div class="flex justify-between flex-col">
-                  <div
-                    class="text-xl md:text-2xl font-bold text-gray-900 flex justify-between"
+            <div class="flex flex-col gap-y-4 h-full">
+              <div class="flex flex-col gap-y-2 border-b border-gray-200 pb-4">
+                <div class="flex items-center justify-between">
+                  <h3 class="text-xl font-semibold">
+                    {{ plan.name }}
+                  </h3>
+                  <span
+                    class="text-xs font-medium px-2 py-0.5 border border-black rounded-full"
+                    v-if="subscription?.planId === plan.id"
+                    >Current Plan</span
                   >
-                    <span>{{ plan.name }}</span>
-                  </div>
-                  <div
-                    class="text-gray-700 flex justify-between border-b-1 border-gray-200 pb-4"
+                  <span
+                    class="text-xs font-medium px-2 py-0.5 bg-black text-white border-1 border-black rounded-full"
+                    v-if="plan.recommended"
                   >
-                    <span>{{ plan.description }}</span>
-                  </div>
-
-                  <div class="pt-4 text-gray-500 font-medium text-base">
-                    <div class="flex items-center align-bottom">
-                      <span class="pt-1.5">$</span>
-                      <div
-                        class="ml-1 mr-2 text-2xl md:text-3xl font-bold text-gray-900"
-                      >
-                        <span>{{ plan.price }}</span>
-                      </div>
-                      <span class="pt-1.5">{{ plan.period }}</span>
-                    </div>
-                    <div class="text-base">{{ plan.billing }}</div>
-                  </div>
-                  <div
-                    class="flex flex-col lg:flex-row gap-2 mt-4 pt-4 border-t-1 border-gray-200"
-                  >
-                    <template
-                      v-for="(chunk, chunkIndex) in chunkFeatures(
-                        plan.features
-                      )"
-                      :key="chunkIndex"
-                    >
-                      <ul class="flex flex-col gap-2">
-                        <li
-                          v-for="(feature, idx) in chunk"
-                          :key="idx"
-                          :class="[
-                            'flex font-medium gap-2',
-                            feature.available ? 'text-black' : 'text-gray-600',
-                          ]"
-                        >
-                          <Icon
-                            name="hugeicons:checkmark-circle-03"
-                            class="text-green-500 flex-shrink-0 mt-1"
-                          />
-                          <span v-if="feature.name.split('/').length === 1">{{
-                            feature.name
-                          }}</span>
-                          <span v-else
-                            >{{ feature.name.split("/")[0]
-                            }}<span class="text-gray-500 text-xs">
-                              {{ `/per ${feature.name.split("/")[1]}` }}
-                            </span>
-                          </span>
-                        </li>
-                      </ul>
-                    </template>
-                  </div>
+                    Recommended
+                  </span>
                 </div>
-                <div class="pt-4" v-if="subscription?.planId !== plan.id">
-                  <Button
-                    :disabled="plan.comingSoon"
-                    :label="
-                      plan.comingSoon
-                        ? 'Coming Soon'
-                        : !subscription?.planId
-                        ? `Start with ${plan.name}`
-                        : !subscription?.plan?.isFree
-                        ? plan.isFree
-                          ? 'Downgrade to Free Plan'
-                          : `Upgrade to ${plan.name} Plan`
-                        : `Upgrade to ${plan.name} Plan`
-                    "
-                    @click="selectPlan(plan)"
-                  >
-                    <template #icon>
-                      <Icon
-                        name="hugeicons:arrow-right-02"
-                        class="text-white text-3xl"
-                      />
-                    </template>
-                  </Button>
+                <p class="text-sm">{{ plan.description }}</p>
+              </div>
+
+              <div class="flex flex-col gap-y-1">
+                <div class="flex items-baseline">
+                  <span class="text-3xl font-bold">${{ plan.price }}</span>
+                  <span class="ml-1">{{ plan.period }}</span>
                 </div>
               </div>
+
+              <div class="flex gap-y-4">
+                <ul class="flex flex-col gap-y-3">
+                  <li
+                    v-for="(feature, idx) in plan.features"
+                    :key="idx"
+                    :class="[
+                      'flex items-start gap-2 text-sm',
+                      feature.available ? '' : 'text-gray-400',
+                    ]"
+                  >
+                    <Icon
+                      name="hugeicons:checkmark-circle-03"
+                      class="text-primary flex-shrink-0 mt-0.5 h-5 w-5"
+                    />
+                    <span v-if="feature.name.split('/').length === 1">{{
+                      feature.name
+                    }}</span>
+                    <span v-else>
+                      {{ feature.name.split("/")[0] }}
+                      <span class="text-xs">
+                        {{ `/per ${feature.name.split("/")[1]}` }}
+                      </span>
+                    </span>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="mt-auto" v-if="subscription?.planId !== plan.id">
+                <Button
+                  :disabled="plan.comingSoon"
+                  :class="[
+                    'w-full justify-center transition-all',
+                    plan.comingSoon ? 'opacity-70' : '',
+                  ]"
+                  :variant="plan.isFree ? 'outline' : 'default'"
+                  :label="
+                    plan.comingSoon
+                      ? 'Coming Soon'
+                      : !subscription?.planId
+                      ? `Start with ${plan.name}`
+                      : !subscription?.plan?.isFree
+                      ? plan.isFree
+                        ? 'Downgrade to Free Plan'
+                        : `Upgrade to ${plan.name}`
+                      : `Upgrade to ${plan.name}`
+                  "
+                  @click="selectPlan(plan)"
+                >
+                  <template #icon>
+                    <Icon
+                      name="hugeicons:arrow-right-02"
+                      class="ml-2 h-5 w-5"
+                    />
+                  </template>
+                </Button>
+              </div>
             </div>
-          </div>
-        </div>
+          </SwiperSlide>
+        </Swiper>
+      </div>
+      <div class="block lg:hidden max-w-11/12">
+        <Swiper
+          @afterInit="onSwiperInit"
+          effect="cards"
+          :cardsEffect="{
+            perSlideRotate: 3,
+            slideShadows: false,
+          }"
+          :grabCursor="true"
+          :modules="[EffectCards]"
+        >
+          <SwiperSlide
+            v-for="plan in formattedPlans"
+            :key="plan.id"
+            class="swiper-slide-pricing"
+            :class="[
+              'p-4 md:p-6 w-1/2 transition-all duration-200 h-full rounded-xl ',
+              plan.recommended
+                ? 'bg-radial-[at_50%_130%] from-black to-gray-300 to-120% text-white'
+                : 'bg-white border-1 border-black/20',
+            ]"
+          >
+            <div class="flex flex-col gap-y-4 h-full">
+              <div class="flex flex-col gap-y-2 border-b border-gray-200 pb-4">
+                <div class="flex items-center justify-between">
+                  <h3 class="text-xl font-semibold">
+                    {{ plan.name }}
+                  </h3>
+                  <span
+                    class="text-xs font-medium px-2 py-0.5 border border-black rounded-full"
+                    v-if="subscription?.planId === plan.id"
+                    >Current Plan</span
+                  >
+                  <span
+                    class="text-xs font-medium px-2 py-0.5 bg-black text-white border-1 border-black rounded-full"
+                    v-if="plan.recommended"
+                  >
+                    Recommended
+                  </span>
+                </div>
+                <p class="text-sm">{{ plan.description }}</p>
+              </div>
+
+              <div class="flex flex-col gap-y-1">
+                <div class="flex items-baseline">
+                  <span class="text-3xl font-bold">${{ plan.price }}</span>
+                  <span class="ml-1">{{ plan.period }}</span>
+                </div>
+              </div>
+
+              <div class="flex gap-y-4">
+                <ul class="flex flex-col gap-y-3">
+                  <li
+                    v-for="(feature, idx) in plan.features"
+                    :key="idx"
+                    :class="[
+                      'flex items-start gap-2 text-sm',
+                      feature.available ? '' : 'text-gray-400',
+                    ]"
+                  >
+                    <Icon
+                      name="hugeicons:checkmark-circle-03"
+                      class="text-primary flex-shrink-0 mt-0.5 h-5 w-5"
+                    />
+                    <span v-if="feature.name.split('/').length === 1">{{
+                      feature.name
+                    }}</span>
+                    <span v-else>
+                      {{ feature.name.split("/")[0] }}
+                      <span class="text-xs">
+                        {{ `/per ${feature.name.split("/")[1]}` }}
+                      </span>
+                    </span>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="mt-auto" v-if="subscription?.planId !== plan.id">
+                <Button
+                  :disabled="plan.comingSoon"
+                  :class="[
+                    'w-full justify-center transition-all',
+                    plan.comingSoon ? 'opacity-70' : '',
+                  ]"
+                  :variant="plan.isFree ? 'outline' : 'default'"
+                  :label="
+                    plan.comingSoon
+                      ? 'Coming Soon'
+                      : !subscription?.planId
+                      ? `Start with ${plan.name}`
+                      : !subscription?.plan?.isFree
+                      ? plan.isFree
+                        ? 'Downgrade to Free Plan'
+                        : `Upgrade to ${plan.name}`
+                      : `Upgrade to ${plan.name}`
+                  "
+                  @click="selectPlan(plan)"
+                >
+                  <template #icon>
+                    <Icon
+                      name="hugeicons:arrow-right-02"
+                      class="ml-2 h-5 w-5"
+                    />
+                  </template>
+                </Button>
+              </div>
+            </div>
+          </SwiperSlide>
+        </Swiper>
       </div>
     </div>
   </div>

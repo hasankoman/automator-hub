@@ -13,7 +13,7 @@ watch(error, (newError) => {
     toast.add({
       severity: "error",
       summary: "Error",
-      detail: newError,
+      detail: newError || "An error occurred",
       life: 3000,
     });
     clearError();

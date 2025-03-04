@@ -18,9 +18,6 @@ const { fetchUser, fetchSubscription } = useMeStore();
 const sidebarStore = useSidebarStore();
 const { open: sidebarOpen } = storeToRefs(sidebarStore);
 
-const githubStore = useGitHubStore();
-const { currentStep } = storeToRefs(githubStore);
-
 onMounted(async () => {
   await Promise.all([fetchUser(), fetchSubscription()]);
 });
@@ -51,8 +48,8 @@ watch(
         class="h-full transition-all duration-1000"
         :class="
           sidebarOpen
-            ? 'ml-21 md:ml-[275px] blur-xs md:blur-none'
-            : 'ml-21 md:ml-24'
+            ? 'ml-16 md:ml-[275px] blur-xs md:blur-none'
+            : 'ml-16 md:ml-24'
         "
         @click="handleOutClick"
       >

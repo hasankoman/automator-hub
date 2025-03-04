@@ -8,18 +8,19 @@ datasource db {
 }
 
 model User {
-  id               Int                   @id @default(autoincrement())
-  email            String?               @unique
-  name             String?
-  githubId         String?               @unique
-  githubUsername   String?
-  githubToken      String?
-  createdAt        DateTime              @default(now())
-  updatedAt        DateTime              @default(now()) @updatedAt
-  subscription     Subscription?
-  usage            Usage?
-  monitoredRepos   MonitoredRepository[]
-  readmeOperations ReadmeOperation[]
+  id                  Int                   @id @default(autoincrement())
+  email               String?               @unique
+  name                String?
+  githubId            String?               @unique
+  githubUsername      String?
+  githubToken         String?
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @default(now()) @updatedAt
+  subscription        Subscription?
+  usage               Usage?
+  monitoredRepos      MonitoredRepository[]
+  readmeOperations    ReadmeOperation[]
+  subscriptionHistory SubscriptionHistory[]
 }
 
 model MonitoredRepository {
@@ -39,21 +40,23 @@ model MonitoredRepository {
 }
 
 model Plan {
-  id                      Int            @id @default(autoincrement())
-  name                    String         @unique
+  id                      Int                   @id @default(autoincrement())
+  name                    String                @unique
   description             String?
   price                   Float
   features                Json[]
-  manualReadmeUpdateLimit Int            @default(10)
-  autoReadmeUpdateLimit   Int            @default(0)
-  allowBranchSelection    Boolean        @default(false)
-  allowAutoReadme         Boolean        @default(false)
-  isActive                Boolean        @default(true)
-  createdAt               DateTime       @default(now())
-  updatedAt               DateTime       @default(now()) @updatedAt
-  isFree                  Boolean        @default(false)
-  comingSoon              Boolean        @default(false)
+  manualReadmeUpdateLimit Int                   @default(10)
+  autoReadmeUpdateLimit   Int                   @default(0)
+  allowBranchSelection    Boolean               @default(false)
+  allowAutoReadme         Boolean               @default(false)
+  isActive                Boolean               @default(true)
+  createdAt               DateTime              @default(now())
+  updatedAt               DateTime              @default(now()) @updatedAt
+  isFree                  Boolean               @default(false)
+  comingSoon              Boolean               @default(false)
+  recommended             Boolean               @default(false)
   subscriptions           Subscription[]
+  subscriptionHistory     SubscriptionHistory[]
 }
 
 model Subscription {
@@ -93,4 +96,19 @@ model ReadmeOperation {
 
   @@index([userId])
   @@index([repositoryId])
+}
+
+model SubscriptionHistory {
+  id                Int      @id @default(autoincrement())
+  userId            Int
+  planId            Int
+  manualUpdatesUsed Int      @default(0)
+  autoReadmeUsed    Int      @default(0)
+  createdAt         DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  plan Plan @relation(fields: [planId], references: [id])
+
+  @@index([userId])
+  @@index([planId])
 }
