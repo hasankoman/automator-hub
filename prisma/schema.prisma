@@ -54,6 +54,7 @@ model Plan {
   updatedAt               DateTime              @default(now()) @updatedAt
   isFree                  Boolean               @default(false)
   comingSoon              Boolean               @default(false)
+  recommended             Boolean               @default(false)
   subscriptions           Subscription[]
   subscriptionHistory     SubscriptionHistory[]
 }
