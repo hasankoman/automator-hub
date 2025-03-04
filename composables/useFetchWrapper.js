@@ -11,8 +11,9 @@ export const useFetchWrapper = async (url, options, loading = true) => {
     });
     return response;
   } catch (error) {
-    loadingStore.setError(error.message || "An unexpected error occurred");
-    throw error;
+    const errorData = error.data || {};
+    loadingStore.setError(errorData.message || "An unexpected error occurred");
+    throw errorData;
   } finally {
     if (loading) {
       loadingStore.stopLoading();

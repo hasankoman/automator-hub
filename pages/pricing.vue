@@ -8,9 +8,17 @@ const { user, subscription } = storeToRefs(meStore);
 const { open: isSidebarOpen } = storeToRefs(sidebarStore);
 const { plans } = storeToRefs(planStore);
 
+const pricingHeader = ref(null);
+const headerHeight = ref(0);
+
 onMounted(async () => {
   if (plans.value.length === 0) {
     await planStore.fetchPlans();
+  }
+
+  await nextTick();
+  if (pricingHeader.value) {
+    headerHeight.value = pricingHeader.value.offsetHeight + 30;
   }
 });
 
@@ -45,10 +53,11 @@ const selectPlan = async (plan) => {
 
 <template>
   <div
-    class="flex flex-col h-full bg-gray-50 rounded-2xl overflow-hidden border-1 border-gray-200 relative"
+    class="flex flex-col bg-gray-50 rounded-2xl overflow-hidden border-1 border-gray-200 relative"
   >
     <div
       class="p-5 bg-white/70 backdrop-blur-sm border-b border-gray-200 absolute top-0 z-20 w-full"
+      ref="pricingHeader"
     >
       <h2 class="font-bold text-gray-900">Pricing Plans</h2>
       <p class="mt-2 text-gray-600">
@@ -56,7 +65,10 @@ const selectPlan = async (plan) => {
       </p>
     </div>
 
-    <div class="flex-1 p-5 pt-32 gap-8 overflow-auto">
+    <div
+      class="flex-1 p-5 gap-8 overflow-auto"
+      :style="{ paddingTop: `${headerHeight}px` }"
+    >
       <div
         class="grid grid-cols-1"
         :class="
