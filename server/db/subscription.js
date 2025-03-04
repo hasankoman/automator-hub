@@ -104,6 +104,15 @@ export const updateOrCreate = async (userId, planId) => {
               autoReadmeUsed: 0,
             },
           });
+        } else {
+          await tx.usage.update({
+            where: { userId },
+            data: {
+              lastResetDate: new Date(),
+              manualUpdatesUsed: 0,
+              autoReadmeUsed: 0,
+            },
+          });
         }
 
         return subscription;

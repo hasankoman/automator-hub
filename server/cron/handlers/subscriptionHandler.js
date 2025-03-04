@@ -1,3 +1,5 @@
+import { updateOrCreate } from "~/server/db/subscription";
+
 export const handleSubscriptions = async () => {
   try {
     const cancelledExpiredSubscriptions = await prisma.subscription.findMany({
@@ -53,16 +55,6 @@ async function handleCancelledSubscriptions(subscriptions) {
           },
         });
 
-        const previousFreeUsage = await prisma.subscriptionHistory.findFirst({
-          where: {
-            userId: subscription.userId,
-            planId: freePlan.id,
-          },
-          orderBy: {
-            createdAt: "desc",
-          },
-        });
-
         await prisma.subscription.update({
           where: { id: subscription.id },
           data: {
@@ -77,12 +69,8 @@ async function handleCancelledSubscriptions(subscriptions) {
           where: { userId: subscription.userId },
           data: {
             lastResetDate: new Date(),
-            manualUpdatesUsed: previousFreeUsage
-              ? previousFreeUsage.manualUpdatesUsed
-              : 0,
-            autoReadmeUsed: previousFreeUsage
-              ? previousFreeUsage.autoReadmeUsed
-              : 0,
+            manualUpdatesUsed: 0,
+            autoReadmeUsed: 0,
           },
         });
       }
@@ -98,7 +86,10 @@ async function handleCancelledSubscriptions(subscriptions) {
 async function handleNonCancelledSubscriptions(subscriptions) {
   for (const subscription of subscriptions) {
     try {
-      console.log(`Attempting payment for subscription ${subscription.id}`);
+      await updateOrCreate(subscription.userId, subscription.planId);
+      if (!subscription.plan.isFree) {
+        console.log(`Attempting payment for subscription ${subscription.id}`);
+      }
     } catch (error) {
       console.error(
         `Payment failed for subscription ${subscription.id}:`,
