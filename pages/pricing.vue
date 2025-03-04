@@ -80,11 +80,11 @@ const onSwiperInit = async (swiper) => {
     v-if="formattedPlans.length > 0"
   >
     <div
-      class="p-5 bg-white/70 backdrop-blur-sm border-b border-gray-200 absolute top-0 z-20 w-full"
+      class="p-3 md:p-5 bg-white/70 backdrop-blur-sm border-b border-gray-200 absolute top-0 z-20 w-full"
       ref="pricingHeader"
     >
       <h2 class="font-bold text-gray-900">Pricing Plans</h2>
-      <p class="mt-2 text-gray-600">
+      <p class="mt-2 text-sm md:text-base text-gray-600">
         Select the plan that best suits your needs.
       </p>
     </div>
@@ -226,7 +226,7 @@ const onSwiperInit = async (swiper) => {
             :class="[
               'p-4 md:p-6 w-1/2 transition-all duration-200 h-full rounded-xl ',
               plan.recommended
-                ? 'bg-radial-[at_50%_130%] from-black to-gray-400 to-150% text-white'
+                ? 'bg-radial-[at_50%_130%] from-black to-gray-300 to-120% text-white'
                 : 'bg-white border-1 border-black/20',
             ]"
           >

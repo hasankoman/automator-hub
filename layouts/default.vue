@@ -48,7 +48,7 @@ watch(
         class="h-full transition-all duration-1000"
         :class="
           sidebarOpen
-            ? 'ml-21 md:ml-[275px] blur-xs md:blur-none'
+            ? 'ml-16 md:ml-[275px] blur-xs md:blur-none'
             : 'ml-16 md:ml-24'
         "
         @click="handleOutClick"

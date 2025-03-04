@@ -41,7 +41,7 @@ const handleGetStarted = () => {
 <template>
   <div class="flex flex-col gap-3 w-full overflow-hidden">
     <div
-      class="flex flex-col gap-5 p-5 bg-white rounded-2xl overflow-auto border border-gray-200 shadow-inner"
+      class="flex flex-col gap-3 md:gap-5 p-3 md:p-5 bg-white rounded-2xl overflow-auto border border-gray-200 shadow-inner"
     >
       <div
         class="bg-gradient-to-t from-gray-100 to-gray-300 rounded-xl p-8 shadow-md"
