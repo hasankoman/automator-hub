@@ -16,6 +16,16 @@ const githubStore = useGitHubStore();
 const { currentStep, selectedAction, selectedRepositories } =
   storeToRefs(githubStore);
 
+const actionSelectionHeader = ref(null);
+const headerHeight = ref(0);
+
+onMounted(async () => {
+  await nextTick();
+  if (actionSelectionHeader.value) {
+    headerHeight.value = actionSelectionHeader.value.offsetHeight + 30;
+  }
+});
+
 const stepComponents = computed(() => {
   return {
     1: {
@@ -83,18 +93,55 @@ const handleScroll = (event) => {
     class="flex flex-col bg-gray-50 rounded-2xl overflow-hidden border-1 border-gray-200 relative"
   >
     <div
-      class="block p-5 bg-white/70 backdrop-blur-sm border-b border-gray-200 absolute top-0 w-full z-10 transition-all duration-300"
+      class="block p-3 md:p-5 bg-white/70 backdrop-blur-sm border-b border-gray-200 absolute top-0 w-full z-10 transition-all duration-300"
+      ref="actionSelectionHeader"
     >
-      <div class="flex gap-4 justify-between">
-        <div class="flex flex-col gap-1">
-          <h2 class="text-lg font-bold">
+      <div class="flex flex-col md:flex-row gap-4 justify-between">
+        <div class="flex flex-row md:flex-col gap-x-1 justify-between">
+          <h2 class="text-gray-900 font-bold">
             {{ stepComponents[currentStep].header.title }}
           </h2>
-          <p class="m-0 text-gray-500 text-sm">
+          <p class="mt-2 text-gray-500 text-base hidden md:block">
             {{ stepComponents[currentStep].header.description }}
           </p>
+          <div class="flex md:hidden h-full gap-3 border-gray-200">
+            <Button
+              outlined
+              size="small"
+              class="w-10 h-10"
+              :disabled="stepComponents[currentStep].buttonDisabled.prev"
+              @click="currentStep -= 1"
+            >
+              <template #icon>
+                <Icon
+                  name="hugeicons:arrow-left-01"
+                  class="!text-black"
+                  size="18"
+                />
+              </template>
+            </Button>
+            <Button
+              iconPos="right"
+              size="small"
+              class="w-10 h-10"
+              :disabled="stepComponents[currentStep].buttonDisabled.next"
+              @click="stepComponents[currentStep].action()"
+            >
+              <template #icon="slotProps">
+                <Icon
+                  v-bind="slotProps"
+                  class="!text-white"
+                  name="hugeicons:arrow-right-01"
+                  size="18"
+                />
+              </template>
+            </Button>
+          </div>
         </div>
-        <div class="flex h-full gap-3 border-gray-200">
+        <p class="mt-2 text-gray-500 text-sm block md:hidden">
+          {{ stepComponents[currentStep].header.description }}
+        </p>
+        <div class="h-full gap-3 border-gray-200 hidden md:flex">
           <Button
             outlined
             size="small"
@@ -129,7 +176,11 @@ const handleScroll = (event) => {
         </div>
       </div>
     </div>
-    <div class="flex-1 overflow-auto pt-40 md:pt-24" @scroll="handleScroll">
+    <div
+      class="flex-1 overflow-auto"
+      :style="{ paddingTop: `${headerHeight}px` }"
+      @scroll="handleScroll"
+    >
       <component :is="stepComponents[currentStep].component" />
     </div>
   </div>

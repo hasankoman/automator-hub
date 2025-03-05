@@ -72,86 +72,88 @@ const navigateToPricing = () => {
 </script>
 
 <template>
-  <div class="flex-1 h-full p-5 gap-8 overflow-auto">
-    <div class="flex flex-col sm:flex-row md:flex-col lg:flex-row gap-6">
+  <div
+    class="flex flex-col sm:flex-row md:flex-col lg:flex-row gap-6 px-3 md:px-5 pb-3 md:pb-5"
+  >
+    <div
+      class="relative group cursor-pointer transition-all duration-300 h-48 flex-1"
+      @click="handleSelection('manual')"
+    >
       <div
-        class="relative group cursor-pointer transition-all duration-300 h-48 flex-1"
-        @click="handleSelection('manual')"
+        class="absolute inset-0 bg-gradient-to-r from-gray-100 to-gray-200 rounded-2xl transition-opacity"
+        :class="selectedAction === 'manual' ? 'opacity-100' : 'opacity-0'"
+      ></div>
+      <div
+        class="relative p-3 md:p-4 bg-white rounded-2xl border-2 transition-all duration-300 hover:shadow-lg"
+        :class="
+          selectedAction === 'manual' ? 'border-gray-800' : 'border-gray-200'
+        "
       >
-        <div
-          class="absolute inset-0 bg-gradient-to-r from-gray-100 to-gray-200 rounded-2xl transition-opacity"
-          :class="selectedAction === 'manual' ? 'opacity-100' : 'opacity-0'"
-        ></div>
-        <div
-          class="relative p-4 bg-white rounded-2xl border-2 transition-all duration-300 hover:shadow-lg"
-          :class="
-            selectedAction === 'manual' ? 'border-gray-800' : 'border-gray-200'
-          "
-        >
-          <div class="flex items-start gap-4">
-            <div
-              class="p-3 bg-gray-100 rounded-lg flex items-center justify-center"
-            >
-              <Icon
-                name="hugeicons:ai-brain-03"
-                class="text-2xl text-gray-900"
-              />
+        <div class="flex items-start gap-4">
+          <div
+            class="p-3 bg-gray-100 rounded-lg flex items-center justify-center"
+          >
+            <Icon name="hugeicons:ai-brain-03" class="text-2xl text-gray-900" />
+          </div>
+          <div class="flex-1 flex flex-col gap-1">
+            <div class="flex justify-between items-center">
+              <h3 class="text-lg md:text-xl font-semibold text-gray-900">
+                Manual Update
+              </h3>
+              <span
+                v-if="usage?.manualReadme"
+                class="text-xs md:text-sm text-gray-500 whitespace-nowrap"
+              >
+                {{ usage?.manualReadme?.used }}/{{
+                  usage?.manualReadme?.limit === 999999999
+                    ? "∞"
+                    : usage?.manualReadme?.limit
+                }}
+              </span>
             </div>
-            <div class="flex-1">
-              <div class="flex justify-between items-center">
-                <h3 class="text-lg font-semibold text-gray-900">
-                  Manual Update
-                </h3>
-                <span v-if="usage?.manualReadme" class="text-sm text-gray-500">
-                  {{ usage?.manualReadme?.used }}/{{
-                    usage?.manualReadme?.limit === 999999999
-                      ? "∞"
-                      : usage?.manualReadme?.limit
-                  }}
-                </span>
-              </div>
-              <p class="mt-2 text-gray-600">
-                Update your README manually with AI-powered suggestions
-              </p>
-            </div>
+            <p class="text-sm md:text-base text-gray-600">
+              Update your README manually with AI-powered suggestions
+            </p>
           </div>
         </div>
       </div>
+    </div>
 
+    <div
+      class="relative group cursor-pointer transition-all duration-300 h-48 flex-1"
+      @click="handleSelection('auto')"
+    >
       <div
-        class="relative group cursor-pointer transition-all duration-300 h-48 flex-1"
-        @click="handleSelection('auto')"
+        class="absolute inset-0 bg-gradient-to-r from-gray-100 to-gray-200 rounded-2xl transition-opacity"
+        :class="selectedAction === 'auto' ? 'opacity-100' : 'opacity-0'"
+      ></div>
+      <div
+        class="relative p-4 bg-white rounded-2xl border-2 transition-all duration-300 hover:shadow-lg"
+        :class="
+          selectedAction === 'auto' ? 'border-gray-800' : 'border-gray-200'
+        "
       >
-        <div
-          class="absolute inset-0 bg-gradient-to-r from-gray-100 to-gray-200 rounded-2xl transition-opacity"
-          :class="selectedAction === 'auto' ? 'opacity-100' : 'opacity-0'"
-        ></div>
-        <div
-          class="relative p-4 bg-white rounded-2xl border-2 transition-all duration-300 hover:shadow-lg"
-          :class="
-            selectedAction === 'auto' ? 'border-gray-800' : 'border-gray-200'
-          "
-        >
-          <div class="flex items-start gap-4">
-            <div
-              class="p-3 bg-gray-100 rounded-lg flex items-center justify-center"
+        <div class="flex items-start gap-4">
+          <div
+            class="p-3 bg-gray-100 rounded-lg flex items-center justify-center"
+          >
+            <Icon
+              name="fluent:bot-sparkle-48-regular"
+              class="text-2xl text-gray-900"
+            />
+          </div>
+          <div class="flex-1 flex flex-col gap-1">
+            <h3 class="text-lg md:text-xl font-semibold text-gray-900">
+              Auto Update
+            </h3>
+            <p class="text-sm md:text-base text-gray-600">
+              Keep your README in sync automatically with repository changes
+            </p>
+            <span
+              class="absolute left-[50%] translate-x-[-50%] top-0 translate-y-[-50%] inline-flex items-center px-5 py-1 rounded-xl text-sm font-medium bg-gray-900 text-white"
             >
-              <Icon
-                name="fluent:bot-sparkle-48-regular"
-                class="text-2xl text-gray-900"
-              />
-            </div>
-            <div class="flex-1">
-              <h3 class="text-lg font-semibold text-gray-900">Auto Update</h3>
-              <p class="mt-2 text-gray-600">
-                Keep your README in sync automatically with repository changes
-              </p>
-              <span
-                class="absolute left-[50%] translate-x-[-50%] top-0 translate-y-[-50%] inline-flex items-center px-5 py-1 rounded-xl text-sm font-medium bg-gray-900 text-white"
-              >
-                Pro
-              </span>
-            </div>
+              Pro
+            </span>
           </div>
         </div>
       </div>
