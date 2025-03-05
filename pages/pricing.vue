@@ -53,7 +53,11 @@ const selectPlan = async (plan) => {
   if (!user.value) {
     return router.push("/auth");
   } else if (plan.isFree) {
-    await meStore.updateSubscription(plan.id);
+    if (subscription.value?.planId) {
+      return router.push(`/settings`);
+    } else {
+      await meStore.updateSubscription(plan.id);
+    }
   } else {
     return router.push(`/payment/${plan.id}`);
   }
@@ -114,9 +118,9 @@ const onSwiperInit = async (swiper) => {
             v-for="plan in formattedPlans"
             :key="plan.id"
             :class="[
-              'p-4 md:p-6 !w-1/3 transition-all duration-200 h-full rounded-xl max-w-80 my-auto',
+              'p-4 md:p-6 !w-1/3 transition-all duration-200 h-full rounded-xl max-w-80 my-auto shadow-xl',
               plan.recommended
-                ? 'bg-radial-[at_50%_130%] from-black to-gray-400 to-150% text-white'
+                ? 'bg-radial-[at_50%_130%] from-black to-gray-400 to-150% text-white border-1 border-white'
                 : 'bg-white border-1 border-black/20',
             ]"
           >
@@ -126,17 +130,24 @@ const onSwiperInit = async (swiper) => {
                   <h3 class="text-xl font-semibold">
                     {{ plan.name }}
                   </h3>
-                  <span
-                    class="text-xs font-medium px-2 py-0.5 border border-black rounded-full"
-                    v-if="subscription?.planId === plan.id"
-                    >Current Plan</span
-                  >
-                  <span
-                    class="text-xs font-medium px-2 py-0.5 bg-black text-white border-1 border-black rounded-full"
-                    v-if="plan.recommended"
-                  >
-                    Recommended
-                  </span>
+                  <div class="flex gap-1 items-center">
+                    <span
+                      class="text-xs font-medium px-2 py-0.5 border-1 rounded-lg"
+                      :class="
+                        plan.recommended
+                          ? 'border-white text-white'
+                          : 'border-black text-black'
+                      "
+                      v-if="subscription?.planId === plan.id"
+                      >Current Plan</span
+                    >
+                    <span
+                      class="text-xs font-medium px-3 py-1 bg-black text-white border-1 border-white rounded-lg absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 shadow-lg"
+                      v-if="plan.recommended"
+                    >
+                      Recommended
+                    </span>
+                  </div>
                 </div>
                 <p class="text-sm">{{ plan.description }}</p>
               </div>
@@ -197,10 +208,7 @@ const onSwiperInit = async (swiper) => {
                   @click="selectPlan(plan)"
                 >
                   <template #icon>
-                    <Icon
-                      name="hugeicons:arrow-right-02"
-                      class="ml-2 h-5 w-5"
-                    />
+                    <Icon name="hugeicons:arrow-right-02" class="h-5 w-5" />
                   </template>
                 </Button>
               </div>
@@ -208,7 +216,7 @@ const onSwiperInit = async (swiper) => {
           </SwiperSlide>
         </Swiper>
       </div>
-      <div class="block lg:hidden max-w-11/12">
+      <div class="block lg:hidden max-w-11/12 sm:max-w-4/5 md:max-w-3/5">
         <Swiper
           @afterInit="onSwiperInit"
           effect="cards"
@@ -222,11 +230,10 @@ const onSwiperInit = async (swiper) => {
           <SwiperSlide
             v-for="plan in formattedPlans"
             :key="plan.id"
-            class="swiper-slide-pricing"
             :class="[
-              'p-4 md:p-6 w-1/2 transition-all duration-200 h-full rounded-xl ',
+              'px-4 md:px-6 py-6 md:py-8 w-1/2 transition-all duration-200 h-full rounded-xl  shadow-xl',
               plan.recommended
-                ? 'bg-radial-[at_50%_130%] from-black to-gray-300 to-120% text-white'
+                ? 'bg-radial-[at_50%_130%] from-black to-gray-400 to-150% text-white border-1 border-white !overflow-visible'
                 : 'bg-white border-1 border-black/20',
             ]"
           >
@@ -236,17 +243,24 @@ const onSwiperInit = async (swiper) => {
                   <h3 class="text-xl font-semibold">
                     {{ plan.name }}
                   </h3>
-                  <span
-                    class="text-xs font-medium px-2 py-0.5 border border-black rounded-full"
-                    v-if="subscription?.planId === plan.id"
-                    >Current Plan</span
-                  >
-                  <span
-                    class="text-xs font-medium px-2 py-0.5 bg-black text-white border-1 border-black rounded-full"
-                    v-if="plan.recommended"
-                  >
-                    Recommended
-                  </span>
+                  <div class="flex gap-1 items-center">
+                    <span
+                      class="text-xs font-medium px-2 py-0.5 border-1 rounded-lg"
+                      :class="
+                        plan.recommended
+                          ? 'border-white text-white'
+                          : 'border-black text-black'
+                      "
+                      v-if="subscription?.planId === plan.id"
+                      >Current Plan</span
+                    >
+                    <span
+                      class="text-xs font-medium px-3 py-1 bg-black text-white border-1 border-white rounded-lg absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 shadow-lg"
+                      v-if="plan.recommended"
+                    >
+                      Recommended
+                    </span>
+                  </div>
                 </div>
                 <p class="text-sm">{{ plan.description }}</p>
               </div>
@@ -305,12 +319,12 @@ const onSwiperInit = async (swiper) => {
                       : `Upgrade to ${plan.name}`
                   "
                   @click="selectPlan(plan)"
+                  :pt="{
+                    label: 'text-sm',
+                  }"
                 >
                   <template #icon>
-                    <Icon
-                      name="hugeicons:arrow-right-02"
-                      class="ml-2 h-5 w-5"
-                    />
+                    <Icon name="hugeicons:arrow-right-02" class="h-5 w-5" />
                   </template>
                 </Button>
               </div>

@@ -228,7 +228,7 @@ const toggleSidebar = () => {
           />
         </nav>
       </div>
-      <div class="bg-white rounded-2xl flex m-1 md:m-3" id="sidebar-footer">
+      <div class="bg-white rounded-2xl flex m-2 md:m-3" id="sidebar-footer">
         <div
           class="rounded-xl gap-2 flex items-center justify-between cursor-pointer flex-1 transition-all ease-in-out duration-300 overflow-auto"
           :class="sidebarOpen ? 'w-full' : 'w-8.5 md:!w-11.5'"
