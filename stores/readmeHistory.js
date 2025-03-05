@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 
 export const useReadmeHistoryStore = defineStore("readmeHistory", {
   state: () => ({
-    history: [],
+    history: null,
   }),
   actions: {
     async fetchHistory() {

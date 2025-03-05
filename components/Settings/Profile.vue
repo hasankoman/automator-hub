@@ -89,14 +89,14 @@ const handleDeleteAccount = async (event) => {
       >
         <AccordionHeader
           :pt="{
-            root: '!p-0 !pt-3 !shadow-none !outline-none !text-sm !text-black  !w-15',
+            root: '!p-0 !pt-3 !shadow-none !outline-none !text-sm !text-black !w-15 !bg-transparent',
           }"
         >
           More
         </AccordionHeader>
         <AccordionContent
           :pt="{
-            content: '!p-0 !pt-1',
+            content: '!p-0 !pt-1 !bg-transparent',
           }"
         >
           <Button

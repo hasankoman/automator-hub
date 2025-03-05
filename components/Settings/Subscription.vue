@@ -160,7 +160,7 @@ const reactivateSubscription = async () => {
   <ConfirmDialog
     group="cancel-subscription"
     :pt="{
-      root: '!rounded-xl w-1/2',
+      root: '!rounded-xl w-full md:w-1/2 mx-3 max-w-lg',
       content: '!gap-2',
       header: '!hidden',
     }"
