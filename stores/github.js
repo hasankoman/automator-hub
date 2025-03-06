@@ -13,8 +13,6 @@ export const useGitHubStore = defineStore("github", {
     async fetchRepositories() {
       const response = await useFetchWrapper("/api/github-repos");
 
-      console.log("response", response);
-
       this.repositories = response.data || [];
     },
     async triggerAction(type, repository) {

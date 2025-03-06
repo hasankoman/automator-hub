@@ -4,11 +4,6 @@ export default defineEventHandler(async (event) => {
     const { isActive } = await readBody(event);
     const { username, repo } = event.context.params;
 
-    console.log("username ->", username);
-    console.log("repo ->", repo);
-    console.log("isActive ->", isActive);
-    console.log("session ->", session);
-
     const repository = await prisma.monitoredRepository.findFirst({
       where: {
         userId: session.user.id,
@@ -37,8 +32,6 @@ export default defineEventHandler(async (event) => {
       if (!response.ok) {
         throw new Error(`GitHub API error: ${response.statusText}`);
       }
-
-      console.log("repository id ->", repository.id);
 
       await prisma.monitoredRepository.update({
         where: {

@@ -5,8 +5,6 @@ export default defineEventHandler(async (event) => {
     const session = await requireGithubAuth(event);
     const { username, repo } = event.context.params;
 
-    console.log(session);
-
     const repository = await prisma.monitoredRepository.findFirst({
       where: {
         userId: session.user.id,
