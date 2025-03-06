@@ -1,4 +1,6 @@
 <script setup>
+const dayjs = useDayjs();
+
 const router = useRouter();
 
 const meStore = useMeStore();
@@ -7,28 +9,23 @@ const { subscription } = storeToRefs(meStore);
 
 const confirm = useConfirm();
 
-const formatDate = (date) => {
-  return new Date(date).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-};
-
 const navigateToPricing = () => {
   router.push("/pricing");
 };
 
 const cancelSubscription = () => {
   const endDate = subscription.value?.endDate || subscription.value?.startDate;
-  const formattedEndDate = formatDate(endDate);
   const planName = subscription.value?.plan?.name;
 
   confirm.require({
     group: "cancel-subscription",
     header: "Cancel Subscription",
     message: `Are you sure you want to cancel your ${planName} subscription?`,
-    detail: `Your subscription will remain active until <b class="text-gray-600">${formattedEndDate}</b>. You'll continue to have full access to all <b class="text-gray-600">${planName}</b> features until then. After this date, your account will revert to the Free plan.`,
+    detail: `Your subscription will remain active until <b class="text-gray-600">${dayjs(
+      endDate
+    ).format(
+      "MMMM D, YYYY"
+    )}</b>. You'll continue to have full access to all <b class="text-gray-600">${planName}</b> features until then. After this date, your account will revert to the Free plan.`,
     rejectProps: {
       label: "Keep Subscription",
       outlined: true,
@@ -112,14 +109,18 @@ const reactivateSubscription = async () => {
           </div>
           <div class="flex justify-between items-center">
             <span class="text-gray-500">Start Date</span>
-            <span>{{ formatDate(subscription.startDate) }}</span>
+            <span>{{
+              dayjs(subscription.startDate).format("MMMM D, YYYY")
+            }}</span>
           </div>
           <div
             v-if="subscription.endDate"
             class="flex justify-between items-center"
           >
             <span class="text-gray-500">End Date</span>
-            <span>{{ formatDate(subscription.endDate) }}</span>
+            <span>{{
+              dayjs(subscription.endDate).format("MMMM D, YYYY")
+            }}</span>
           </div>
         </div>
       </div>

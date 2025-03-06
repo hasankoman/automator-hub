@@ -19,11 +19,6 @@ onMounted(async () => {
   }
 });
 
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  return date.toLocaleString();
-};
-
 const formattedHistory = computed(() => {
   const repositoriesMap = new Map();
 
@@ -47,7 +42,7 @@ const formattedHistory = computed(() => {
         h.status === "success"
           ? "hugeicons:checkmark-square-04"
           : "hugeicons:multiplication-sign-square",
-      time: formatDate(h.createdAt),
+      createdAt: h.createdAt,
       child: true,
     });
   });
@@ -91,13 +86,15 @@ const formattedHistory = computed(() => {
       <div class="grid grid-cols-1 auto-rows-min gap-5" v-else>
         <PanelMenu
           :model="formattedHistory"
+          multiple
           class="w-full"
           :pt="{
-            panel: '!bg-white !rounded-xl !shadow-xs border border-gray-200',
+            panel:
+              '!bg-white !rounded-xl !shadow-xs border border-gray-200 !p-1.5',
             headercontent: '!rounded-lg',
             item: '!rounded-lg overflow-hidden',
             itemcontent: '!bg-transparent',
-            rootlist: 'flex flex-col gap-2 !py-2',
+            rootlist: 'flex flex-col gap-2 !py-2 !px-2 md:!px-3',
           }"
         >
           <template #item="{ item }">
@@ -117,7 +114,11 @@ const formattedHistory = computed(() => {
                 item.label
               }}</span>
               <span class="ml-auto text-sm">
-                {{ item.time }}
+                {{
+                  item.child
+                    ? $dayjs(item.createdAt).format("DD.MM.YYYY HH:mm")
+                    : ""
+                }}
               </span>
             </a>
           </template>

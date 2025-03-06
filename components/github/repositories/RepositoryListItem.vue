@@ -181,7 +181,9 @@ const isSelected = computed(() => {
 
       <div v-if="repository.updated_at" class="text-xs text-gray-500 mt-1">
         <span class="font-medium">Updated at: </span>
-        <span>{{ new Date(repository.updated_at).toLocaleString() }}</span>
+        <span>{{
+          $dayjs(repository.updated_at).format("DD.MM.YYYY HH:mm")
+        }}</span>
       </div>
     </div>
     <div

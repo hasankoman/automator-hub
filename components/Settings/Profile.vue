@@ -66,7 +66,7 @@ const handleDeleteAccount = async (event) => {
       <div class="flex flex-col">
         <span class="text-sm text-gray-500">Account Created</span>
         <span class="font-medium">{{
-          new Date(user?.createdAt).toLocaleDateString()
+          $dayjs(user?.createdAt).format("DD.MM.YYYY")
         }}</span>
       </div>
     </div>

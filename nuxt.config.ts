@@ -13,6 +13,7 @@ export default defineNuxtConfig({
     "@nuxt/fonts",
     process.env.NODE_ENV === 'development' && "@nuxtjs/ngrok",
     "nuxt-cron",
+    "dayjs-nuxt",
   ].filter(Boolean),
   imports: {
     presets: [],
