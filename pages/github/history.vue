@@ -40,7 +40,7 @@ const formatDate = (dateString) => {
     </div>
 
     <div
-      class="flex-1 pb-5 px-3 md:px-5 gap-8 flex items-center justify-center shadow-inner"
+      class="flex-1 pb-5 px-3 md:px-5 gap-8 shadow-inner overflow-auto"
       :style="{ paddingTop: `${headerHeight}px` }"
       v-if="history"
     >
@@ -57,7 +57,7 @@ const formatDate = (dateString) => {
           You have not performed any operations yet.
         </p>
       </div>
-      <div class="w-full gap-4 flex flex-col overflow-auto max-h-[80vh]" v-else>
+      <div class="grid grid-cols-1 auto-rows-min gap-5" v-else>
         <div
           v-for="h in history"
           :key="h.id"
