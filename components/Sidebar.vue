@@ -46,21 +46,21 @@ const mainLinks = [
   },
 ];
 
-const githubLinks = [
+const readmeLinks = [
   {
-    to: "/github",
+    to: "/readme/manual",
     icon: "hugeicons:ease-curve-control-points",
-    label: "Repositories",
+    label: "Manual",
     requiresAuth: "github",
   },
   {
-    to: "/github/hooks",
+    to: "/readme/auto",
     icon: "material-symbols-light:webhook-rounded",
-    label: "Webhooks",
+    label: "Auto",
     requiresAuth: "github",
   },
   {
-    to: "/github/history",
+    to: "/readme/history",
     icon: "fluent:history-48-regular",
     label: "History",
     requiresAuth: "github",
@@ -86,8 +86,8 @@ const navCategories = [
     links: mainLinks,
   },
   {
-    title: "Github",
-    links: githubLinks,
+    title: "Readme Updates",
+    links: readmeLinks,
   },
   {
     title: "Account",

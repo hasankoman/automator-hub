@@ -10,8 +10,14 @@ export const useGitHubStore = defineStore("github", {
   }),
 
   actions: {
-    async fetchRepositories() {
-      const response = await useFetchWrapper("/api/github-repos");
+    async fetchRepositories(type) {
+      const params = new URLSearchParams({
+        type,
+      });
+
+      const response = await useFetchWrapper(
+        `/api/github-repos?${params.toString()}`
+      );
 
       this.repositories = response.data || [];
     },

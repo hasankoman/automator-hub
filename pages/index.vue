@@ -31,7 +31,7 @@ const features = [
 
 const handleGetStarted = () => {
   if (status.value === "authenticated") {
-    navigateTo("/github");
+    navigateTo("/readme/manual");
   } else {
     signIn("github");
   }

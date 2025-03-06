@@ -2,6 +2,7 @@
 definePageMeta({
   middleware: "auth",
   authRequired: true,
+  name: "readme-auto",
 });
 
 const githubStore = useGitHubStore();
@@ -50,14 +51,16 @@ const toggle = (event) => {
       class="p-5 bg-white/70 backdrop-blur-sm border-b border-gray-200 absolute top-0 w-full z-10 transition-all duration-300"
     >
       <div class="flex flex-col gap-1">
-        <h2 class="text-lg font-bold">Repository Webhooks</h2>
+        <h2 class="text-lg font-bold">Auto Update</h2>
         <p class="m-0 text-gray-500 text-sm">
-          View and manage webhooks for your repositories
+          Automatically update your repository readme
         </p>
       </div>
     </div>
 
-    <div class="flex-1 p-4 md:p-6 gap-2 !pt-32">
+    <GithubRepositoriesRepositoryList actionType="auto" />
+
+    <div class="flex-1 p-4 md:p-6 gap-2 !pt-32" v-if="false">
       <div
         class="p-4 bg-white rounded-xl shadow-xs flex flex-col items-center justify-between gap-1 col-span-1 border border-gray-200"
         v-if="hooks.length === 0"

@@ -1,11 +1,11 @@
 <script setup>
-import ActionSelection from "~/components/github/ActionSelection.vue";
 import RepositoryList from "~/components/github/repositories/RepositoryList.vue";
 import Actions from "~/components/github/Actions.vue";
 
 definePageMeta({
   middleware: "auth",
   authRequired: true,
+  name: "readme-manual",
 });
 
 onBeforeMount(() => {
@@ -22,31 +22,17 @@ const headerHeight = ref(0);
 onMounted(async () => {
   await nextTick();
   if (actionSelectionHeader.value) {
-    headerHeight.value = actionSelectionHeader.value.offsetHeight + 30;
+    headerHeight.value = actionSelectionHeader.value.offsetHeight;
   }
 });
 
 const stepComponents = computed(() => {
   return {
     1: {
-      component: ActionSelection,
-      buttonDisabled: {
-        prev: currentStep.value === 1,
-        next: !selectedAction.value,
-      },
-      action: () => {
-        currentStep.value += 1;
-      },
-      header: {
-        title: "Choose Update Method",
-        description:
-          "Select how you want to manage your repository documentation",
-      },
-    },
-    2: {
       component: RepositoryList,
+      actionType: "manual",
       buttonDisabled: {
-        prev: false,
+        prev: true,
         next: Object.keys(selectedRepositories.value).length === 0,
       },
       action: () => {
@@ -61,7 +47,7 @@ const stepComponents = computed(() => {
         } updates.`,
       },
     },
-    3: {
+    2: {
       component: Actions,
       buttonDisabled: {
         prev: false,
@@ -79,13 +65,6 @@ const stepComponents = computed(() => {
     },
   };
 });
-
-const scrollPosition = ref(0);
-
-const handleScroll = (event) => {
-  const target = event.target;
-  scrollPosition.value = target.scrollTop;
-};
 </script>
 
 <template>
@@ -179,9 +158,11 @@ const handleScroll = (event) => {
     <div
       class="flex-1 overflow-auto"
       :style="{ paddingTop: `${headerHeight}px` }"
-      @scroll="handleScroll"
     >
-      <component :is="stepComponents[currentStep].component" />
+      <component
+        :is="stepComponents[currentStep].component"
+        :actionType="stepComponents[currentStep].actionType"
+      />
     </div>
   </div>
 </template>

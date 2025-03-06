@@ -8,27 +8,40 @@ const { selectedRepositories, selectedAction } = storeToRefs(githubStore);
 
 const toast = useToast();
 
-const { repository } = defineProps({
+const { repository, actionType } = defineProps({
   repository: Object,
+  actionType: String,
+});
+
+const dialog = ref({
+  show: false,
+  data: null,
 });
 
 const handleRepositoryClick = (repository) => {
-  if (isSelected.value) {
-    delete selectedRepositories.value[repository.id];
-  } else {
-    if (repository.webhook && selectedAction.value === "auto") {
-      toast.add({
-        severity: "error",
-        summary: "Error",
-        detail: "This repository is already selected for auto action",
-        life: 3000,
-      });
-      return;
-    }
-    selectedRepositories.value = {
-      ...selectedRepositories.value,
-      [repository.id]: repository,
+  if (actionType === "auto") {
+    dialog.value = {
+      show: true,
+      data: repository,
     };
+  } else if (actionType === "manual") {
+    if (isSelected.value) {
+      delete selectedRepositories.value[repository.id];
+    } else {
+      if (repository.webhook && selectedAction.value === "auto") {
+        toast.add({
+          severity: "error",
+          summary: "Error",
+          detail: "This repository is already selected for auto action",
+          life: 3000,
+        });
+        return;
+      }
+      selectedRepositories.value = {
+        ...selectedRepositories.value,
+        [repository.id]: repository,
+      };
+    }
   }
 };
 
@@ -95,7 +108,10 @@ const isSelected = computed(() => {
     :class="isSelected ? 'border-emerald-500' : 'border-gray-200 '"
     @click="handleRepositoryClick(repository)"
   >
-    <div class="absolute left-0 top-0 -translate-2 bg-white">
+    <div
+      class="absolute left-0 top-0 -translate-2 bg-white"
+      v-if="actionType === 'manual'"
+    >
       <div
         class="w-6 h-6 flex items-center justify-center rounded-lg border-2 cursor-pointer transition-all ease-linear duration-200"
         :class="
@@ -218,4 +234,41 @@ const isSelected = computed(() => {
       </div>
     </div>
   </div>
+  <Dialog
+    v-model:visible="dialog.show"
+    v-if="actionType === 'auto'"
+    modal
+    closable
+    header="Manage Auto README Actions"
+    :pt="{
+      root: 'w-full max-w-xl mx-3',
+      content: 'flex flex-col gap-3',
+    }"
+  >
+    <h2 class="text-xl font-bold">⚡ Extend Functional Coverage</h2>
+    <div class="mt-2"><span class="font-medium">Listening:</span> No</div>
+    <div class="mt-1">
+      <span class="font-medium">Assignee:</span> John Walter
+    </div>
+    <div class="mt-1">
+      <span class="font-medium">Due Date:</span> Oct 21 at 2:00 PM
+    </div>
+    <div class="mt-1">
+      <span class="font-medium">Label:</span>
+      <span class="p-1 bg-orange-200 rounded">Product</span>
+      <span class="p-1 bg-green-200 rounded">Quality</span>
+    </div>
+    <div class="mt-4">
+      <span class="font-medium">Description:</span>
+      <p>
+        Donec enim diam vulputate ut. Tellus mauris a diam maecenas. At varius
+        vel pharetra vel turpis. Diam sollicitudin tempor id eu nisl nunc mi
+        ipsum faucibus. Amet luctus venenatis lectus magna fringilla urna
+        porttitor rhoncus.
+      </p>
+    </div>
+    <div class="mt-4 flex justify-end">
+      <Button label="Save" @click="dialog.show = false" />
+    </div>
+  </Dialog>
 </template>

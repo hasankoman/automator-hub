@@ -6,8 +6,10 @@ export default defineEventHandler(async (event) => {
       Accept: "application/vnd.github.v3+json",
     };
 
+    const { type: actionType } = getQuery(event);
+
     const repos = await fetchRepos(headers);
-    const repoData = await enrichReposWithLanguages(repos, headers);
+    const repoData = await enrichReposWithLanguages(repos, headers, actionType);
 
     return createApiResponse(repoData);
   } catch (error) {
@@ -32,7 +34,7 @@ async function fetchRepos(headers) {
   return res.json();
 }
 
-async function enrichReposWithLanguages(repos, headers) {
+async function enrichReposWithLanguages(repos, headers, actionType) {
   const enrichedRepos = await Promise.all(
     repos.map(async (repo) => {
       try {
@@ -62,9 +64,11 @@ async function enrichReposWithLanguages(repos, headers) {
           defaultBranch: repo.default_branch,
           languages,
           webhook: webhook
-            ? {
-                active: webhook.active,
-              }
+            ? actionType === "manual"
+              ? {
+                  active: webhook.active,
+                }
+              : webhook
             : null,
         };
       } catch (err) {

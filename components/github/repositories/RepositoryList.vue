@@ -5,11 +5,19 @@ import { storeToRefs } from "pinia";
 
 const githubStore = useGitHubStore();
 const headerStore = useHeaderStore();
+const route = useRoute();
 
 const { repositories } = storeToRefs(githubStore);
 
+const { actionType } = defineProps({
+  actionType: {
+    type: String,
+    required: true,
+  },
+});
+
 onMounted(() => {
-  githubStore.fetchRepositories();
+  githubStore.fetchRepositories(actionType);
 });
 
 const filteredRepositories = computed(() =>
@@ -80,7 +88,10 @@ onUnmounted(() => {
         v-for="repository in filteredRepositories"
         :key="repository.id || repository.fullName"
       >
-        <GithubRepositoriesRepositoryListItem :repository="repository" />
+        <GithubRepositoriesRepositoryListItem
+          :repository="repository"
+          :actionType="actionType"
+        />
       </template>
     </div>
   </div>
