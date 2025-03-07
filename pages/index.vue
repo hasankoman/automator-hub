@@ -31,7 +31,8 @@ useHead({
     },
   ],
 });
-const { data: authData, status, signIn } = useAuth();
+
+const { status, signIn } = useAuth();
 
 const features = [
   {
@@ -104,17 +105,18 @@ const handleGetStarted = () => {
                 />
               </template>
             </Button>
-            <Button
-              label="View Plans"
-              class="flex items-center gap-2 !border-black !bg-transparent"
-              size="large"
-              outlined
-              @click="$router.push('/pricing')"
-            >
-              <template #icon>
-                <Icon name="hugeicons:tag-02" />
-              </template>
-            </Button>
+            <NuxtLink to="/pricing" prefetch>
+              <Button
+                label="View Plans"
+                class="flex items-center gap-2 !border-black !bg-transparent"
+                size="large"
+                outlined
+              >
+                <template #icon>
+                  <Icon name="hugeicons:tag-02" />
+                </template>
+              </Button>
+            </NuxtLink>
           </div>
         </div>
       </div>

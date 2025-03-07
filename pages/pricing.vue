@@ -38,35 +38,43 @@ useHead({
   ],
 });
 
-const planStore = usePlanStore();
-const meStore = useMeStore();
-const sidebarStore = useSidebarStore();
-const router = useRouter();
-
 import { Swiper, SwiperSlide } from "swiper/vue";
-
-import "swiper/css";
-
-import "swiper/css/effect-cards";
-import "swiper/css/effect-coverflow";
-
 import { EffectCards, EffectCoverflow } from "swiper/modules";
 
+const router = useRouter();
+
+const planStore = usePlanStore();
+const meStore = useMeStore();
+
 const { user, subscription } = storeToRefs(meStore);
-const { open: isSidebarOpen } = storeToRefs(sidebarStore);
 const { plans } = storeToRefs(planStore);
 
 const pricingHeader = ref(null);
 const headerHeight = ref(0);
+const isMounted = ref(false);
+const swiperLoaded = ref(false);
 
 onMounted(async () => {
-  if (plans.value.length === 0) {
-    await planStore.fetchPlans();
-  }
+  try {
+    await Promise.all([
+      import("swiper/css"),
+      import("swiper/css/effect-cards"),
+      import("swiper/css/effect-coverflow"),
+    ]);
+    swiperLoaded.value = true;
 
-  await nextTick();
-  if (pricingHeader.value) {
-    headerHeight.value = pricingHeader.value.offsetHeight + 30;
+    if (plans.value.length === 0) {
+      await planStore.fetchPlans();
+    }
+
+    await nextTick();
+    if (pricingHeader.value) {
+      headerHeight.value = pricingHeader.value.offsetHeight + 30;
+    }
+
+    isMounted.value = true;
+  } catch (error) {
+    console.error("Error in pricing page initialization:", error);
   }
 });
 
@@ -77,16 +85,6 @@ const formattedPlans = computed(() => {
     billing: "billed monthly",
   }));
 });
-
-const chunkFeatures = (features) => {
-  const chunkSize = 5;
-  const chunks = [];
-  chunks.push(features.slice(0, chunkSize));
-  if (features.length > chunkSize) {
-    chunks.push(features.slice(chunkSize));
-  }
-  return chunks;
-};
 
 const selectPlan = async (plan) => {
   if (!user.value) {
@@ -104,16 +102,6 @@ const selectPlan = async (plan) => {
 
 const onSwiperInit = async (swiper) => {
   swiper.slideToLoop(1, 750, true);
-  return;
-  setTimeout(() => {
-    swiper.slideToLoop(2, 400, true);
-  }, 400);
-  setTimeout(() => {
-    swiper.slideToLoop(1, 400, true);
-  }, 800);
-  setTimeout(() => {
-    swiper.slideToLoop(0, 400, true);
-  }, 1200);
 };
 </script>
 
@@ -136,7 +124,7 @@ const onSwiperInit = async (swiper) => {
       class="flex-1 pb-5 gap-8 overflow-x-hidden overflow-y-auto flex items-center justify-center shadow-inner"
       :style="{ paddingTop: `${headerHeight}px` }"
     >
-      <div class="hidden lg:block">
+      <div class="hidden lg:block" v-if="isMounted && swiperLoaded">
         <Swiper
           @afterInit="onSwiperInit"
           :effect="'coverflow'"
@@ -255,7 +243,10 @@ const onSwiperInit = async (swiper) => {
           </SwiperSlide>
         </Swiper>
       </div>
-      <div class="block lg:hidden max-w-11/12 sm:max-w-4/5 md:max-w-3/5">
+      <div
+        class="block lg:hidden max-w-11/12 sm:max-w-4/5 md:max-w-3/5"
+        v-if="isMounted && swiperLoaded"
+      >
         <Swiper
           @afterInit="onSwiperInit"
           effect="cards"

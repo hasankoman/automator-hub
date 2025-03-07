@@ -138,7 +138,10 @@ const toggleSidebar = () => {
         >
           <img
             src="../assets/icons/gh-manager-icon.png"
-            alt=""
+            alt="Automator Hub Logo"
+            width="46"
+            height="46"
+            loading="lazy"
             class="w-8.5 min-w-8.5 md:min-w-11.5 min-h-8.5 md:min-h-11.5 max-w-8.5 md:max-w-11.5 max-h-8.5 md:max-h-11.5 aspect-auto rounded-xl"
           />
 
