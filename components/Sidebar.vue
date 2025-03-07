@@ -78,6 +78,11 @@ const accountLinks = [
     icon: "hugeicons:wallet-02",
     label: "Pricing",
   },
+  {
+    to: "/about",
+    icon: "hugeicons:information-circle",
+    label: "About Us",
+  },
 ];
 
 const navCategories = [
