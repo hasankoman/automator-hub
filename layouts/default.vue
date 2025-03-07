@@ -6,7 +6,11 @@ import { Analytics } from "@vercel/analytics/nuxt";
 import { SpeedInsights } from "@vercel/speed-insights/nuxt";
 
 useHead({
-  title: "Automator Hub",
+  titleTemplate: (productCategory) => {
+    return productCategory
+      ? `${productCategory} - Automator Hub`
+      : "Automator Hub";
+  },
 });
 
 import { Sidebar } from "#components";

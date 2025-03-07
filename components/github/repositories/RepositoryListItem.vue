@@ -4,7 +4,9 @@ import { computed } from "vue";
 import { storeToRefs } from "pinia";
 
 const githubStore = useGitHubStore();
-const { selectedRepositories } = storeToRefs(githubStore);
+const { selectedRepositories, selectedAction } = storeToRefs(githubStore);
+
+const toast = useToast();
 
 const { repository } = defineProps({
   repository: Object,
@@ -14,6 +16,15 @@ const handleRepositoryClick = (repository) => {
   if (isSelected.value) {
     delete selectedRepositories.value[repository.id];
   } else {
+    if (repository.webhook && selectedAction.value === "auto") {
+      toast.add({
+        severity: "error",
+        summary: "Error",
+        detail: "This repository is already selected for auto action",
+        life: 3000,
+      });
+      return;
+    }
     selectedRepositories.value = {
       ...selectedRepositories.value,
       [repository.id]: repository,
@@ -170,7 +181,9 @@ const isSelected = computed(() => {
 
       <div v-if="repository.updated_at" class="text-xs text-gray-500 mt-1">
         <span class="font-medium">Updated at: </span>
-        <span>{{ new Date(repository.updated_at).toLocaleString() }}</span>
+        <span>{{
+          $dayjs(repository.updated_at).format("DD.MM.YYYY HH:mm")
+        }}</span>
       </div>
     </div>
     <div

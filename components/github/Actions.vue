@@ -50,14 +50,6 @@ const handleAutoSetup = async (repository) => {
     await githubStore.setupWebhook(repository);
     loadingStatus.value[repository.id] = "success";
 
-    // İşlem başarılı olduğunda güncelle
-    await readmeHistoryStore.createOrUpdateHistory({
-      repositoryId: repository.id,
-      repositoryName: repository.name,
-      operationType: "auto",
-      status: "success",
-    });
-
     toast.add({
       severity: "success",
       summary: "Auto-Update Enabled",
@@ -66,14 +58,6 @@ const handleAutoSetup = async (repository) => {
     });
   } catch (error) {
     loadingStatus.value[repository.id] = "error";
-
-    // İşlem başarısız olduğunda güncelle
-    await readmeHistoryStore.createOrUpdateHistory({
-      repositoryId: repository.id,
-      repositoryName: repository.name,
-      operationType: "auto",
-      status: "failed",
-    });
 
     toast.add({
       severity: "error",

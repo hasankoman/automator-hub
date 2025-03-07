@@ -1,3 +1,5 @@
+import { createReadmeHistory } from "~/server/db/readmeHistory";
+
 export default defineEventHandler(async (event) => {
   try {
     const body = await readBody(event);
@@ -34,17 +36,35 @@ export default defineEventHandler(async (event) => {
           body.ref === `refs/heads/${repository.branch}` &&
           !body.commits[0].message.includes("readme file updated")
         ) {
-          await $fetch(useRuntimeConfig().public.webhookUrl, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: repository.user.githubToken,
-            },
-            body: {
-              defaultBranch: body.repository.default_branch,
-              fullName: body.repository.full_name,
-            },
-          });
+          try {
+            await $fetch(useRuntimeConfig().public.webhookUrl, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: repository.user.githubToken,
+              },
+              body: {
+                defaultBranch: body.repository.default_branch,
+                fullName: body.repository.full_name,
+              },
+            });
+
+            await createReadmeHistory(
+              repository.userId,
+              repository.repositoryId,
+              repository.fullName,
+              "auto",
+              "success"
+            );
+          } catch (error) {
+            await createReadmeHistory(
+              repository.userId,
+              repository.repositoryId,
+              repository.fullName,
+              "auto",
+              "failed"
+            );
+          }
         }
         break;
     }

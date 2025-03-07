@@ -1,4 +1,43 @@
 <script setup>
+useHead({
+  title: "Pricing Plans",
+  meta: [
+    {
+      name: "description",
+      content:
+        "Explore our pricing plans to automate your GitHub documentation with AI-powered features.",
+    },
+    {
+      property: "og:title",
+      content: "Pricing Plans - Automate Your GitHub Documentation",
+    },
+    {
+      property: "og:description",
+      content:
+        "Explore our pricing plans to automate your GitHub documentation with AI-powered features.",
+    },
+    {
+      property: "og:image",
+      content: "https://www.automator-hub.com/_nuxt/gh-manager-icon.png",
+    },
+    { property: "og:url", content: "https://www.automator-hub.com/pricing" },
+    { name: "twitter:card", content: "summary_large_image" },
+    {
+      name: "twitter:title",
+      content: "Pricing Plans - Automate Your GitHub Documentation",
+    },
+    {
+      name: "twitter:description",
+      content:
+        "Explore our pricing plans to automate your GitHub documentation with AI-powered features.",
+    },
+    {
+      name: "twitter:image",
+      content: "https://www.automator-hub.com/_nuxt/gh-manager-icon.png",
+    },
+  ],
+});
+
 const planStore = usePlanStore();
 const meStore = useMeStore();
 const sidebarStore = useSidebarStore();

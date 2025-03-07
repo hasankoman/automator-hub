@@ -1,4 +1,12 @@
 <script setup>
+useHead({
+  titleTemplate: (productCategory) => {
+    return productCategory
+      ? `${productCategory} - Automator Hub`
+      : "Automator Hub";
+  },
+});
+
 import { Analytics } from "@vercel/analytics/nuxt";
 import { SpeedInsights } from "@vercel/speed-insights/nuxt";
 </script>

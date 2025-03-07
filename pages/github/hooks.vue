@@ -102,7 +102,7 @@ const toggle = (event) => {
               </div>
             </div>
 
-            <div class="flex items-center gap-3" v-if="false">
+            <div class="flex items-center gap-3">
               <Button
                 type="button"
                 @click="toggle"

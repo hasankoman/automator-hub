@@ -1,8 +1,48 @@
 <script setup>
+useHead({
+  title: "Integrations",
+  meta: [
+    {
+      name: "description",
+      content:
+        "Connect your GitHub account with public or private repositories to automate documentation management.",
+    },
+    {
+      property: "og:title",
+      content: "Integrations - Automate Your GitHub Documentation",
+    },
+    {
+      property: "og:description",
+      content:
+        "Connect your GitHub account with public or private repositories to automate documentation management.",
+    },
+    {
+      property: "og:image",
+      content: "https://www.automator-hub.com/_nuxt/gh-manager-icon.png",
+    },
+    {
+      property: "og:url",
+      content: "https://www.automator-hub.com/integrations",
+    },
+    { name: "twitter:card", content: "summary_large_image" },
+    {
+      name: "twitter:title",
+      content: "Integrations - Automate Your GitHub Documentation",
+    },
+    {
+      name: "twitter:description",
+      content:
+        "Connect your GitHub account with public or private repositories to automate documentation management.",
+    },
+    {
+      name: "twitter:image",
+      content: "https://www.automator-hub.com/_nuxt/gh-manager-icon.png",
+    },
+  ],
+});
+
 import { ref } from "vue";
 import { useToast } from "primevue/usetoast";
-
-import Checkbox from "primevue/checkbox";
 
 const { signIn, signOut, data } = useAuth();
 const router = useRouter();

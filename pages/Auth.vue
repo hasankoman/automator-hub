@@ -1,4 +1,43 @@
 <script setup>
+useHead({
+  title: "Sign In",
+  meta: [
+    {
+      name: "description",
+      content:
+        "Sign in to your account using GitHub to access your documentation management features.",
+    },
+    {
+      property: "og:title",
+      content: "Sign In - Automate Your GitHub Documentation",
+    },
+    {
+      property: "og:description",
+      content:
+        "Sign in to your account using GitHub to access your documentation management features.",
+    },
+    {
+      property: "og:image",
+      content: "https://www.automator-hub.com/_nuxt/gh-manager-icon.png",
+    },
+    { property: "og:url", content: "https://www.automator-hub.com/auth" },
+    { name: "twitter:card", content: "summary_large_image" },
+    {
+      name: "twitter:title",
+      content: "Sign In - Automate Your GitHub Documentation",
+    },
+    {
+      name: "twitter:description",
+      content:
+        "Sign in to your account using GitHub to access your documentation management features.",
+    },
+    {
+      name: "twitter:image",
+      content: "https://www.automator-hub.com/_nuxt/gh-manager-icon.png",
+    },
+  ],
+});
+
 definePageMeta({
   layout: "auth",
   middleware: "auth",

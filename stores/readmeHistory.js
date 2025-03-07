@@ -16,6 +16,7 @@ export const useReadmeHistoryStore = defineStore("readmeHistory", {
         body: historyData,
       });
 
+      this.history = this.history || [];
       this.history.unshift(data);
     },
   },
