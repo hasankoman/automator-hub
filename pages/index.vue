@@ -1,6 +1,35 @@
 <script setup>
 useHead({
   title: "Automate Your GitHub Documentation",
+  meta: [
+    {
+      name: "description",
+      content:
+        "Transform your repository documentation with AI-powered README generation and management.",
+    },
+    { property: "og:title", content: "Automate Your GitHub Documentation" },
+    {
+      property: "og:description",
+      content:
+        "Transform your repository documentation with AI-powered README generation and management.",
+    },
+    {
+      property: "og:image",
+      content: "https://www.automator-hub.com/_nuxt/gh-manager-icon.png",
+    },
+    { property: "og:url", content: "https://www.automator-hub.com" },
+    { name: "twitter:card", content: "summary_large_image" },
+    { name: "twitter:title", content: "Automate Your GitHub Documentation" },
+    {
+      name: "twitter:description",
+      content:
+        "Transform your repository documentation with AI-powered README generation and management.",
+    },
+    {
+      name: "twitter:image",
+      content: "https://www.automator-hub.com/_nuxt/gh-manager-icon.png",
+    },
+  ],
 });
 const { data: authData, status, signIn } = useAuth();
 

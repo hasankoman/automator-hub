@@ -4,6 +4,47 @@ definePageMeta({
   authRequired: true,
 });
 
+useHead({
+  title: "Settings",
+  meta: [
+    {
+      name: "description",
+      content:
+        "Manage your account, usage, and subscription settings for automating GitHub documentation.",
+    },
+    {
+      property: "og:title",
+      content: "Settings - Automate Your GitHub Documentation",
+    },
+    {
+      property: "og:description",
+      content:
+        "Manage your account, usage, and subscription settings for automating GitHub documentation.",
+    },
+    {
+      property: "og:image",
+      content:
+        "https://www.automator-hub.com/_nuxt/gh-manager-icon.B6bCIoY5.png",
+    },
+    { property: "og:url", content: "https://www.automator-hub.com/settings" },
+    { name: "twitter:card", content: "summary_large_image" },
+    {
+      name: "twitter:title",
+      content: "Settings - Automate Your GitHub Documentation",
+    },
+    {
+      name: "twitter:description",
+      content:
+        "Manage your account, usage, and subscription settings for automating GitHub documentation.",
+    },
+    {
+      name: "twitter:image",
+      content:
+        "https://www.automator-hub.com/_nuxt/gh-manager-icon.B6bCIoY5.png",
+    },
+  ],
+});
+
 const meStore = useMeStore();
 
 const { subscription } = storeToRefs(meStore);
