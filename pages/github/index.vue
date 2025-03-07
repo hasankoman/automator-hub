@@ -8,6 +8,45 @@ definePageMeta({
   authRequired: true,
 });
 
+useHead({
+  title: "GitHub Dashboard",
+  meta: [
+    {
+      name: "description",
+      content:
+        "Manage your GitHub repositories and automate documentation updates with AI-powered features.",
+    },
+    {
+      property: "og:title",
+      content: "GitHub Dashboard - Automate Your Documentation",
+    },
+    {
+      property: "og:description",
+      content:
+        "Manage your GitHub repositories and automate documentation updates with AI-powered features.",
+    },
+    {
+      property: "og:image",
+      content: "https://www.automator-hub.com/_nuxt/gh-manager-icon.png",
+    },
+    { property: "og:url", content: "https://www.automator-hub.com/github" },
+    { name: "twitter:card", content: "summary_large_image" },
+    {
+      name: "twitter:title",
+      content: "GitHub Dashboard - Automate Your Documentation",
+    },
+    {
+      name: "twitter:description",
+      content:
+        "Manage your GitHub repositories and automate documentation updates with AI-powered features.",
+    },
+    {
+      name: "twitter:image",
+      content: "https://www.automator-hub.com/_nuxt/gh-manager-icon.png",
+    },
+  ],
+});
+
 onBeforeMount(() => {
   githubStore.resetState();
 });

@@ -4,6 +4,48 @@ definePageMeta({
   authRequired: true,
 });
 
+useHead({
+  title: "Documentation History",
+  meta: [
+    {
+      name: "description",
+      content:
+        "View your documentation update history across all your repositories.",
+    },
+    {
+      property: "og:title",
+      content: "Documentation History - Automate Your GitHub Documentation",
+    },
+    {
+      property: "og:description",
+      content:
+        "View your documentation update history across all your repositories.",
+    },
+    {
+      property: "og:image",
+      content: "https://www.automator-hub.com/_nuxt/gh-manager-icon.png",
+    },
+    {
+      property: "og:url",
+      content: "https://www.automator-hub.com/github/history",
+    },
+    { name: "twitter:card", content: "summary_large_image" },
+    {
+      name: "twitter:title",
+      content: "Documentation History - Automate Your GitHub Documentation",
+    },
+    {
+      name: "twitter:description",
+      content:
+        "View your documentation update history across all your repositories.",
+    },
+    {
+      name: "twitter:image",
+      content: "https://www.automator-hub.com/_nuxt/gh-manager-icon.png",
+    },
+  ],
+});
+
 const readmeHistoryStore = useReadmeHistoryStore();
 const { history } = storeToRefs(readmeHistoryStore);
 

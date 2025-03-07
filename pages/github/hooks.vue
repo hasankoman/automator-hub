@@ -4,6 +4,48 @@ definePageMeta({
   authRequired: true,
 });
 
+useHead({
+  title: "GitHub Webhooks",
+  meta: [
+    {
+      name: "description",
+      content:
+        "Manage GitHub webhooks to automatically update your documentation when your repositories change.",
+    },
+    {
+      property: "og:title",
+      content: "GitHub Webhooks - Automate Your Documentation",
+    },
+    {
+      property: "og:description",
+      content:
+        "Manage GitHub webhooks to automatically update your documentation when your repositories change.",
+    },
+    {
+      property: "og:image",
+      content: "https://www.automator-hub.com/_nuxt/gh-manager-icon.png",
+    },
+    {
+      property: "og:url",
+      content: "https://www.automator-hub.com/github/hooks",
+    },
+    { name: "twitter:card", content: "summary_large_image" },
+    {
+      name: "twitter:title",
+      content: "GitHub Webhooks - Automate Your Documentation",
+    },
+    {
+      name: "twitter:description",
+      content:
+        "Manage GitHub webhooks to automatically update your documentation when your repositories change.",
+    },
+    {
+      name: "twitter:image",
+      content: "https://www.automator-hub.com/_nuxt/gh-manager-icon.png",
+    },
+  ],
+});
+
 const githubStore = useGitHubStore();
 const loadingStore = useLoadingStore();
 
