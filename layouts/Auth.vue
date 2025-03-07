@@ -5,6 +5,19 @@ useHead({
       ? `${productCategory} - Automator Hub`
       : "Automator Hub";
   },
+  script: [
+    {
+      type: "application/ld+json",
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        name: "Sign In - Automator Hub",
+        description:
+          "Sign in to access your GitHub documentation automation tools.",
+        url: "https://www.automator-hub.com/auth",
+      }),
+    },
+  ],
 });
 
 import { Analytics } from "@vercel/analytics/nuxt";

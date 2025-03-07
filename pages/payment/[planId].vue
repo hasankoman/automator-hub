@@ -3,6 +3,39 @@ definePageMeta({
   layout: "payment",
 });
 
+useHead({
+  title: "Payment",
+  meta: [
+    {
+      name: "description",
+      content:
+        "Complete your payment to upgrade your plan and access premium features for automating GitHub documentation.",
+    },
+    { property: "og:title", content: "Payment - Upgrade Your Plan" },
+    {
+      property: "og:description",
+      content:
+        "Complete your payment to upgrade your plan and access premium features for automating GitHub documentation.",
+    },
+    {
+      property: "og:image",
+      content: "https://www.automator-hub.com/_nuxt/gh-manager-icon.png",
+    },
+    { property: "og:url", content: "https://www.automator-hub.com/payment" },
+    { name: "twitter:card", content: "summary_large_image" },
+    { name: "twitter:title", content: "Payment - Upgrade Your Plan" },
+    {
+      name: "twitter:description",
+      content:
+        "Complete your payment to upgrade your plan and access premium features for automating GitHub documentation.",
+    },
+    {
+      name: "twitter:image",
+      content: "https://www.automator-hub.com/_nuxt/gh-manager-icon.png",
+    },
+  ],
+});
+
 const route = useRoute();
 const router = useRouter();
 const toast = useToast();

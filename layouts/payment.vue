@@ -4,6 +4,19 @@ import { SpeedInsights } from "@vercel/speed-insights/nuxt";
 
 useHead({
   title: "Payment - Automation Manager",
+  script: [
+    {
+      type: "application/ld+json",
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        name: "Payment - Automation Manager",
+        description:
+          "Complete your payment to upgrade your plan and access premium features.",
+        url: "https://www.automator-hub.com/payment",
+      }),
+    },
+  ],
 });
 </script>
 

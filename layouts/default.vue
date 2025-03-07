@@ -11,6 +11,25 @@ useHead({
       ? `${productCategory} - Automator Hub`
       : "Automator Hub";
   },
+  script: [
+    {
+      type: "application/ld+json",
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        name: "Automator Hub",
+        applicationCategory: "DeveloperApplication",
+        operatingSystem: "Web",
+        offers: {
+          "@type": "Offer",
+          price: "0",
+          priceCurrency: "USD",
+        },
+        description:
+          "Automate your GitHub documentation with AI-powered README generation and management tools.",
+      }),
+    },
+  ],
 });
 
 import { Sidebar } from "#components";
