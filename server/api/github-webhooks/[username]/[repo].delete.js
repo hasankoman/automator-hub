@@ -1,19 +1,19 @@
 import { decrementMetric } from "~/server/db/usage";
+import supabase from "~/server/utils/supabase";
 
 export default defineEventHandler(async (event) => {
   try {
     const session = await requireGithubAuth(event);
     const { username, repo } = event.context.params;
 
-    const repository = await prisma.monitoredRepository.findFirst({
-      where: {
-        userId: session.user.id,
-        fullName: `${username}/${repo}`,
-      },
-      select: {
-        webhookId: true,
-      },
-    });
+    const { data: repository, error: repoError } = await supabase
+      .from("MonitoredRepository")
+      .select("webhookId")
+      .eq("userId", session.user.id)
+      .eq("fullName", `${username}/${repo}`)
+      .single();
+
+    if (repoError) throw repoError;
 
     if (repository?.webhookId) {
       const response = await fetch(
@@ -33,12 +33,13 @@ export default defineEventHandler(async (event) => {
       }
     }
 
-    await prisma.monitoredRepository.deleteMany({
-      where: {
-        userId: session.user.id,
-        fullName: `${username}/${repo}`,
-      },
-    });
+    const { error: deleteError } = await supabase
+      .from("MonitoredRepository")
+      .delete()
+      .eq("userId", session.user.id)
+      .eq("fullName", `${username}/${repo}`);
+
+    if (deleteError) throw deleteError;
 
     await decrementMetric(session.user.id, "autoReadmeUsed");
 

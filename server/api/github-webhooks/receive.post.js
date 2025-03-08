@@ -1,4 +1,5 @@
 import { createReadmeHistory } from "~/server/db/readmeHistory";
+import supabase from "~/server/utils/supabase";
 
 export default defineEventHandler(async (event) => {
   try {
@@ -13,17 +14,14 @@ export default defineEventHandler(async (event) => {
       );
     }
 
-    const repository = await prisma.monitoredRepository.findFirst({
-      where: {
-        fullName: body.repository.full_name,
-        isActive: true,
-      },
-      include: {
-        user: true,
-      },
-    });
+    const { data: repository, error: repoError } = await supabase
+      .from("MonitoredRepository")
+      .select("*, user:User(*)")
+      .eq("fullName", body.repository.full_name)
+      .eq("isActive", true)
+      .single();
 
-    if (!repository) {
+    if (repoError || !repository) {
       throw createApiError(
         ErrorTypes.NOT_FOUND,
         "Repository not found or webhook inactive"

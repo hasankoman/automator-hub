@@ -20,6 +20,7 @@ The project follows a standard Nuxt 3 directory structure:
     - `Sidebar.vue`: Sidebar navigation component.
   - **`composables`**: Reusable composables.
     - `useFetchWrapper.js`: Wrapper for simplified API calls with loading and error handling.
+    - `useSupabase.js`: Composable for Supabase client access.
   - **`pages`**: Vue components representing application routes.
     - `account`: Authentication related pages.
       - `default.vue`: Handles default login/logout logic.
@@ -27,10 +28,19 @@ The project follows a standard Nuxt 3 directory structure:
       - `integrations.vue`: Allows connecting/disconnecting GitHub.
     - `github`: Pages for GitHub integration.
       - `index.vue`: GitHub dashboard
+  - **`plugins`**: Nuxt plugins
+    - `supabase.js`: Plugin to initialize Supabase client.
+  - **`server`**: Server-side code
+    - `db`: Database operations using Supabase.
+    - `utils`: Utility functions for the server.
   - **`store`**: Pinia stores for managing application state.
     - `github.js`: Manages GitHub data.
     - `loading.js`: Loading indicator.
     - `sidebar.js`: Handles sidebar state.
+  - **`supabase`**: Supabase configuration and migrations
+    - `migrations`: SQL migration files for Supabase
+    - `seed.sql`: Seed data for Supabase
+    - `README.md`: Instructions for setting up Supabase
   - **`assets`**: CSS and other assets.
     - `main.css`: Contains TailwindCSS styles.
   - **`AuraPreset.js`**: PrimeVue theme configuration file.
@@ -53,6 +63,7 @@ The project follows a standard Nuxt 3 directory structure:
 - **State Management:** Pinia
 - **Styling:** Tailwind CSS
 - **Authentication:** NextAuth.js with Github and Credentials Providers
+- **Database:** Supabase (PostgreSQL)
 - **Other:** `@element-plus/nuxt`, `@nuxtjs/device`
 
 ## Installation & Setup
@@ -81,9 +92,23 @@ The project follows a standard Nuxt 3 directory structure:
    bun install
    ```
 
-4. **Set up environment variables:** Create a `.env` file (or `.env.production` for production) in the root directory and add your environment variables, including `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `AUTH_SECRET`, `AUTH_ORIGIN`, and `WEBHOOK_URL` from your `.env.production` example. Ensure that `AUTH_ORIGIN` points to the correct API endpoint for your authentication system. The `WEBHOOK_URL` should point to a service that handles the README update (not provided in the example).
+4. **Set up Supabase:**
 
-5. **Start the development server:**
+   Follow the instructions in `supabase/README.md` to:
+
+   - Create a Supabase project
+   - Configure API keys
+   - Run migrations
+   - Seed the database
+
+5. **Set up environment variables:** Create a `.env` file (or `.env.production` for production) in the root directory and add your environment variables, including:
+
+   - `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` for GitHub integration
+   - `AUTH_SECRET` and `AUTH_ORIGIN` for authentication
+   - `WEBHOOK_URL` for README update webhooks
+   - `SUPABASE_URL`, `SUPABASE_ANON_KEY`, and `SUPABASE_SERVICE_ROLE_KEY` for Supabase connection
+
+6. **Start the development server:**
    ```bash
    npm run dev
    # or
@@ -112,6 +137,21 @@ The project follows a standard Nuxt 3 directory structure:
    # or
    bun run preview
    ```
+
+## Database Migration
+
+This project has been migrated from Prisma ORM to Supabase. The migration involved:
+
+1. Replacing Prisma database models with Supabase tables
+2. Converting Prisma queries to Supabase client API calls
+3. Adding Row Level Security (RLS) for data protection
+4. Setting up database migrations and seed data
+
+If you're updating from a previous version that used Prisma, make sure to:
+
+- Update your environment variables with Supabase credentials
+- Run the migration scripts in the Supabase SQL Editor
+- Remove any Prisma-specific code or dependencies
 
 ## Deployment
 

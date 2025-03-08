@@ -37,6 +37,8 @@ export default defineEventHandler(async (event) => {
     if (readmeHistory) {
       await updateReadmeHistory(readmeHistory.id, "failed");
     }
+    // Preserve the original error if it has a statusCode
+    if (error.statusCode) throw error;
     throw createApiError(ErrorTypes.INTERNAL, error.message, error);
   }
 });

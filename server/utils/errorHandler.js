@@ -29,11 +29,14 @@ export const createApiError = (type, message, originalError = null) => {
       message: message || "Plan action limit reached",
     },
   };
+  console.log("errors", errors[type]);
 
   const error = errors[type] || errors[ErrorTypes.INTERNAL];
   if (originalError) {
     console.error(originalError);
   }
 
-  return createError(error);
+  console.log(error);
+
+  throw createError(error);
 };

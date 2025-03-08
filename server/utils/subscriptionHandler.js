@@ -1,23 +1,28 @@
 import { createApiError, ErrorTypes } from "./errorHandler";
+import supabase from "./supabase";
 
 export const checkAccess = async (userId, feature) => {
   try {
-    const usage = await prisma.usage.findUnique({
-      where: { userId },
-      include: {
-        user: {
-          include: {
-            subscription: {
-              include: {
-                plan: true,
-              },
-            },
-          },
-        },
-      },
-    });
+    const { data: usage, error: usageError } = await supabase
+      .from("Usage")
+      .select(
+        `
+        *,
+        user:User(
+          *,
+          subscription:Subscription(
+            *,
+            plan:Plan(*)
+          )
+        )
+      `
+      )
+      .eq("userId", userId)
+      .single();
 
-    if (!usage?.user?.subscription) {
+    console.log("usage", usage);
+
+    if (usageError || !usage?.user?.subscription) {
       throw createApiError(
         ErrorTypes.NOT_FOUND,
         "No active subscription found"

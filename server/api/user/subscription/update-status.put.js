@@ -20,6 +20,7 @@ export default defineEventHandler(async (event) => {
 
     return createApiResponse(subscription);
   } catch (error) {
+    if (error.statusCode) throw error;
     throw createApiError(
       ErrorTypes.INTERNAL,
       "Failed to update subscription status",

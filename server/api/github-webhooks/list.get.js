@@ -1,12 +1,15 @@
+import supabase from "~/server/utils/supabase";
+
 export default defineEventHandler(async (event) => {
   try {
     const session = await requireGithubAuth(event);
 
-    const monitoredRepos = await prisma.monitoredRepository.findMany({
-      where: {
-        userId: session.user.id,
-      },
-    });
+    const { data: monitoredRepos, error: repoError } = await supabase
+      .from("MonitoredRepository")
+      .select("*")
+      .eq("userId", session.user.id);
+
+    if (repoError) throw repoError;
 
     const webhooks = [];
 

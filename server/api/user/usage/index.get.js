@@ -7,6 +7,9 @@ export default defineEventHandler(async (event) => {
 
     return createApiResponse(usage);
   } catch (error) {
+    if (error.statusCode) {
+      throw error;
+    }
     throw createApiError(ErrorTypes.INTERNAL, error.message, error);
   }
 });

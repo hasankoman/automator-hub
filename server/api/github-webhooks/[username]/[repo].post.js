@@ -1,19 +1,19 @@
+import supabase from "~/server/utils/supabase";
+
 export default defineEventHandler(async (event) => {
   try {
     const session = await requireGithubAuth(event);
     const { isActive } = await readBody(event);
     const { username, repo } = event.context.params;
 
-    const repository = await prisma.monitoredRepository.findFirst({
-      where: {
-        userId: session.user.id,
-        fullName: `${username}/${repo}`,
-      },
-      select: {
-        webhookId: true,
-        id: true,
-      },
-    });
+    const { data: repository, error: repoError } = await supabase
+      .from("MonitoredRepository")
+      .select("webhookId, id")
+      .eq("userId", session.user.id)
+      .eq("fullName", `${username}/${repo}`)
+      .single();
+
+    if (repoError) throw repoError;
 
     if (repository?.webhookId) {
       const response = await fetch(
@@ -33,14 +33,14 @@ export default defineEventHandler(async (event) => {
         throw new Error(`GitHub API error: ${response.statusText}`);
       }
 
-      await prisma.monitoredRepository.update({
-        where: {
-          id: repository.id,
-        },
-        data: {
-          isActive: isActive,
-        },
-      });
+      const { error: updateError } = await supabase
+        .from("MonitoredRepository")
+        .update({ isActive: isActive })
+        .eq("id", repository.id);
+
+      if (updateError) throw updateError;
+    } else {
+      throw new Error("Webhook not found");
     }
 
     return createApiResponse({ success: true });
