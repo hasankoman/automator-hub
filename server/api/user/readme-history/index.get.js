@@ -8,6 +8,7 @@ export default defineEventHandler(async (event) => {
 
     return createApiResponse(operations);
   } catch (error) {
+    if (error.statusCode) throw error;
     throw createApiError(
       ErrorTypes.INTERNAL,
       error.message || "Failed to fetch readme operations",

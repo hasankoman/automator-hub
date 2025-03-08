@@ -22,6 +22,7 @@ export default defineEventHandler(async (event) => {
       paymentDetails,
     });
   } catch (error) {
+    if (error.statusCode) throw error;
     throw createApiError(ErrorTypes.INTERNAL, "Payment failed", error);
   }
 });

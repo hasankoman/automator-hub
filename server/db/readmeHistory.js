@@ -1,11 +1,16 @@
-export const getUserReadmeHistory = async (userId) => {
-  const operations = await prisma.readmeOperation.findMany({
-    where: { userId },
-    orderBy: { createdAt: "desc" },
-    take: 10,
-  });
+import supabase from "../utils/supabase";
+import { createApiError, ErrorTypes } from "../utils/errorHandler";
 
-  return operations;
+export const getUserReadmeHistory = async (userId) => {
+  const { data, error } = await supabase
+    .from("ReadmeOperation")
+    .select("*")
+    .eq("userId", userId)
+    .order("createdAt", { ascending: false })
+    .limit(10);
+
+  if (error) throw error;
+  return data;
 };
 
 export const createReadmeHistory = async (
@@ -16,9 +21,21 @@ export const createReadmeHistory = async (
   status
 ) => {
   try {
-    return await prisma.readmeOperation.create({
-      data: { userId, repositoryId, repositoryName, operationType, status },
-    });
+    const { data, error } = await supabase
+      .from("ReadmeOperation")
+      .insert({
+        userId,
+        repositoryId,
+        repositoryName,
+        operationType,
+        status,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      })
+      .single();
+
+    if (error) throw error;
+    return data;
   } catch (error) {
     throw createApiError(
       ErrorTypes.INTERNAL,
@@ -29,8 +46,12 @@ export const createReadmeHistory = async (
 };
 
 export const updateReadmeHistory = async (id, status) => {
-  return await prisma.readmeOperation.update({
-    where: { id },
-    data: { status },
-  });
+  const { data, error } = await supabase
+    .from("ReadmeOperation")
+    .update({ status, updatedAt: new Date().toISOString() })
+    .eq("id", id)
+    .single();
+
+  if (error) throw error;
+  return data;
 };

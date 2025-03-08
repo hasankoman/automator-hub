@@ -1,21 +1,26 @@
+import supabase from "../utils/supabase.js";
+import { createApiError, ErrorTypes } from "../utils/errorHandler";
+
 export const getUserUsage = async (userId) => {
   try {
-    const usage = await prisma.usage.findUnique({
-      where: { userId },
-      include: {
-        user: {
-          include: {
-            subscription: {
-              include: {
-                plan: true,
-              },
-            },
-          },
-        },
-      },
-    });
+    const { data: usage, error } = await supabase
+      .from("Usage")
+      .select(
+        `
+        *,
+        user:User(
+          *,
+          subscription:Subscription(
+            *,
+            plan:Plan(*)
+          )
+        )
+      `
+      )
+      .eq("userId", userId)
+      .single();
 
-    if (!usage) {
+    if (error || !usage) {
       return null;
     }
 
@@ -43,10 +48,40 @@ export const getUserUsage = async (userId) => {
 
 export const incrementMetric = async (userId, metric) => {
   try {
-    return await prisma.usage.update({
-      where: { userId },
-      data: { [metric]: { increment: 1 } },
-    });
+    // Supabase doesn't support direct incrementing like Prisma
+    // We need to get the current value and then update it
+    const metricMapping = {
+      manualUpdatesUsed: "manualUpdatesUsed",
+      autoReadmeUsed: "autoReadmeUsed",
+    };
+
+    const supabaseMetric = metricMapping[metric];
+    if (!supabaseMetric) {
+      throw createApiError(ErrorTypes.INTERNAL, "Invalid metric name");
+    }
+
+    // Get current value
+    const { data: currentUsage, error: getError } = await supabase
+      .from("Usage")
+      .select(supabaseMetric)
+      .eq("userId", userId)
+      .single();
+
+    if (getError) throw getError;
+
+    // Increment and update
+    const { data, error: updateError } = await supabase
+      .from("Usage")
+      .update({
+        [supabaseMetric]: (currentUsage[supabaseMetric] || 0) + 1,
+        updatedAt: new Date().toISOString(),
+      })
+      .eq("userId", userId)
+      .select()
+      .single();
+
+    if (updateError) throw updateError;
+    return data;
   } catch (error) {
     throw createApiError(
       ErrorTypes.INTERNAL,
@@ -58,10 +93,43 @@ export const incrementMetric = async (userId, metric) => {
 
 export const decrementMetric = async (userId, metric) => {
   try {
-    return await prisma.usage.update({
-      where: { userId },
-      data: { [metric]: { decrement: 1 } },
-    });
+    // Supabase doesn't support direct decrementing like Prisma
+    // We need to get the current value and then update it
+    const metricMapping = {
+      manualUpdatesUsed: "manualUpdatesUsed",
+      autoReadmeUsed: "autoReadmeUsed",
+    };
+
+    const supabaseMetric = metricMapping[metric];
+    if (!supabaseMetric) {
+      throw createApiError(ErrorTypes.INTERNAL, "Invalid metric name");
+    }
+
+    // Get current value
+    const { data: currentUsage, error: getError } = await supabase
+      .from("Usage")
+      .select(supabaseMetric)
+      .eq("userId", userId)
+      .single();
+
+    if (getError) throw getError;
+
+    // Only decrement if greater than 0
+    const newValue = Math.max(0, (currentUsage[supabaseMetric] || 0) - 1);
+
+    // Update with decremented value
+    const { data, error: updateError } = await supabase
+      .from("Usage")
+      .update({
+        [supabaseMetric]: newValue,
+        updatedAt: new Date().toISOString(),
+      })
+      .eq("userId", userId)
+      .select()
+      .single();
+
+    if (updateError) throw updateError;
+    return data;
   } catch (error) {
     throw createApiError(
       ErrorTypes.INTERNAL,

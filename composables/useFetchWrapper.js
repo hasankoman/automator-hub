@@ -1,5 +1,6 @@
 export const useFetchWrapper = async (url, options, loading = true) => {
   const loadingStore = useLoadingStore();
+  const router = useRouter();
 
   try {
     if (loading) {
@@ -11,6 +12,9 @@ export const useFetchWrapper = async (url, options, loading = true) => {
     });
     return response;
   } catch (error) {
+    if (error.statusCode === 401) {
+      router.push("/auth");
+    }
     const errorData = error.data || {};
     loadingStore.setError(errorData.message || "An unexpected error occurred");
     throw errorData;

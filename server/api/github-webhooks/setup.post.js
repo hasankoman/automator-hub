@@ -1,5 +1,6 @@
 import { incrementMetric } from "~/server/db/usage";
 import { validateAccess } from "../../utils/subscriptionHandler";
+import supabase from "~/server/utils/supabase";
 
 export default defineEventHandler(async (event) => {
   try {
@@ -34,26 +35,23 @@ export default defineEventHandler(async (event) => {
       }
     );
 
-    await prisma.monitoredRepository.upsert({
-      where: {
-        userId_repositoryId: {
+    const { error: upsertError } = await supabase
+      .from("MonitoredRepository")
+      .upsert(
+        {
           userId: session.user.id,
           repositoryId: repository.id,
+          branch: repository.default_branch,
+          fullName: repository.fullName,
+          webhookId: response.id,
+          isActive: true,
+          updatedAt: new Date().toISOString(),
+          createdAt: new Date().toISOString(),
         },
-      },
-      update: {
-        webhookId: response.id,
-        isActive: true,
-      },
-      create: {
-        userId: session.user.id,
-        repositoryId: repository.id,
-        branch: repository.default_branch,
-        fullName: repository.fullName,
-        webhookId: response.id,
-        isActive: true,
-      },
-    });
+        { onConflict: ["userId", "repositoryId"] }
+      );
+
+    if (upsertError) throw upsertError;
 
     await incrementMetric(session.user.id, "autoReadmeUsed");
 

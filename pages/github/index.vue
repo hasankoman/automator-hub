@@ -5,7 +5,7 @@ import Actions from "~/components/github/Actions.vue";
 
 definePageMeta({
   middleware: "auth",
-  authRequired: true,
+  authRequired: false,
 });
 
 useHead({

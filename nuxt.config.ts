@@ -44,11 +44,18 @@ export default defineNuxtConfig({
       githubClientId: process.env.GITHUB_CLIENT_ID,
       webhookUrl: process.env.WEBHOOK_URL,
       appUrl: process.env.APP_URL,
+      supabase: {
+        url: process.env.SUPABASE_URL,
+        key: process.env.SUPABASE_ANON_KEY,
+      },
     },
     githubClientSecret: process.env.GITHUB_CLIENT_SECRET,
     authSecret: process.env.AUTH_SECRET,
     webhookSecret: process.env.WEBHOOK_SECRET,
     tokenEncryptionKey: process.env.TOKEN_ENCRYPTION_KEY,
+    supabase: {
+      serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
+    },
   },
   css: ["~/assets/css/main.css"],
   compatibilityDate: "2025-02-06",

@@ -15,6 +15,7 @@ export default defineEventHandler(async (event) => {
 
     return createApiResponse(operation);
   } catch (error) {
+    if (error.statusCode) throw error;
     throw createApiError(
       ErrorTypes.INTERNAL,
       error.message || "Failed to create readme operation",

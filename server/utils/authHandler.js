@@ -1,9 +1,10 @@
 import { getServerSession } from "#auth";
 import { createApiError, ErrorTypes } from "../utils/errorHandler";
+import supabase from "./supabase";
 
 export const requireAuth = async (event) => {
   const session = await getServerSession(event);
-
+  console.log("session", session);
   if (!session) {
     throw createApiError(ErrorTypes.UNAUTHORIZED);
   }
@@ -15,12 +16,13 @@ export const requireGithubAuth = async (event) => {
   const session = await requireAuth(event);
 
   if (!session?.user?.github?.accessToken) {
-    const user = await prisma.user.findUnique({
-      where: { id: session.user.id },
-      select: { githubToken: true },
-    });
+    const { data: user, error: userError } = await supabase
+      .from("User")
+      .select("githubToken")
+      .eq("id", session.user.id)
+      .single();
 
-    if (!user?.githubToken) {
+    if (userError || !user?.githubToken) {
       throw createApiError(
         ErrorTypes.UNAUTHORIZED,
         "GitHub authentication required"
