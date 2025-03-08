@@ -13,7 +13,7 @@ export const useMeStore = defineStore("me", {
       const route = useRoute();
 
       await signIn("github", {
-        callbackUrl: window.location.origin + route?.query?.redirect || "/",
+        callbackUrl: window.location.origin + (route?.query?.redirect || "/"),
       });
     },
 
