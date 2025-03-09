@@ -297,14 +297,16 @@ const initAnimations = () => {
     const isMobile = useDevice().isMobile;
     animate(
       target,
-      { opacity: [0, 1], y: [100, 0], scale: [0.7, 1] },
+      {
+        opacity: [0, 1],
+        x: [index % 2 === 0 ? -100 : 100, 0],
+      },
       { duration: 0.5, delay: isMobile ? 0.15 : 0.15 * (index + 1) }
     );
     return () =>
       animate(target, {
         opacity: 0,
-        y: 100,
-        scale: 0.7,
+        x: index % 2 === 0 ? -100 : 100,
       });
   });
 
@@ -331,6 +333,23 @@ const initAnimations = () => {
       { duration: 0.5, delay: stagger(0.15) }
     );
     return false;
+  });
+
+  inView(".section-title", (target) => {
+    animate(
+      target.querySelector("h2"),
+      { opacity: [0, 1], y: [-30, 0] },
+      { duration: 0.5 }
+    );
+    animate(
+      target.querySelector("p"),
+      { opacity: [0, 1], y: [30, 0] },
+      { duration: 0.5 }
+    );
+    return () => {
+      animate(target.querySelector("h2"), { opacity: 0, y: -30 });
+      animate(target.querySelector("p"), { opacity: 0, y: 30 });
+    };
   });
 };
 
@@ -395,12 +414,12 @@ const scrollToSection = (sectionId) => {
 <template>
   <div class="flex flex-col gap-3 w-full overflow-hidden">
     <div
-      class="flex flex-col bg-white rounded-2xl overflow-auto border border-gray-200 shadow-inner"
+      class="flex flex-col gap-y-4 pt-4 bg-black rounded-2xl overflow-auto border border-gray-200 shadow-inner"
     >
       <!-- Hero Section -->
       <section
         id="hero"
-        class="py-5 xl:py-10 lg:min-h-[80vh] bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center"
+        class="py-5 xl:py-10 lg:min-h-[80vh] mx-4 rounded-2xl bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center"
       >
         <div class="max-w-screen-xl m-auto px-4">
           <div
@@ -660,7 +679,7 @@ fetch('/api/data', {
       </section>
 
       <!-- Trusted By Section -->
-      <section class="py-12 px-4 bg-white" id="trusted-by">
+      <section class="py-8 px-4 rounded-2xl bg-white mx-4" id="trusted-by">
         <div class="max-w-screen-xl mx-auto flex flex-col items-center gap-3">
           <p class="text-center text-gray-600 font-medium text-lg">
             Companies of all sizes trust Automator Hub to document their
@@ -689,26 +708,26 @@ fetch('/api/data', {
       </section>
 
       <!-- Features Section -->
-      <section id="features" class="py-20 md:py-28 bg-gray-50">
+      <section id="features" class="rounded-2xl bg-white mx-4">
         <div
-          class="max-w-screen-xl flex flex-col gap-y-16 items-center text-center mx-auto px-4"
+          class="max-w-screen-xl flex flex-col gap-y-16 items-center mx-auto py-8 px-4 overflow-hidden"
         >
-          <div class="flex flex-col items-center gap-4">
+          <div
+            class="flex flex-col gap-4 overflow-hidden mr-auto section-title"
+          >
             <h2 class="font-bold flex items-center flex-col lg:flex-row">
               <CommonShine text="Supercharge Your" />
               <span class="text-gray-800 ml-2 text-xl lg:text-2xl xl:text-3xl"
                 >Documentation</span
               >
             </h2>
-            <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+            <p class="text-lg text-gray-600 max-w-3xl">
               Our AI-powered tools make creating and maintaining GitHub
               documentation effortless
             </p>
           </div>
 
-          <div
-            class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 features-container overflow-hidden"
-          >
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 features-container">
             <div
               v-for="(feature, index) in features"
               :key="feature.title"
@@ -716,12 +735,16 @@ fetch('/api/data', {
               :id="`feature-${index}`"
             >
               <div
-                class="bg-white/95 backdrop-blur-sm rounded-xl p-6 h-full flex flex-col items-center"
+                class="bg-white/95 backdrop-blur-sm rounded-xl p-3 h-full flex flex-col gap-3 items-start"
               >
-                <Icon :name="feature.icon" class="!text-4xl !h-12" />
-                <h3 class="text-xl font-semibold mb-3">
-                  {{ feature.title }}
-                </h3>
+                <div
+                  class="flex gap-3 items-center bg-black/30 p-1 rounded-lg text-white backdrop-blur-sm"
+                >
+                  <Icon :name="feature.icon" class="text-xl" />
+                  <h3 class="font-semibold text-sm">
+                    {{ feature.title }}
+                  </h3>
+                </div>
                 <p class="text-sm">
                   {{ feature.description }}
                 </p>
@@ -732,7 +755,7 @@ fetch('/api/data', {
       </section>
 
       <!-- How It Works Section -->
-      <section id="how-it-works" class="py-20 md:py-28 bg-white">
+      <section id="how-it-works" class="rounded-2xl bg-white mx-4">
         <div class="flex flex-col gap-6 mx-auto px-4">
           <div class="flex flex-col items-center gap-4">
             <h2 class="font-bold flex items-center flex-col lg:flex-row">
@@ -919,7 +942,7 @@ fetch('/api/data', {
       </section>
 
       <!-- Testimonials Section -->
-      <section class="py-20 md:py-28 bg-white">
+      <section class="rounded-2xl bg-white mx-4">
         <div class="flex flex-col gap-6 mx-auto px-4">
           <div class="flex flex-col items-center gap-4">
             <h2 class="font-bold flex items-center flex-col lg:flex-row">
@@ -976,7 +999,7 @@ fetch('/api/data', {
       </section>
 
       <!-- FAQ Section -->
-      <section id="faq" class="py-20 md:py-28 bg-gray-50">
+      <section id="faq" class="rounded-2xl bg-white mx-4">
         <div class="flex flex-col gap-6 mx-auto px-4">
           <div class="flex flex-col items-center gap-4">
             <h2 class="font-bold flex items-center flex-col lg:flex-row">
